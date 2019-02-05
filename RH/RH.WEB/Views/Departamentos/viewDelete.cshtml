@@ -1,0 +1,39 @@
+﻿@model RH.Entidades.Departamento
+
+@{ 
+    var depto = ViewBag.nombreDepto;
+}
+<link href="~/Content/incapacidades.css" rel="stylesheet" />
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">¿Estás seguro que deseas eliminar el departamento @depto ?</h4>
+</div>
+<div class="modal-body">
+    <div class="panel">
+        <div class="form-horizontal detail">
+            @*Primer row*@
+            <div class="row">
+                <div class="control-label col-md-2 col-xs-4">
+                    <strong>@Html.DisplayNameFor(model => model.IdDepartamento)</strong>
+                </div>
+                <div class="form-group col-xs-4" id="info">
+                    @Html.DisplayFor(model => model.IdDepartamento)
+                </div>
+
+                <div class="control-label col-md-2 col-xs-4">
+                    <strong>@Html.DisplayNameFor(model => model.Descripcion) </strong>
+                </div>
+                <div class="form-group col-xs-4" id="info">
+                   @Html.DisplayFor(model => model.Descripcion)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="form-actions no-color">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <a value="Eliminar" class="btn btn-danger" href="@Url.Action("Delete", "Departamentos", new { id = Model.IdDepartamento } )">Eliminar</a>
+    </div>
+</div>

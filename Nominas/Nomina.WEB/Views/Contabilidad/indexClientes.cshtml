@@ -1,0 +1,55 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@model List<Empresa>
+
+@{
+    var conceptos = ViewBag.conceptos;
+}
+
+<div class="col-md-6 col-md-offset-4">
+    <h3>Configuracion de las Claves Clientes</h3>
+</div>
+
+<div class="col-md-12" style="align-items:center; margin :10px;">
+    <div class="col-md-4">
+        <label>Empresa: </label>
+        <select class="form-control" id="empresa2">
+            <option value="0">Seleccionar Empresa</option>
+            @foreach (var e in Model)
+            {
+                <option value="@e.IdEmpresa">@e.RazonSocial</option>
+            }
+        </select>
+    </div>
+
+</div>
+<div id="claveCliente"  class="col-md-12" >
+
+</div>
+<script>
+
+
+
+    $("#empresa2").change(function () {
+        var empresa = $('select[id=empresa2]').val();
+        var request = $.ajax({
+            url: "/Contabilidad/configuracionClientes",
+            method: "POST",
+            data:
+                {
+                    idEmpresa: empresa
+                },
+            beforeSend: function () {
+                waitingDialog.show('Procesando...');
+            }
+        });
+
+        request.done(function (data) {
+            waitingDialog.hide();
+            $('#claveCliente').html(data);
+        });
+
+    });
+
+
+</script>

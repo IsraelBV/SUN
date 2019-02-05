@@ -1,0 +1,92 @@
+﻿@using RH.Entidades
+@{
+
+    var listaEmpresas = ViewBag.ListaEmpresas as List<SelectListItem>;
+    var listaEjercicio = ViewBag.ListaEjercicios as List<NOM_Ejercicio_Fiscal>;
+}
+
+<h1>Reporte Infonavit <span><i class="fa fa-home" aria-hidden="true"></i> </span></h1>
+<div class="jumbotron">
+    
+    <div class="row">
+        <form class="form-inline">
+            <div class="form-group">
+                <label>Ejercicio: </label>
+                <select id="ejercicio" class="form-control">
+                    @foreach (var e in listaEjercicio)
+                    {
+                        <option value="@e.IdEjercicio">@e.Anio</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="selectEmpresas">Empresas:</label>
+                @if (listaEmpresas != null)
+                {
+                    <select id="selectEmpresas">
+                        @foreach (var listItem in listaEmpresas)
+                        {
+                            <option value="@listItem.Value">@listItem.Text</option>
+                        }
+                    </select>
+                }
+            </div>
+            @*<div class="form-group">
+                <label for="selectClientes">Clientes:</label>
+
+                <select id="selectClientes">
+                    <option value="0">Seleccione una empresa ...</option>
+                </select>
+
+            </div>*@
+
+            
+            <a class="btn btn-primary " id="descargarReporteinfo">Generar Reporte Infonavit  </a>
+        </form>
+    </div>
+    
+</div>
+
+<div>
+    <a id="downReporteInfo" href="#" style="display: none !important;">Descargar Reporte</a>
+</div>
+
+<script>
+       
+
+           $("#descargarReporteinfo").click(function () {
+
+                        var ejercicio = $('#ejercicio').val();
+                        var empresa = $('#selectEmpresas').val();
+                
+
+                        var xhr = $.ajax({
+                            url: '/Reportes/ReporteInfonavit/',
+                            method: "POST",
+                            data: {
+                                idEjercicio: ejercicio,
+                                idEmpresa: empresa
+                            },
+                            beforeSend: function (xhr) {
+                                waitingDialog.show('Generando Reporte de Infonavit...');
+                            },
+                            success: function (data) {
+                                if (data.success) {                                  
+                                   window.location = data.resultPath;                                  
+                                } else {
+                                    utils.showMessage("WAR", data.error, 8000);
+                                }
+                            },
+                            error: function (data) {
+                                alert(data.error);
+                            },
+                            complete: function (data) {
+                                waitingDialog.hide();
+
+                            }
+                        });
+                    });
+
+                
+</script>

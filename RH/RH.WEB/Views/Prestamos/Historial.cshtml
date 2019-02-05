@@ -1,0 +1,21 @@
+﻿@model List<RH.Entidades.HistorialPagos>
+
+<table class="table table-hover table-striped hisTab">
+    <thead>
+        <tr>
+            <th>ID Pago</th>
+            <th>Fecha</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.IdPagos</td>
+                <td>@item.FechaRegistro.ToString("dd-MM-yyyy")</td>
+                <td>@item.CantidadDescuento</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A5D75BF2-BC33-4FB2-B14A-7C1EB5BF8CC9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nomina.Procesador</RootNamespace>
+    <AssemblyName>Nomina.Procesador</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Gma.QrCodeNet.Encoding, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\ALLPROYECTS\packages\Gma.QrCodeNet.0.4.1.2\lib\net40\Gma.QrCodeNet.Encoding.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\ALLPROYECTS\packages\iTextSharp.5.5.10\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Datos\NominasDAO.cs" />
+    <Compile Include="Datos\RHDAO.cs" />
+    <Compile Include="Datos\TimbradoDAO.cs" />
+    <Compile Include="LogTxtCore.cs" />
+    <Compile Include="Metodos\MAguinaldo.cs" />
+    <Compile Include="Metodos\MCfdi.cs" />
+    <Compile Include="Metodos\MCuotasImss.cs" />
+    <Compile Include="Metodos\MDeducciones.cs" />
+    <Compile Include="Metodos\MFiniquitoIndemnizacion.cs" />
+    <Compile Include="Metodos\MNominas.cs" />
+    <Compile Include="Metodos\MObligaciones.cs" />
+    <Compile Include="Metodos\MPercepciones.cs" />
+    <Compile Include="Metodos\MSatXml.cs" />
+    <Compile Include="Modelos\CertificadoDigital.cs" />
+    <Compile Include="Modelos\Cfdi33\Cfdiv33.cs" />
+    <Compile Include="Modelos\DetalleNominaComp.cs" />
+    <Compile Include="Modelos\CalculoAnual.cs" />
+    <Compile Include="Modelos\PathsCertificado.cs" />
+    <Compile Include="Modelos\Cfdi32\Cfdiv32.cs" />
+    <Compile Include="Modelos\EmpleadoConceptos.cs" />
+    <Compile Include="Modelos\IsrSubsidio.cs" />
+    <Compile Include="Modelos\Nomina12\Nomina12.cs" />
+    <Compile Include="Modelos\Nominas.cs" />
+    <Compile Include="Modelos\TotalConcepto.cs" />
+    <Compile Include="NominaCore.cs" />
+    <Compile Include="opensslkey.cs" />
+    <Compile Include="PDFCore.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\webServicePAC\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="TimbradoCoreV2.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\System.Xml.Linq.XElement.datasource" />
+    <None Include="Service References\webServicePAC\Nomina.Procesador.webServicePAC.cancelarComprobanteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\webServicePAC\Nomina.Procesador.webServicePAC.CancelarComprobanteRetencionesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\webServicePAC\Nomina.Procesador.webServicePAC.EnviarCancelacionPFXResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\webServicePAC\Nomina.Procesador.webServicePAC.obtenerTimbradoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\webServicePAC\timbrado.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\webServicePAC\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\webServicePAC\timbrado.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\webServicePAC\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\webServicePAC\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\webServicePAC\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RH\Common\Common.csproj">
+      <Project>{20dcbdf8-2407-4a4d-9842-aa7277cd676e}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RH\RH.BLL\RH.BLL.csproj">
+      <Project>{907adfc2-db13-40d2-859f-f5a03d7506ae}</Project>
+      <Name>RH.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RH\RH.DAL\RH.DAL.csproj">
+      <Project>{90b8c565-0c9d-4229-ac43-052610ce3228}</Project>
+      <Name>RH.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RH\RH.Entidades\RH.Entidades.csproj">
+      <Project>{6d3c701f-1e8f-4a6c-a377-bbf87b8fdac1}</Project>
+      <Name>RH.Entidades</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SYA\SYA.BLL\SYA.BLL.csproj">
+      <Project>{eba96154-7f94-4421-be43-839caaa78a23}</Project>
+      <Name>SYA.BLL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,164 @@
+﻿@model RH.Entidades.DatosBancarios
+@{ 
+    string[] parentezco = { "ESPOSO/A", "HIJO/A", "PADRE/MADRE", "HERMANO/A", "TÍO/A", "PRIMO/A", "SOBRINO/A", "ABUELO/A" };
+    string selected = "";
+    var bancos = ViewBag.Bancos;
+}
+
+@using(Ajax.BeginForm("UpdateDatosBancarios", "Empleados", new AjaxOptions { OnSuccess = "OnSuccessUpdateBanco", OnFailure = "OnFailure"}, new { @class = "tooltipForm form-horizontal", id = "form-update-datos-bancarios" }))
+{
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="IdBanco" class="control-label col-md-4">Banco</label>
+            <div class="col-md-8">
+                <select name="IdBanco" class="form-control form-disabled">
+                    @foreach (var item in bancos)
+                    {
+                        selected = item.IdBanco == Model.IdBanco ? "selected" : "";
+                        <option value="@item.IdBanco" @selected>@item.Descripcion</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="NoSiga" class="control-label col-md-4">No Siga 1</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="NoSigaF" value="@Model.NoSigaF"
+                       data-rule-digits="true"
+                       data-rule-minlength="1"
+                       data-rule-maxlength="20" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="NoSiga" class="control-label col-md-4">No Siga 2</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="NoSigaC" value="@Model.NoSigaC"
+                       data-rule-digits="true"
+                       data-rule-minlength="1"
+                       data-rule-maxlength="20" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="CuentaBancaria">Cuenta Bancaria</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="CuentaBancaria" value="@Model.CuentaBancaria"
+                       data-rule-maxlength="10"
+                       data-rule-minlength="10"
+                       data-rule-digits="true" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="NumeroTarjeta"># Tarjeta</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="NumeroTarjeta" value="@Model.NumeroTarjeta"
+                       data-rule-maxlength="16"
+                       data-rule-minlength="16"
+                       data-rule-digits="true" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="Clabe">CLABE</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="Clabe" value="@Model.Clabe"
+                       data-rule-maxlength="18"
+                       data-rule-minlength="18"
+                       data-rule-digits="true" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="control-label col-md-4" for="NombreBeneficiario">Beneficiario</label>
+            <div class="col-md-8">
+                <input type="text" name="NombreBeneficiario" class="form-control form-disabled" value="@Model.NombreBeneficiario"
+                       data-rule-maxlength="100" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="CURPBEneficiario">CURP</label>
+            <div class="col-md-8">
+                <input type="text" name="CURPBeneficiario" class="form-control form-disabled" value="@Model.CURPBeneficiario"
+                       data-rule-CURP="true" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="RFCBeneficiario">RFC</label>
+            <div class="col-md-8">
+                <input type="text" name="RFCBeneficiario" class="form-control form-disabled" value="@Model.RFCBeneficiario"
+                       data-rule-RFC="true" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="ParentezcoBeneficiario">Parentezco</label>
+            <div class="col-md-8">
+                <select name="ParentezcoBeneficiario" class="form-control form-disabled">
+                    @for(int i = 0; i < parentezco.Length; i++)
+                    {
+                        selected = parentezco[i].Equals(Model.ParentezcoBeneficiario) ? "selected" : "";
+                        <option @selected>@parentezco[i]</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="DomicilioBeneficiario">Domicilio</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="DomicilioBeneficiario" data-rule-maxlength="150" value="@Model.DomicilioBeneficiario" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="Status" class="control-label col-md-4">Status</label>
+            <div class="col-md-8">
+                <select name="Status" class="form-control form-disabled">
+                    @{ 
+                        selected = Model.Status ? "selected" : "";
+                    }
+                    <option value="true" @selected>Vigente</option>
+                    @{ 
+                        selected = !Model.Status ? "selected" : "";
+                    }
+                    <option value="false" @selected>No Vigente</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" value="@Model.Id" name="Id" />
+    <input type="hidden" value="@Model.IdEmpleado" name="IdEmpleado" />
+}
+
+<script>
+    $("#form-update-datos-bancarios").validate({
+        showErrors: function (errorMap, errorList) {
+
+            //Quitar tooltips cuando el elemento es válido
+            $.each(this.validElements(), function (index, element) {
+                var $element = $(element);
+                $element.data("title", "")
+                    .removeClass("error")
+                    .addClass("success")
+                    .tooltip("destroy");
+            });
+
+            //agregar tooltip cuando el elemento sea inválido
+            $.each(errorList, function (index, error) {
+                var $element = $(error.element);
+
+                $element.tooltip("destroy")
+                    .data("title", error.message)
+                    .removeClass("success")
+                    .addClass("error")
+                    .tooltip();
+            });
+        }
+    });
+</script>

@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "ValRFC";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+
+    var asignados = ViewBag.DepartamentosAsignados;
+}
+<style>
+    .panel-heading {
+        padding-bottom: 5%;
+    }
+
+    .panel-body {
+        height: 800px;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/pdfmake-0.1.18,dt-1.10.11,b-1.1.2,b-html5-1.1.2,b-print-1.1.2,kt-2.1.1,r-2.0.2/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+
+<div class="panel with-nav-tabs panel-primary">
+    <div class="panel-heading clearfix text-center">
+    @using (Html.BeginForm("UploadRFC", "valRFC", FormMethod.Post, new { id = "formulario", enctype = "multipart/form-data", @class = "tooltipForm" }))
+    {
+            <div class="panel-heading">
+                    <div class="col-md-3">
+                        <a href="@Url.Action("DescargaListRFC", "valRFC")" class="btn btn-default btnPanel hovernuevo"><i class="fa fa-file-excel-o"></i> Descargar Lista de RFC</a>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="file" class="form-control" accept=".txt" id="fileInput" name="fileInput" required />
+                        </div>                      
+                    </div>
+
+                    <div class="col-md-3 text-right">
+                        <span><input type="submit" value="Guardar Respuesta del SAT" class="btn btn-default hovernuevo hoversecundario"></span>
+                    </div>
+            </div>
+    }
+    </div>
+            <div class="panel-body" style="height:500px;   width:100%;">               
+                    <iframe id="frameCentro" src="https://portalsat.plataforma.sat.gob.mx/ConsultaRFC/"  frameborder="0" style="width: 100%; height:100%;" align="middle"></iframe>              
+            </div>
+    </div>
+      
+        <script type="text/javascript" src="https://cdn.datatables.net/t/bs/pdfmake-0.1.18,dt-1.10.11,b-1.1.2,b-html5-1.1.2,b-print-1.1.2,kt-2.1.1,r-2.0.2/datatables.min.js"></script>
+<script>
+       $("#btnProcesar").click(function () {
+        $("#btnProcesar").attr("disabled", true);
+        window.location.href = "/valRFC/Index";
+       });
+
+
+
+    $('.panel-body').css({ height: $(window).innerHeight() - 200 });
+    $(window).resize(function () { $('.panel-body').css({ height: $(window).innerHeight() - 200 }); });
+
+</script>

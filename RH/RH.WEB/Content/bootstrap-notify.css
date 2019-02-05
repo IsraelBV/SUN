@@ -1,0 +1,33 @@
+﻿.alert-nomina {
+    background-color: #4e4e4e;
+    border-color: transparent;
+    border-radius: 2px;
+    color: #fff;
+    padding: 10px;
+    text-transform: uppercase;
+}
+
+[data-notify="title"] {
+    font-weight:bold;
+    display: block;
+    margin-bottom: 2px;
+}
+
+[data-notify="message"] {
+    font-size: 80%;
+}
+
+.alert-error {
+    background-color: #a03b48;
+    border-color: transparent;
+    border-radius: 2px;
+    color: #fff;
+    padding: 10px;
+    text-transform: uppercase;
+}
+
+[data-notify="title"] {
+    font-weight:bold;
+    display: block;
+    margin-bottom: 2px;
+}

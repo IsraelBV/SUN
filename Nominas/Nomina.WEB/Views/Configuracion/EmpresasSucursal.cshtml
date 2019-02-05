@@ -1,0 +1,42 @@
+﻿
+@using Nomina.BLL;
+@using RH.Entidades;
+@using Common.Enums;
+@using Common.Helpers;
+@using RH.BLL;
+@model List<SucursalesEmpresa>
+
+@if (Model == null)
+{
+    <div>
+        <label>Debe seleccionar una sucursal para ver sus empresas</label>
+    </div>
+}
+else
+{
+    <table id="contables" class="table table-striped"  cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Empresa</th>
+                <th>Prima de Riesgo</th>
+                <th>RFC</th>
+                <th>C.P.</th>              
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdTabla  </td>
+                    <th>@item.Nombre</th>
+                    <th class="text-danger">@item.PrimaRiesgo</th>
+                    <td>@item.RFC</td>
+                    <td>@item.CP</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+

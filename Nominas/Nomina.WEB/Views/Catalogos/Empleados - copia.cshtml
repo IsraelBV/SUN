@@ -1,0 +1,213 @@
+﻿
+@using RH.BLL;
+@model List<DatosEmpleado>
+
+@{
+    var contratro = ViewBag.Contrato;
+}
+
+<link href="~/Content/catEmpleados.css" rel="stylesheet" />
+@if (Model == null)
+{
+    <label>  Elija una sucursal</label>
+}
+else
+{
+
+    <div id="DatosPersonales">
+        <div class="panel with-nav-tabs panel-default" id="panelEmpleados">
+            <div class="panel-heading clearfix text-center">
+
+
+                <div class="pull-left">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#datospersonales">Datos Personales</a></li>
+                        <li><a data-toggle="tab" href="#Contratacion">Contratación</a></li>
+                        <li><a data-toggle="tab" href="#nominas">Nóminas</a></li>
+                        <li><a data-toggle="tab" href="#empresas">Empresas</a></li>
+                        <li><a data-toggle="tab" href="#Bancos">Datos Bancarios</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body panel-height" style="height:150px" id="panBody">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="datospersonales">
+                        <fieldset>
+
+                            <div class='form-horizontal'>
+                                <div class="col-md-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="col-md-1 ">ID : </label>
+                                        <input type="text" name="ID" class="col-md-2 " disabled />
+                                        <label class="col-md-1 ">Nombres: </label>
+                                        <input type="text" name="Nombres" class="col-md-7 " disabled />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-1 ">Sexo</label>
+                                        <input type="text" name="Sexo" class="col-md-2 " disabled />
+
+                                        <label class="col-md-1 ">CURP: </label>
+                                        <input type="text" name="CURP" class="col-md-3 " disabled />
+                                        <label class="col-md-1 ">RFC: </label>
+                                        <input type="text" name="RFC" class="col-md-3 " disabled />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-1 ">NSS : </label>
+                                        <input type="text" name="NSS" class="col-md-2 " disabled />
+                                        <label class="col-md-1 ">UMF: </label>
+                                        <input type="text" name="UMF" class="col-md-3" disabled />
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </fieldset>
+
+                    </div>
+                    <div class="tab-pane" id="Contratacion">
+                        <fieldset>
+                            <div class="form-horizontal">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-md-2 ">Fecha Alta: </label>
+                                        <input type="text" name="FechaAlta" class="col-md-2 " disabled />
+                                        <label class="col-md-2 ">Fecha Real: </label>
+                                        <input type="text" name="FechaReal" class="col-md-2 " disabled />
+                                        <label class="col-md-2 ">Fecha IMSS: </label>
+                                        <input type="text" name="FechaIMSS" class="col-md-2 " disabled />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2">Tipo de Contrato</label>
+                                        <input type="text" name="Tipo_Contrato" class="col-md-2" disabled />
+                                        <label class="col-md-2">Días Contrato</label>
+                                        <input type="text" name="DiasContrato" class="col-md-2" disabled />
+                                        <label class="col-md-2">Vence Contrato</label>
+                                        <input type="text" name="VenceContrato" class="col-md-2 " disabled />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-2">Día de Descanso</label>
+                                        <input type="text" name="DiaDescanso" class="col-md-2" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="tab-pane" id="nominas">
+                        <fieldset>
+                            <div class="form-horizontal">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-md-2">Tipo de Nómina</label>
+                                        <input type="text" name="TipoNomina" class="col-md-2" disabled />
+                                        <label class="col-md-2">Tipo de pago</label>
+                                        <input type="text" name="TipoPago" class="col-md-2" disabled />
+                                        <label class="col-md-2">Tipo de salario</label>
+                                        <input type="text" name="TipoSalario" class="col-md-2" disabled />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2">SD</label>
+                                        <input type="text" name="SD" class="col-md-2" disabled />
+                                        <label class="col-md-2">SDI</label>
+                                        <input type="text" name="SDI" class="col-md-2" disabled />
+                                        <label class="col-md-2">Salario Real</label>
+                                        <input type="text" name="SalarioReal" class="col-md-2" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="tab-pane" id="empresas">
+                        <fieldset>
+
+                            <div class="form-horizontal">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-md-2">Fiscal</label>
+                                        <input type="text" name="Fiscal" class="col-md-4" disabled />
+
+                                        <label class="col-md-2">Complemento</label>
+                                        <input type="text" name="Complemento" class="col-md-4" disabled />
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2">Sindicato</label>
+                                        <input type="text" name="Sindicato" class="col-md-4" disabled />
+
+                                        <label class="col-md-2">Asimilado</label>
+                                        <input type="text" name="Asimilado" class="col-md-4" disabled />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </div>
+                    <div class="tab-pane" id="Bancos">
+                        <fieldset>
+                            <div class="form-horizontal">
+                                <div id="contenidoBancos">
+
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+    <table id="empleados" class="display" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Paterno</th>
+                <th>Materno</th>
+                <th>Nombre(s)</th>
+                <th>RFC</th>
+                <th>Fecha de Alta</th>
+                <th>Puesto</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>Paterno</th>
+                <th>Materno</th>
+                <th>Nombre(s)</th>
+                <th>RFC</th>
+                <th>Fecha de Alta</th>
+                <th>Puesto</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr data-idempleado="@a.IdEmpleado">
+                    <td>@a.IdEmpleado</td>
+                    <td>@a.Paterno</td>
+                    <td>@a.Materno</td>
+                    <td>@a.Nombres</td>
+                    <td>@a.RFC</td>
+                    <td>@a.FechaAlta.ToString("dd/MM/yyyy")</td>
+                    <td>@a.Puesto</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<script>
+    $(document).ready(function () {
+       
+
+    });
+
+</script>

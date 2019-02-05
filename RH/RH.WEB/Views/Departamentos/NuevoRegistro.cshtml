@@ -1,0 +1,56 @@
+﻿@using RH.BLL;
+@using RH.Entidades;
+@model  RH.Entidades.Departamento
+@{
+    ViewBag.Title = "Crear Departamento";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+
+    var listaEstados = ViewBag.EstadoLista;
+
+    SucursalDatos sucursal;
+    sucursal = Session["Sucursal"] as SucursalDatos;
+}
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+<link rel="stylesheet" href="~/Content/DepaIndex.css" />
+<style>
+    .panel-heading {
+        background-color: #337ab7 !important;
+    }
+</style>
+
+<h2>Nuevo Registro</h2>
+@using (Html.BeginForm("NuevoRegistro", "Departamentos", FormMethod.Post, new { id = "formulario" , @class = "tooltipForm" }))
+{
+    @Html.HiddenFor(x => x.IdDepartamento)
+    <input type="hidden" id="sucursal" name="sucursal" value="@sucursal.IdSucursal" />
+    <div class="panel panel-default">
+        <div class="panel-heading text-right"><input type="submit" class="btn btn-primary input-group-sm" value="Guardar" />  <a class="btn btn-danger" href="~/Departamentos/index/?sucursal=@(sucursal.IdSucursal)">Cancelar</a></div>
+        <div class="panel-body">
+            <div class="form-horizontal ">
+
+                @*Primer row Departamento*@
+                <div class="row">
+                    <label class="control-label col-md-4 col-xs-4">Departamento</label>
+                    <div class="form-group has-feedback col-md-8 col-xs-8">
+                        <input type="text" name="Descripción" class="form-control" placeholder="Nombre Departamento" id="Descripcion" data-rule-alpha="true" data-rule-required="true" data-rule-minlength="3" data-rule-maxlength="25" autofocus="autofocus">
+                    </div>
+                </div>
+
+                @*Segundo row Status*@
+                @*<div class="row">
+                    <div class="control-label col-md-2 col-xs-4">
+                        <label>Status</label>
+                    </div>
+                    <div class="form-group has-feedback col-xs-4 check">
+                        @Html.CheckBox("Status")
+                    </div>
+                </div>*@
+            </div>
+        </div>
+
+    </div>
+}
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>

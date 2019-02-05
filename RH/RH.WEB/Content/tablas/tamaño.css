@@ -1,0 +1,101 @@
+﻿#incapacidades, #incidencias, #puestos, #details {
+    height:430px;
+    display:block;
+}
+
+#departamentos{
+    height:440px;
+    display:block;
+}
+
+/*Permisos, Factores*/
+#tblEmpleados, #registros{
+    height:215px;
+    display:block;
+}
+
+#delFactor{
+    margin-bottom:0px;
+    border-color:#ffffff;
+}
+
+/*Préstamos*/
+#tblPrestamos{
+    height:342px;
+    display:block;
+}
+
+.hisTab{
+    margin-bottom:15px;
+}
+
+/*Modal Prestamos*/
+.pan{
+    margin-bottom:0px;
+    border-color:#ffffff;
+}
+
+.modal-body{
+    padding:0px;
+    margin-top:20px;
+}
+
+/*Empresas Activas*/
+#empActivas{
+    height:358px;
+    display:block;
+}
+
+.td-tab2{
+    width:2%;
+}
+
+/*Empresas Inactivas*/
+#empInactivas{
+    height:358px;
+    display:block;
+}
+
+.td-tab {
+    width: 2%;
+}
+
+/*Clientes, Sucursales*/
+#edit{
+    margin-bottom:0px;
+    border-color:#ffffff;
+}
+
+#detail{
+    margin-bottom:0px;
+    border-color:#ffffff;
+}
+
+#create{
+    margin-bottom:0px;
+    border-color:#ffffff;
+}
+
+/*Modal de Eliminar Factores*/
+.panel-body{
+    padding:10px;
+    margin-bottom:20px;
+}
+
+.lb{
+    width:30%;
+}
+
+.modFac{
+    width:20%;
+    text-align:center;
+}
+
+/*-----*/
+#mody{
+    padding:25px;
+}
+
+#divContenido img{
+    margin-left:200px;
+}

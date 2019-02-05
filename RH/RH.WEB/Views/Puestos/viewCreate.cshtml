@@ -1,0 +1,57 @@
+﻿@using Common.Helpers;
+@model RH.Entidades.Puesto
+
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+@{ 
+    var id = ViewBag.idDepartamento;
+}
+
+
+    @using (Html.BeginForm("Create", "Puestos", FormMethod.Post, new { id = "formulario", @class = "tooltipForm" }))
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"><i class="fa fa-plus"></i> Nuevo Puesto </h4>
+        </div>
+
+        <div class="modal-body" id="pModalBody">
+            <div class="form-horizontal ">
+                <input type="hidden" value="@id" id="IdDepartamento" name="IdDepartamento" />
+
+                @*Primer row*@
+                <div class="row">
+                    <div class="control-label col-md-4 col-xs-4">
+                        <label>Descripción</label>
+                    </div>
+                    <div class="form-group has-feedback col-md-8 col-xs-8">
+                        <input type="text" name="Descripcion" class="form-control" placeholder="Nombre del puesto" id="Descripcion" autofocus="autofocus" data-rule-required="true" data-rule-minlength="3" data-rule-maxlength="25">
+                        <span class="glyphicon form-control-feedback"></span>
+                    </div>
+
+                    @*<div class="control-label col-md-2 col-xs-4">
+                        <label>Status</label>
+                    </div>
+                    <div class="checkbox has-feedback col-xs-4">
+                        @Html.CheckBox("Status")
+                    </div>*@
+                </div>
+                <div class="row">
+                    <div class="control-label col-md-4 col-xs-4">
+                        <label>Recibo</label>
+                    </div>
+                    <div class="form-group has-feedback col-md-8 col-xs-8">
+                        <input type="text" name="PuestoRecibo" class="form-control" placeholder="Nombre del puesto para el recibo" id="PuestoRecibo" autofocus="autofocus" data-rule-required="true" data-rule-minlength="3" data-rule-maxlength="25">
+                        <span class="glyphicon form-control-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <input type="submit" class="btn btn-primary input-group-sm save" value="Guardar" />
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        </div>
+    }
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>

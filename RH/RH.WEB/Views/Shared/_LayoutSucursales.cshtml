@@ -1,0 +1,9 @@
+﻿
+@model IEnumerable<RH.BLL.SucursalDatos>
+@if(Model != null)
+{
+    foreach (var item in Model)
+    {
+        <a href="@Url.Action("Index", "Sucursal", new { idSucursal = item.IdSucursal })"><i class="fa fa-caret-right"></i> @item.Nombre - @item.Ciudad </a>
+    }
+}

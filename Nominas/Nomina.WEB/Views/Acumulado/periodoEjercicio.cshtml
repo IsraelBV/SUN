@@ -1,0 +1,144 @@
+﻿
+@using RH.Entidades
+@using Nomina.BLL
+@model List<EstructuraPeriodo>
+
+@if (Model.Count > 0)
+{
+    <table  class="display tablaPeriodoEjercicio compact" width="100%">
+        <thead>
+            <tr>
+                <th>Id Periodo</th>
+                <th>Descripción</th>
+                <th>Tipo de Nomina</th>
+                <th>Dias Periodo</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Sucursal</th>
+                <th>Autorizado</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr data-idperiodo="@p.IdPeriodo">
+                    <td>@p.IdPeriodo</td>
+                    <td>@p.Descripcion</td>
+                    <td>@p.TipoNomina</td>
+                    <td>@p.DiasPeriodo</td>
+                    <td>@p.FechaInicio.ToString("dd/MM/yyyy")</td>
+                    <td>@p.FechaFin.ToString("dd/MM/yyyy")</td>
+                    <td>@p.Cliente @p.Sucursal</td>
+                    @if (@p.Autorizado == true)
+                    {
+                        <td>
+                            <label class="label-success" style="color:#fff">Autorizado</label>
+                        </td>
+
+                    }
+
+</tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+
+    <div class="alert alert-info">
+        <strong>Info!</strong> No se encontrarón datos en esa fecha para este cliente...
+    </div>
+
+}
+<script>
+    $(document).ready(function () {
+       var table =  $('table.tablaPeriodoEjercicio').DataTable({
+            dom: 'Bfrtip',
+            scrollY: '60vh',
+            "scrollY": "250px",
+            info: false,
+            select: {
+                style: 'multi'
+            },
+            "scrollCollapse": true,
+            "paging": false,
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "Sin registros - Busca de nuevo",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Sin registros disponibles",
+                "infoFiltered": "(filtered from _MAX_ total records)",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                }
+            }, "buttons": [
+            {
+                className : 'seleccionarall',
+                text: 'Selec Todos',
+                action: function () {
+                    table.rows().select();
+                },key: {
+                    key: 'a',
+
+                }
+            },
+            {
+                className: 'seleccionarcero',
+                text: 'Deselc Todos',
+                action: function () {
+                    table.rows().deselect();
+                }
+            },
+            {
+                className: 'seleccionarcero',
+                text: 'Generar Acumulado',
+                action: function () {
+                    var selected = $(".tablaPeriodoEjercicio").find(".selected");
+                    if (selected.length > 0) {
+                        utils.confirmDialog("¿DESEA CONTINUAR?", "Se procesarán " + selected.length + " periodo para su acumulado", "CONFIRMAR", "CANCELAR", function (response) {
+                            if (response) {
+                                var idPeriodo = [];
+                                selected.each(function () {
+                                    var id = parseInt($(this).data("idperiodo"));
+                                    idPeriodo.push(id);
+                                });
+                                console.log(idPeriodo);
+                                var request = $.ajax({
+                                    url: "/Acumulado/generarAcumulado/",
+                                    method: "POST",   
+                                    data: {
+                                        idPeriodo: idPeriodo
+                                    },
+                                    beforeSend: function () {
+                                        waitingDialog.show('Procesando Acumulado...');
+                                       
+                                    }
+                                });
+
+                                request.done(function (data) {
+                                    waitingDialog.hide();
+                                    window.location = "/Acumulado/descargarPlantilla?ruta=" + data;
+                                });
+                            }
+
+                        });
+                     
+                    } else {
+                        utils.showMessage("WARNING", "Debe seleccionar minimo un registro a procesar.", 8000,"danger");
+                    }
+
+                    
+                }
+            },
+            ]
+     
+
+        });
+    });
+</script>   

@@ -1,0 +1,262 @@
+﻿@using RH.Entidades;
+@using Common.Helpers;
+@using Common.Enums;
+@model NOM_PeriodosPago
+@{
+    List<C_PeriodicidadPago_SAT> periodicidades = ViewBag.Periodicidades;
+
+}
+
+<style>
+    .btn-activo {
+        color: #fff;
+        background-color: #337ab7;
+        border-color: #2e6da4;
+    }
+
+    .btn-desactivado {
+        color: #000000;
+        background-color: #D8D8D8;
+        border-color: #D8D8D8;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+        padding-top: 16px;
+    }
+</style>
+<div class="main-content-body">
+    <div class="form-horizontal" style="padding-top:10px;">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IdTipoNomina" class="col-md-3">Tipo Nómina</label>
+                <div class="col-md-5">
+                    <select class="form-control" onchange="selector()" id="tiponomina" name="IdTipoNomina" title="Periodicidad de Pago" required>
+                        <option value="0" data-num-dias="0">Seleccione una Opcion</option>
+                        @foreach (var periodicidad in periodicidades)
+                        {
+                            <option value="@periodicidad.IdPeriodicidadPago" data-num-dias="@periodicidad.Dias">@periodicidad.Descripcion</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="ultimo" name="Ultimo" value="true" /> Último del mes
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Descripcion" class="col-md-3">Descripción</label>
+                <div class="col-md-9">
+                    <input type="text" name="Descripcion" id="Descripcion" required class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DiasPeriodo" class="col-md-3">Días Periodo</label>
+                <div class="col-md-2">
+                    <input type="number" name="DiasPeriodo" id="DiasPeriodo" class="form-control" required min="0" max="366" value="0" />
+                </div>
+                <label for="Fecha_Inicio" class="col-md-3">Fecha Inicio</label>
+                <div class="col-md-4">
+                    <input type="date" name="Fecha_Inicio" id="Fecha_Inicio" value="@DateTime.Now.ToString("yyyy-MM-dd")" required class="form-control" />
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-5">
+                    @if ((int)Session["activarComplemento"] == 1)
+                    {
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="Complemento" title="Agregar empleados con empresa de solo complmento" name="Complemento" value="true" /> Solo Complemento
+                        </label>
+                    }
+                </div>
+                <label for="Fecha_Fin" class="col-md-3">Fecha Fin</label>
+                <div class="col-md-4">
+                    <input type="date" name="Fecha_Fin" id="Fecha_Fin" value="@DateTime.Now.ToString("yyyy-MM-dd")" required class="form-control" />
+                </div>
+
+
+            </div>
+        </div>
+        <div class="pull-right" id="seccionBotones" style="margin-bottom:10px;">
+            <a class="btn btn-activo btnEmpleadosNormal" id="activos" href="#">Empleados: Activos</a>
+            <a class="btn btn-desactivado btnEmpleadoRFCNV" id="rfc" href="#">Empleados: RFC No válido</a>
+            <a class="btn btn-desactivado btnEmpleadoBaja" id="baja">Empleados: Desactivados</a>
+        </div>
+        <div class="pull-right" id="seccionBotones2" style="margin-bottom:10px; display:none">
+            <a class="btn btn-activo btnEmpleadosNormal" id="activos" href="#">Empleados: Activos</a>
+            <a class="btn btn-desactivado btnEmpleadoRFCNV" id="rfc" href="#">Empleados: RFC No válido</a>
+
+        </div>
+
+
+        <div id="empleado">
+
+            <table id="normal" class="display compact" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Nombre(s)</th>
+                        <th>RFC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    function comprobarSiBisisesto(anio) {
+        if ((anio % 100 != 0) && ((anio % 4 == 0) || (anio % 400 == 0))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function selector() {
+        var x = document.getElementById("tiponomina").value;
+
+        if (x != 0) {
+            if (x == 11) {//finiquito
+                @if ((int)Session["activarComplemento"] == 1)
+                {
+                    <text>
+                    $("#empleado").load("/PeriodosPago/empleadoFiniquitoC/?idPeriocidadPago=" + x + "&rfc=1");
+                    $("#seccionBotones").css("display", "none");
+                    $("#seccionBotones2").css("display", "block");
+
+                    </text>
+                }
+                else
+                {
+                    <text>
+                    $("#empleado").load("/PeriodosPago/empleadoFiniquito/?idPeriocidadPago=" + x + "&rfc=1");
+                    $("#seccionBotones").css("display", "none");
+                    $("#seccionBotones2").css("display", "block");
+
+                    </text>
+                }
+            } else if (x == 12) {//aguinaldo
+
+
+                var today = new Date();
+                var diasEjercicio = 365;
+
+                var yyyy = today.getFullYear();
+                console.log(yyyy);
+
+                var inicio = today.getFullYear() + "-01-01";
+                var fin = today.getFullYear() + "-12-31";
+
+                var fechaInicio = new Date(inicio).getTime();
+                var fechaFin = new Date(fin).getTime();
+
+                var ressultB = comprobarSiBisisesto(yyyy);
+
+                if (ressultB === true) {
+                    diasEjercicio = 366;
+                }
+
+
+                //  $("input[name='DiasPeriodo']").val(diasEjercicio);
+                $("#DiasPeriodo").val(diasEjercicio);
+                //  $('#DiasPeriodo input').attr('value', diasEjercicio);
+
+                $('#Fecha_Inicio').val(inicio);
+                $('#Fecha_Fin').val(fin);
+
+                $("#empleado").load("/PeriodosPago/GetEmpleadoByTipoNomina/?idPeriocidadPago=" + x + "&rfc=1");
+                $("#seccionBotones2").css("display", "none");
+                $("#seccionBotones").css("display", "block");
+
+            }
+            else
+            {
+                $("#empleado").load("/PeriodosPago/GetEmpleadoByTipoNomina/?idPeriocidadPago=" + x + "&rfc=1");
+                $("#seccionBotones2").css("display", "none");
+                $("#seccionBotones").css("display", "block");
+            }
+
+        }
+        else if (x === 0) {
+
+        }
+
+
+        //Focus Descripcion
+        $("#Descripcion").focus();
+    }
+    $(".btnEmpleadosNormal").click(function () {
+        $("#activos").removeClass("btn-desactivado");
+        $("#baja").removeClass("btn-activo");
+        $("#rfc").removeClass("btn-activo");
+        $("#activos").addClass("btn-activo");
+        $("#baja").addClass("btn-desactivado");
+        $("#rfc").addClass("btn-desactivado");
+
+        var x = document.getElementById("tiponomina").value;
+        if (x != 0) {
+            if (x == 11) {
+
+                $("#empleado").load("/PeriodosPago/empleadoFiniquito/?idPeriocidadPago=" + x + "&rfc=1");
+
+            } else {
+                $("#empleado").load("/PeriodosPago/GetEmpleadoByTipoNomina/?idPeriocidadPago=" + x + "&rfc=1");
+            }
+
+        }
+    });
+    $(".btnEmpleadoRFCNV").click(function () {
+        $("#activos").removeClass("btn-activo");
+        $("#baja").removeClass("btn-activo");
+        $("#rfc").removeClass("btn-desactivado");
+        $("#activos").addClass("btn-desactivado");
+        $("#baja").addClass("btn-desactivado");
+        $("#rfc").addClass("btn-activo");
+        var x = document.getElementById("tiponomina").value;
+        if (x != 0) {
+            if (x == 11) {
+                $("#empleado").load("/PeriodosPago/empleadoFiniquito/?idPeriocidadPago=" + x + "&rfc=0");
+
+            } else {
+                $("#empleado").load("/PeriodosPago/GetEmpleadoByTipoNomina/?idPeriocidadPago=" + x + "&rfc=0");
+            }
+
+        }
+    });
+    $(".btnEmpleadoBaja").click(function () {
+        $("#activos").removeClass("btn-activo");
+        $("#baja").removeClass("btn-desactivado");
+        $("#rfc").removeClass("btn-activo");
+        $("#activos").addClass("btn-desactivado");
+        $("#baja").addClass("btn-activo");
+        $("#rfc").addClass("btn-desactivado");
+
+        var x = document.getElementById("tiponomina").value;
+        if (x != 0) {
+            $("#empleado").load("/PeriodosPago/EmpleadosBaja/?idPeriocidadPago=" + x);
+        }
+    });
+</script>

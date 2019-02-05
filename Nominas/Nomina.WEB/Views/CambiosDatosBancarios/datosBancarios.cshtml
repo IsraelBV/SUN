@@ -1,0 +1,157 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@model  EmpleadoBank
+
+@{ 
+    var bancos = ViewBag.bancos;
+    var metodos = ViewBag.metodos;
+}
+<div id="datosBEmpleados">
+   
+
+   <input type="hidden" id="idEmpleado" value="@Model.IdEmpleado"/>
+
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+           
+                <h3 style="color:#000 !important;">Datos Bancarios</h3>
+           
+        </div>
+        <div class="panel-body" style="height:345px;">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-md-4">Banco</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="bancos">
+                            @if (Model.IdBanco == 0)
+                            {
+                                <option selected value="0">Elije una opcion</option>
+                            }
+                            @foreach (var b in bancos)
+                            {
+                                if(b.IdBanco == Model.IdBanco)
+                                {
+                                    <option selected value="@b.IdBanco">@b.Descripcion</option>
+                                }
+                                else
+                                {
+                                    <option value="@b.IdBanco">@b.Descripcion</option>
+                                }
+                            }
+                        </select>
+                          
+                            
+
+</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4">No Siga 1</label>
+                    <div class="col-md-8">
+                        <input  type="text" id="NoSiga1" name="NoSiga1" class="form-control input-sm" value="@Model.NoSiga"/>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4">No Siga 2</label>
+                    <div class="col-md-8">
+                        <input type="text" id="NoSiga2" name="NoSiga2" class="form-control input-sm" value="@Model.NoSIga2" />
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4">Cuenta Bancaria</label>
+                    <div class="col-md-8">
+                        <input type="text" id="CuentaBancaria" name="CuentaBancaria" class="form-control input-sm" value="@Model.cuenta" />
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4">Numero De Tarjeta</label>
+                    <div class="col-md-8">
+                        <input type="text" id="NoTarjeta" name="NoTarjeta" class="form-control input-sm" value="@Model.Tarjeta" />
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4">Clabe</label>
+                    <div class="col-md-8">
+                        <input type="text" id="Clabe" name="Clabe" class="form-control input-sm" value="@Model.Clabe" />
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4">Metodo de Pago</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="metodos">
+                           @if (Model.IdMetodoPago == 0)
+                            {
+                            <option selected value="0">Elije una opcion</option>
+                            }
+                            @foreach (var m in metodos)
+                            {
+                                if (m.IdMetodo == Model.IdMetodoPago)
+                                {
+                                    <option selected value="@m.IdMetodo">@m.Descripcion</option>
+                                }                              
+                                
+                                else
+                                {
+                                    <option value="@m.IdMetodo">@m.Descripcion</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+
+            <a class="btn btn-primary btn-sm" id="guardarDatos">Guardar</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#guardarDatos').on('click', function () {
+        utils.confirmDialog("¿DESEA CONTINUAR?", "Se Guardaran los cambios correspondientes", "CONFIRMAR", "CANCELAR", function (response) {
+            if (response) {
+                var banco = $('select[id=bancos]').val();
+                var metodo = $('select[id=metodos]').val();
+                var item = {}
+
+                item["IdBanco"] = banco;
+                item["IdMetodoPago"] = metodo;
+                item["NoSiga"] = $("#NoSiga1").val();
+                item["NoSiga2"] = $("#NoSiga2").val();
+                item["cuenta"] = $("#CuentaBancaria").val();
+                item["Tarjeta"] = $("#NoTarjeta").val();
+                item["Clabe"] = $("#Clabe").val();
+                item["IdEmpleado"] = $("#idEmpleado").val();
+
+                var request = $.ajax({
+                    url: "/CambiosDatosBancarios/guardarDatos",
+                    method: "POST",
+                    data:
+                        {
+                            item: item
+                        },
+                    beforeSend: function () {
+                        waitingDialog.show('Procesando...');
+                    }
+                });
+
+                request.done(function (data) {
+                    waitingDialog.hide();
+                    if (data == true) {
+                        notification = utils.showMessage("Guardando Datos", "¡Datos guardados exitosamente!", 1000, "");
+                    } else {
+                        notification = utils.showMessage("Warning", "¡Ocurrio un error al guardar los datos!", 1000, "danger");
+                    }
+                    
+                });
+            }
+        });
+
+    });
+</script>

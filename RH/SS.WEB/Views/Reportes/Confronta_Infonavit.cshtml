@@ -1,0 +1,88 @@
+﻿@using RH.Entidades
+@{
+
+    var listaEmpresas = ViewBag.ListaEmpresas as List<SelectListItem>;
+    var listaEjercicio = ViewBag.ListaEjercicios as List<NOM_Ejercicio_Fiscal>;
+    var listames = ViewBag.listameses as List<SelectListItem>;
+}
+
+<h1>Confronta Infonavit<span><i class="fa fa-home" aria-hidden="true"></i> </span></h1>
+<div class="jumbotron">
+
+    <div class="row">
+        <form class="form-inline">
+            <p class="text-center">
+                <div class="form-group">
+                    <label>Ejercicio: </label>
+                    <select id="ejercicio" class="form-control">
+                        @foreach (var e in listaEjercicio)
+                        {
+                            <option value="@e.IdEjercicio">@e.Anio</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="selectMes">Mes:</label>
+
+                    <select id="selectMes" class="form-control">
+                        <option value="0">Seleccione el mes ...</option>
+                        @foreach (var listItem in listames)
+                        {
+                            <option value="@listItem.Value">@listItem.Text</option>
+                        }
+                    </select>
+
+                </div>
+                <div class="form-group">
+                    <label for="selectEmpresas">Empresas:</label>
+                    @if (listaEmpresas != null)
+                    {
+                        <select id="selectEmpresas" class="form-control">
+                            @foreach (var listItem in listaEmpresas)
+                            {
+                                <option value="@listItem.Value">@listItem.Text</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </p>
+        </form>
+        <div class="form-group">
+            <input type="file" name="file" accept=".xlsx, .xls"  class="file">            
+                <div class="input-group col-xs-12">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-file"></i></span>
+                    <input type="text" class="form-control input-lg" disabled placeholder="Seleccione excel del SUA V7">
+                    <span class="input-group-btn">
+                        <button class="browse btn btn-info input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+                    </span>
+                </div>            
+        </div>
+        <div class="form-group ">
+            <p class="text-center"><a class="btn btn-primary  " id="descargarReporteinfo">Generar Reporte Infonavit  </a></p>
+        </div> 
+    
+    </div>
+</div>
+
+<div>
+    <a id="downReporteInfo" href="#" style="display: none !important;">Descargar Reporte</a>
+</div>
+
+<style>
+    .file {
+  visibility: hidden;
+  position: absolute;
+}
+</style>
+
+<script>
+    $(document).on('click', '.browse', function () {
+        var file = $(this).parent().parent().parent().find('.file');
+        file.trigger('click');
+    });
+    $(document).on('change', '.file', function () {
+        $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+    });
+
+
+</script>

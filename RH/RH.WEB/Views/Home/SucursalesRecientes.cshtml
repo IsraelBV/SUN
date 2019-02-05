@@ -1,0 +1,16 @@
+﻿@model IEnumerable<RH.BLL.SucursalDatos>
+    @if (Model != null)
+    {
+        int contador = 0;
+        foreach (var sucursal in Model)
+        {
+            contador++;
+            <a href="@Url.Action("Index", "Sucursal", new { id = sucursal.IdSucursal })">
+            <div id="caja@(contador)" class="cajaRecientes col-md-2">
+                <h4>@sucursal.Nombre</h4>
+                <small>@sucursal.Ciudad</small>
+                <small>@sucursal.FechaReciente</small>
+            </div>
+            </a>
+        }
+    }

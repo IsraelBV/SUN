@@ -1,0 +1,97 @@
+﻿@using Common.Helpers;
+@model RH.Entidades.C_TiposInasistencia
+
+<link href="~/Content/modalDesign.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+<link href="~/Content/buttons.css" rel="stylesheet" />
+
+@{ 
+    var id = ViewBag.Id;
+    var listaTipoPago = ViewBag.listaTipoPago;
+}
+
+@if (Model == null)
+{
+    Response.Redirect("~/TiposInasistencia");
+}
+else
+{
+
+
+    using (Ajax.BeginForm("Edit", "TiposInasistencia", null, new AjaxOptions { OnComplete = "CloseModal()" }, new { id = "formularioEdit", @class = "tooltipForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Edita la Incidencia</h3>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-horizontal">
+                <input type="hidden" value="@id" id="Id" name="Id" />
+                @*Primer Row*@
+                <div class="row r1">
+                    <div class="control-label col-md-2 col-xs-4">
+                        <label>Clave</label>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <input type="text" name="Clave" value="@Model.Clave" class="form-control text-uppercase" id="Clave" data-rule-lettersonly="true" data-rule-required="true" data-rule-maxlength="2">
+                    </div>
+
+                    <div class="control-label col-md-2 col-xs-4">
+                        <label>Descripción</label>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <input type="text" name="Descripcion" value="@Model.Descripcion" class="form-control" id="Descripcion" data-rule-lettersonly="true" data-rule-required="true" data-rule-minlength="3" data-rule-maxlength="50">
+                    </div>
+                </div>
+
+
+                @*Segundo Row*@
+                <div class="row r2">
+                    <div class="control-label col-md-2 col-xs-4">
+                        <label>% Pago</label>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <input type="number" name="PorcentajePago" value="@Model.PorcentajePago" class="form-control" id="PorcentajePago" data-rule-required="true">
+                    </div>
+
+                    <div class="control-label col-md-2 col-xs-4">
+                        <label>Tipo de Pago</label>
+                    </div>
+                    <div class="form-group col-xs-4 _typeP">
+                        @HtmlLocalHelper.ComboBox(listaTipoPago, "TipoPago")
+                    </div>
+                </div>
+
+                @*Tercer Row*@
+                <div class="row r3">
+                    <div class="control-label col-md-2 col-xs-4">
+                        <label>Derecho de Pago</label>
+                    </div>
+                    <div class="checkbox col-xs-4">
+                        @Html.EditorFor(model => model.DerechoPago)
+                    </div>
+
+                    <div class="control-label col-md-2 col-xs-4">
+                        <label>Status</label>
+                    </div>
+                    <div class="checkbox col-xs-4">
+                        @Html.EditorFor(model => model.Status)
+                        <span class="glyphicon form-control-feedback  " id="Folio1"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-actions no-color">
+                <input type="submit" class="btn btn-primary input-group-sm save" value="Guardar" /> <a class="btn btn-danger" data-dismiss="modal">Cancelar</a>
+            </div>
+        </div>
+    }
+}
+
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+    <script src="~/Scripts/validator/messages_es.js"></script>
+    <script src="~/Scripts/validator/TooltipValidator.js"></script>

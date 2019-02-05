@@ -1,0 +1,148 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+
+@{
+    var ejercicio = ViewBag.ejercicio as List<NOM_Ejercicio_Fiscal>;
+    var empresas = ViewBag.empresas as List<Empresa>;
+    var clientes = ViewBag.sucursales as List<Cliente>;
+}
+
+<div class="col-md-12">
+    <div class="col-md-2">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>Ejercicio: </label>
+                <select id="ejercicio" class="form-control">
+                    @foreach (var e in ejercicio)
+                    {
+                        <option value="@e.IdEjercicio">@e.Anio</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="empresa">
+            <div class="form-group">
+                <label>Empresa: </label>
+                <select id="empresa" class="form-control">
+                    @foreach (var em in empresas)
+                    {
+                        <option value="@em.IdEmpresa">@em.IdEmpresa - @em.RazonSocial</option>
+                    }
+                </select>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="empresa">
+            <div class="form-group">
+                <label>Clientes: </label>
+                <select id="clientes" class="form-control">
+                    <option value="0">Todas los clientes</option>
+                    @foreach (var cli in clientes)
+                    {
+                        <option value="@cli.IdCliente">@cli.Nombre</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-2">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>Fecha Inicio Timbrado: </label>
+                <input type="date" class="form-control " id="fechaInicioEjercicio" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>Fecha Fin Timbrado: </label>
+                <input type="date" class="form-control" id="fechaFinEjercicio" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>*</label>
+                <a class="btn btn-primary form-control" id="descargarAcum" title="Genera reporte de acumulado de recibos timbrados">Generar Reporte Acumulado</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="autorizado">
+            <div class="form-group">
+                <label for="sinAutorizar" title="Incluye los periodos que su inicio este dentro del rango de fechas">Incluir periodos no timbrados</label>
+                <input type="checkbox" id="sinAutorizar" />               
+            </div>
+            <div class="form-group">               
+                <label for="anual">Con Calculo Anual</label>
+                <input type="checkbox" id="anual" />
+            </div>
+        </div>
+    </div>
+</div>
+    <a id="downAcumlado" href="#" style="display: none !important;">Descargar Acumulado</a>
+    <script>
+       $(document).ready(function () {
+
+                    $("#descargarAcum").click(function () {
+
+                        var incluiPerNoAutorizados = false;
+                        var calculoanual = false;
+                        var ejercicio = $('#ejercicio').val();
+                        var empresa = $('#empresa').val();
+                        var cliente = $('#clientes').val();
+                        var fechaInicioEjercicio = $("#fechaInicioEjercicio").val();
+                        var fechaFinEjercicio = $("#fechaFinEjercicio").val();
+                        
+                        if ($("#sinAutorizar").is(':checked')) {
+                            incluiPerNoAutorizados = true;
+                          
+                        }
+                        if ($("#anual").is(':checked')) {
+                            calculoanual = true;
+
+                        }
+
+                        var xhr = $.ajax({
+                            url: '/Acumulado/ReporteAcumulado/',
+                            method: "POST",
+                            data: {
+                                idEjercicio: ejercicio,
+                                dateInicial: fechaInicioEjercicio,
+                                dateFinal: fechaFinEjercicio,
+                                idEmpresa: empresa,
+                                idCliente: cliente,
+                                incluirNoAutorizados: incluiPerNoAutorizados,
+                                calculoanual : calculoanual
+                            },
+                            beforeSend: function (xhr) {
+                                waitingDialog.show('Generando Reporte de Acumulado...');
+                            },
+                            success: function (data) {
+                                if (data.success) {
+                                    $("#downAcumlado").attr("href", data.resultPath);
+                                    window.location = data.resultPath;
+                                } else {
+                                    utils.showMessage("WAR", data.error, 8000);
+                                }
+                            },
+                            error: function (data) {
+                                alert(data.error);
+                            },
+                            complete: function (data) {
+                                waitingDialog.hide();
+
+                            }
+                        });
+                    });
+
+                });
+   </script>

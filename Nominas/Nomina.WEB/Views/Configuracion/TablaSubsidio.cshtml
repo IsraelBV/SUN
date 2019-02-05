@@ -1,0 +1,56 @@
+﻿@using Nomina.BLL;
+@using RH.Entidades;
+@using Common.Enums;
+@using Common.Helpers;
+@model List<C_NOM_Tabla_Subsidio>
+
+@{ 
+    int token = ViewBag.id;
+}
+                   <table id="tblSubsidio" class="table table-striped" width="100%" cellspacing="0">
+                       <thead>
+                           <tr>
+                               <th>Límite Inferior</th>
+                               <th>Límite Superior</th>
+                               <th>Subsidio</th>
+
+                           </tr>
+                       </thead>
+                       <tbody>
+                           @foreach (var item in Model.Where(x => x.Tipo_Tarifa == token))
+                           {
+                           <tr>
+                               <td>@item.Limite_Inferior</td>
+                               @if(@item.Limite_Superior == 1000000)
+                               {
+                                   <td>En adelante</td>
+                               }else
+                               {
+                               <td>@item.Limite_Superior</td>
+                               }
+                              
+                               <td>@item.Subsidio</td>
+
+
+                           </tr>
+                           }
+                       </tbody>
+                   </table>
+               
+
+ <script>
+    
+     $("#tblSubsidio").DataTable({
+         bFilter: false,
+            "language": {
+                "url": "../scripts/datatables-spanish.json"
+            },
+            scrollY: "410px",
+            select: 'single',
+            paging: false,
+            bInfo: false
+        });
+    
+
+
+</script>

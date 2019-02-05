@@ -1,0 +1,190 @@
+﻿@using Common.Helpers;
+@using Common.Enums;
+@using RH.Entidades;
+@model RH.Entidades.NOM_PeriodosPago
+@{
+    var especial = Model.Especial == true ? "checked" : "";
+    var ultimo = Model.Ultimo == true ? "checked" : "";
+    Dictionary<string, object> dic = new Dictionary<string, object>();
+    dic.Add("disabled", "disabled");
+    var empleadosPeri = ViewBag.empleadoPeri;
+    List<C_PeriodicidadPago_SAT> periodicidades = ViewBag.Periodicidades;
+}
+<style>
+        .btn-activo{
+        color: #fff;
+        background-color: #337ab7;
+        border-color:#2e6da4;
+        
+    }
+    .btn-desactivado{
+         color: #000000;
+        background-color: #D8D8D8;
+        border-color:#D8D8D8;    }
+
+                a.dt-button.seleccionarall {
+                background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important
+                }
+                a.dt-button.seleccionarcero{
+                background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important
+                }  
+                a.dt-button.borrarRegistro {
+                 background-image: linear-gradient(to bottom, #fff 0%, #FF6A6A 100%) !important
+                }
+                 a.dt-button.agregarRegistro {
+                background-image: linear-gradient(to bottom, #fff 0%, #337ab7 100%) !important;
+                }
+</style>
+<div class="main-content-body">
+    <div class="form-horizontal" style="padding-top:10px;">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IdTipoNomina" class="col-md-3">Tipo Nómina</label>
+                <div class="col-md-4">
+                    <select id="IdTipoNomina" name="IdTipoNomina" class="form-control" disabled>
+                        @if (periodicidades != null)
+                        {
+                            var idSel = Model.IdTipoNomina;
+
+                            foreach (var itemPeriodo in periodicidades)
+                            {
+                                if (itemPeriodo.IdPeriodicidadPago == idSel)
+                                {
+                                    <option value="@itemPeriodo.IdPeriodicidadPago" data-num-dias="@itemPeriodo.Dias" selected>@itemPeriodo.Descripcion</option>
+                                }
+                                else
+                                {
+                                    <option value="@itemPeriodo.IdPeriodicidadPago" data-num-dias="@itemPeriodo.Dias">@itemPeriodo.Descripcion</option>
+                                }
+                            }
+                        }
+                        else
+                        {
+
+                        }
+                    </select>
+
+                </div>
+
+                <div class="col-md-5">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="ultimo" name="Ultimo" value="true" @ultimo disabled  /> Último del mes
+                    </label>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Descripcion" class="col-md-3">Descripción</label>
+                <div class="col-md-9">
+                    <input type="text" name="Descripcion" id="Descripcion" required class="form-control" value="@Model.Descripcion" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DiasPeriodo" class="col-md-3">Días Periodo</label>
+                <div class="col-md-2">
+                    <input type="number" name="DiasPeriodo" id="DiasPeriodo" class="form-control" required min="0" max="30" value="@Model.DiasPeriodo" />
+                </div>
+                <label for="Fecha_Inicio" class="col-md-3">Fecha Inicio</label>
+                <div class="col-md-4">
+                    <input type="date" name="Fecha_Inicio" id="Fecha_Inicio" value="@Model.Fecha_Inicio.ToString("yyyy-MM-dd")" disabled  class="form-control" />
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-5">
+                    @if (!Model.Autorizado)
+                    {
+                       <a class="btn btn-primary " id="btnCambiarDescripcion">Cambiar Nombre</a>
+                    }                    
+                </div>
+                <label for="Fecha_Fin" class="col-md-3">Fecha Fin</label>
+                <div class="col-md-4">
+                    <input type="date" name="Fecha_Fin" id="Fecha_Fin" value="@Model.Fecha_Fin.ToString("yyyy-MM-dd")" disabled  required class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="pull-right" id="seccionBotones" style="margin-bottom:10px;">
+@if (!Model.Autorizado)
+{
+            <a class="btn btn-activo btnEmpleadosAgregados" id="agregados" href="#">Empleados: Agregados</a>
+            <a class="btn btn-desactivado btnEmpleadoDisponibles" id="poragregar" href="#">Empleados: Sin Agregar </a>            
+}
+        </div>
+
+        <div id="empleadosDetalles" style="padding-left:10px;">
+            <table id="empleadosPeri" class="display compact" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Nombre(s)</th>
+                        <th>RFC</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>ID</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Nombre(s)</th>
+                        <th>RFC</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var a in empleadosPeri)
+                    {
+                        <tr data-idperiodopago="@Model.IdPeriodoPago" data-idempleado="@a.idempleado">
+                            <td>@a.idempleado</td>
+                            <td>@a.Paterno</td>
+                            <td>@a.Materno</td>
+                            <td>@a.Nombres</td>
+                            <td>@a.RFC</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>  
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".btnEmpleadosAgregados").click(function () {
+        $("#agregados").removeClass("btn-desactivado");
+        $("#poragregar").removeClass("btn-activo");
+        $("#agregados").addClass("btn-activo");
+        $("#poragregar").addClass("btn-desactivado");
+        $("#empleadosDetalles").load("/PeriodosPago/empleadosAgregados/?idPeriodo=" + @Model.IdPeriodoPago );
+    });
+
+    $(".btnEmpleadoDisponibles").click(function () {
+        $("#agregados").removeClass("btn-activo");
+        $("#poragregar").removeClass("btn-desactivado");
+        $("#agregados").addClass("btn-desactivado");
+        $("#poragregar").addClass("btn-activo");
+       
+        $("#empleadosDetalles").load("/PeriodosPago/empleadosDisponibles/?idPeriodo=" + @Model.IdPeriodoPago +"&idtiponomina="+@Model.IdTipoNomina);
+    });
+
+
+    $("#btnCambiarDescripcion").click(function(){
+        
+       var descripcion = $("#Descripcion").val();
+       var request = $.ajax({
+           url: "/PeriodosPago/cambiarDescripcion/",
+           method: "POST",
+           data: {idPeriodo: @Model.IdPeriodoPago,  nombreNuevo : descripcion }
+       });
+        request.done(function (data) {
+            if(data == true){
+                utils.showMessage("Guardando Datos", "¡Nombre guardado exitosamente!", 1000, "");      
+            }else{
+                utils.showMessage("WAR", "No se guardó el Nombre.", 8000);
+            }
+           
+       })
+    });
+
+</script>

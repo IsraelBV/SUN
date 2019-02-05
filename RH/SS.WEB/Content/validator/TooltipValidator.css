@@ -1,0 +1,9 @@
+﻿.error { 
+    border: 1px solid #b94a48!important; 
+    background-color: #fee!important; 
+}
+
+.success {
+     border: 1px solid green!important; 
+     background-color: #e6ffe6!important; 
+}

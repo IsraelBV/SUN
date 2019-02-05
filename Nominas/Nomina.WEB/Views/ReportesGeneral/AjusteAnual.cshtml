@@ -1,0 +1,63 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+
+@{
+    var ejercicio = ViewBag.ejercicio as List<NOM_Ejercicio_Fiscal>;
+    var empresas = ViewBag.empresas as List<Empresa>;
+    var clientes = ViewBag.sucursales as List<Cliente>;
+}
+
+<div class="col-md-12">
+    <div class="col-md-3">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>Ejercicio: </label>
+                <select id="ejercicio" class="form-control">
+                    @foreach (var e in ejercicio)
+                    {
+                        <option value="@e.IdEjercicio">@e.Anio</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="empresa">
+            <div class="form-group">
+                <label>Empresa: </label>
+                <select id="empresa" class="form-control">
+                    <option value="0">Todas las Empresas </option>
+                    @foreach (var em in empresas)
+                    {
+                        <option value="@em.IdEmpresa">@em.IdEmpresa - @em.RazonSocial</option>
+                    }
+                </select>
+            </div>
+
+        </div>
+    </div>  
+    <div class="col-md-3">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>*</label>
+                <a class="btn btn-primary form-control" id="descargarAcum">Generar Reporte</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+       $(document).ready(function () {
+
+                    $("#descargarAcum").click(function () {
+
+                        
+                        var ejercicio = $('#ejercicio').val();
+                        var empresa = $('#empresa').val();
+                        var nombre = $('#empresa>option:selected').text();
+                        window.location.href = "/ReportesGeneral/GetFileAjusteAnual?idejercicio=" + ejercicio + "&idempresa=" + empresa + "&nombre" + nombre;
+                      
+                    });
+
+                });
+</script>
+

@@ -1,0 +1,110 @@
+﻿@using RH.Entidades
+@using RH.Entidades.GlobalModel
+@model DataInit
+@{
+    var periodo = ViewBag.periodo;
+    var empresa = ViewBag.empresa;
+
+}
+<div class="row">
+    <div class="jumbotron container-fluid" style="margin:0px; padding-top:2em; padding-bottom: 2em;">
+
+        <div class="col-sm-12 col-md-5" id="GetEmpForm">
+            <div class="fomr-group col-md-12">
+                <div class="form-group">
+                    <label>Periodo de pago </label>
+                    <input class="form-control" type="text" value="@periodo.Descripcion" disabled />
+                </div>
+            </div>
+
+            <div class="form-group col-md-12">
+                <label>Empresa: </label>
+                <select class="form-control" id="empresa" data-info="Empresa">
+                    <option value="" disabled selected>Seleccione una empresa...</option>
+                    @foreach (var e in Model.empresa)
+                    {
+                <option value="@e.IdEmpresa">@e.IdEmpresa | @e.RazonSocial</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-md-6 col-sm-12">
+                <label>Clave Banco </label>
+                <select class="form-control" id="idBanco" disabled data-info = "Clave Banco">
+                    <option value="" disabled>Seleccione una banco...</option>
+                    @foreach (var e in Model.banco)
+                    {
+                <option @(e.IdBanco == 2 ? "selected" : "") value="@e.CveSat" data-bancoid="@e.IdBanco">@e.CveSat | @e.Descripcion</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-md-4 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1">
+                <input id="btnGetList" class="btn btn-info col-lg-12 col-md-12 col-sm-12 col-xs-12" type="button" value="Buscar" />
+            </div>
+        </div>
+     
+        <div class="col-md-7 col-sm-12" id="GetLayForm">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Importe Total </label>
+                    <input class="form-control" id="importeTotal" type="text" value="0" disabled />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Total Empleados </label>
+                    <input class="form-control" id="totalEmpleados" type="text" value="0" disabled />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Tipo de Registro</label>
+                    <input class="form-control" id="tipoRegistro" type="text" value="H" disabled />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Clave de Servicio </label>
+                    <input class="form-control" id="claveServicio" type="text" value="NE" disabled />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Tipo de Reg. D </label>
+                    <input class="form-control" id="registroDetalle" type="text" value="D" disabled />
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="form-group">
+                    <label>Fecha: </label>
+                    <input class="form-control" id="fecha" type="date" data-info="Fecha" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Consecutivo </label>
+                    <input class="form-control" id="consecutivo" type="text" value="1" />
+                </div>
+            </div>
+
+            @if (periodo.Pagado == true)
+            {
+                <div class="col-md-12">
+                    <div class="alert alert-warning" role="alert">
+                        <strong>PERIODO PAGADO: @periodo.FechaPagoBanco</strong>
+                    </div>
+                </div>
+            }
+        </div>
+
+        </div>
+
+
+</div>
+
+<div class="col-md-12" id="layout"  style="padding:1em;">
+</div>
+
+<script src="@Url.Content("~/Scripts/LayoutBancario/LayoutBancario.js")"></script>
+<link href="@Url.Content("~/Content/LayoutBancario/LayoutBancario.css")" rel="stylesheet" type="text/css" />
+
+

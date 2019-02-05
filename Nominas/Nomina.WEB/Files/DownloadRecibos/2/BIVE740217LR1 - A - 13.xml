@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3.3" Serie="A" Folio="7" Fecha="2018-04-18T18:53:41" Sello="y7kzvBTceMexi0UldrotL3icXns7yCFwhaDEYgkh4IgwerTjBruQ5o/2rBXQQPZp+tSdTUzE6ZZV/OVh9Ekq62f5Bvdn4S2HGSe8AyJF//FpWnaXOyHHGVMnYhlsJZcPSXCXAdvCwznqGBdH6oEHx6EwodXiBgffLLdDUYpZIOQ=" FormaPago="99" NoCertificado="20001000000200000216" Certificado="MIIEMTCCAxmgAwIBAgIUMjAwMDEwMDAwMDAyMDAwMDAyMTYwDQYJKoZIhvcNAQEFBQAwggFcMRowGAYDVQQDDBFBLkMuIDIgZGUgcHJ1ZWJhczEvMC0GA1UECgwmU2VydmljaW8gZGUgQWRtaW5pc3RyYWNpw7NuIFRyaWJ1dGFyaWExODA2BgNVBAsML0FkbWluaXN0cmFjacOzbiBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpw7NuMSkwJwYJKoZIhvcNAQkBFhphc2lzbmV0QHBydWViYXMuc2F0LmdvYi5teDEmMCQGA1UECQwdQXYuIEhpZGFsZ28gNzcsIENvbC4gR3VlcnJlcm8xDjAMBgNVBBEMBTA2MzAwMQswCQYDVQQGEwJNWDEZMBcGA1UECAwQRGlzdHJpdG8gRmVkZXJhbDESMBAGA1UEBwwJQ295b2Fjw6FuMTQwMgYJKoZIhvcNAQkCDCVSZXNwb25zYWJsZTogQXJhY2VsaSBHYW5kYXJhIEJhdXRpc3RhMB4XDTEyMTAyMzE3MTYzM1oXDTE2MTAyMzE3MTYzM1owgasxIDAeBgNVBAMUF0FOQSBDRUNJTElBIEdPTUVaIFlB0UVaMSAwHgYDVQQpFBdBTkEgQ0VDSUxJQSBHT01FWiBZQdFFWjEgMB4GA1UEChQXQU5BIENFQ0lMSUEgR09NRVogWUHRRVoxFjAUBgNVBC0TDUdPWUE3ODA0MTZHTTAxGzAZBgNVBAUTEkdPWUE3ODA0MTZNREZSTk4wOTEOMAwGA1UECxMFTGVudGUwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANE54X4JwhPUkVhaLN32fbVSUzrtl83qTdsKpUFIt0CpTg+8SVwLO1FPih+eQ9hvoPJPdyM601bwf+vLB3iRp6hHQKSMUB1MXjDuPvkrcKEf2LR/5gAN+aXdfmPQj9NlV47v7Yj0HY6PkSWytxsAgha3gaWr/uKzcCvkx7HQS1+zAgMBAAGjHTAbMAwGA1UdEwEB/wQCMAAwCwYDVR0PBAQDAgbAMA0GCSqGSIb3DQEBBQUAA4IBAQA6W3YebSopPcWQn6EY6Af0Xcalet2kC+7sL03OOQl+GhGvjRzMBLNbNAZEAyqCZ94fU2lvpHs6+dWcRh1byr4o9odCKFngxY2neGCjidZwWBmjRVwnd29TzSTfH62B0xcwfur9BgVAqRLBTUvQMe3n5IqXs/by1GNEjkkTK/Rkyjoc8UmIuqvLz4zb36jbFJljGzWlqucYTg1Lr/LlloQnsEFsujDNPEHr/IBHiQhKA604gl3gYaXqoX1XICwv1ZUUyBm0AJdhQdNeeCSpEHgiEObdz9caN54NG4dEaTCBBnx0PMPvZ5KQqMTs1w5uYGAAwmxZOdbKwZibrTC5HEie" SubTotal="969.06" Moneda="MXN" Total="969.06" TipoDeComprobante="N" MetodoPago="PUE" LugarExpedicion="77507" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd " xmlns:cfdi="http://www.sat.gob.mx/cfd/3">
+  <cfdi:Emisor Rfc="GOYA780416GM0" Nombre="REHUM S.A. DE C.V." RegimenFiscal="605" />
+  <cfdi:Receptor Rfc="AAQM610917QJA" Nombre="BRIONES VELASQUES EVERILDA" UsoCFDI="P01" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="84111505" Cantidad="1" ClaveUnidad="ACT" Descripcion="Pago de nómina" ValorUnitario="969.06" Importe="969.06" />
+  </cfdi:Conceptos>
+  <cfdi:Complemento>
+    <nomina12:Nomina xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1.2" TipoNomina="O" FechaPago="2018-04-30" FechaInicialPago="2018-04-16" FechaFinalPago="2018-04-30" NumDiasPagados="8" TotalPercepciones="906.88" TotalOtrosPagos="62.18" xsi:schemaLocation="http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/Complementoscfdi/nomina12.xsd" xmlns:nomina12="http://www.sat.gob.mx/nomina12">
+      <nomina12:Emisor Curp="CACF880922HJCMSR03" RegistroPatronal="L0345455345" RfcPatronOrigen="GOYA780416GM0" />
+      <nomina12:Receptor Curp="BIVE740217MCSRLV05" NumSeguridadSocial="82057405126" FechaInicioRelLaboral="2012-10-22" Antigüedad="P288W" TipoContrato="01" TipoJornada="03" TipoRegimen="02" NumEmpleado="1" Departamento="LIMPIEZA" Puesto="AUX LIMPIEZA" RiesgoPuesto="1" PeriodicidadPago="02" Banco="072" CuentaBancaria="1234123445678912" SalarioBaseCotApor="92.35" SalarioDiarioIntegrado="92.35" ClaveEntFed="ROO" />
+      <nomina12:Percepciones TotalSueldos="906.88" TotalGravado="806.88" TotalExento="100">
+        <nomina12:Percepcion TipoPercepcion="001" Clave="001" Concepto="Sueldos" ImporteGravado="706.88" ImporteExento="0.00" />
+        <nomina12:Percepcion TipoPercepcion="038" Clave="148" Concepto="Vacaciones" ImporteGravado="100" ImporteExento="100" />
+      </nomina12:Percepciones>
+      <nomina12:OtrosPagos>
+        <nomina12:OtroPago TipoOtroPago="002" Clave="CACR" Concepto="Subsidio" Importe="62.18">
+          <nomina12:SubsidioAlEmpleo SubsidioCausado="107.00" />
+        </nomina12:OtroPago>
+      </nomina12:OtrosPagos>
+      <nomina12:Incapacidades>
+        <nomina12:Incapacidad DiasIncapacidad="3" TipoIncapacidad="01" />
+      </nomina12:Incapacidades>
+    </nomina12:Nomina>
+  <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="E156E630-E4EC-4A84-BE3D-D52965682B87" FechaTimbrado="2018-04-18T18:53:51" RfcProvCertif="LAN8507268IA" SelloCFD="y7kzvBTceMexi0UldrotL3icXns7yCFwhaDEYgkh4IgwerTjBruQ5o/2rBXQQPZp+tSdTUzE6ZZV/OVh9Ekq62f5Bvdn4S2HGSe8AyJF//FpWnaXOyHHGVMnYhlsJZcPSXCXAdvCwznqGBdH6oEHx6EwodXiBgffLLdDUYpZIOQ=" NoCertificadoSAT="30001000000100000801" SelloSAT="C87etLZsOCpEHTXeSpJNoDh7SLdAwV/OZbPoMXZ+PLj68UweU774gDpxM5l9u+IGtTMICglVrXP+xZynGix4+HupdBAU4BxhKk4oDwqGUOSbjN1kbvThSGvhYJF8CGYa+/PkXiaoA3IewgXpDph6ZLpPqMGioZL/6NRk180q2P0=" />
+  </cfdi:Complemento>
+</cfdi:Comprobante>

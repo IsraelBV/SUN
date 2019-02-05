@@ -1,0 +1,356 @@
+﻿
+@using RH.BLL;
+@model List<DatosEmpleado>
+
+@{
+    var contratro = ViewBag.Contrato;
+}
+
+<link href="~/Content/catEmpleados.css" rel="stylesheet" />
+@if (Model == null)
+{
+    <label>  Elija una sucursal</label>
+}
+else
+{
+
+    <div id="DatosPersonales">
+        <div class="panel with-nav-tabs panel-default" id="panelEmpleados">
+            <div class="panel-heading clearfix text-center">
+
+
+                <div class="pull-left">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#datospersonales">Datos Personales</a></li>
+                        <li><a data-toggle="tab" href="#Contratacion">Contratación</a></li>
+                        <li><a data-toggle="tab" href="#nominas">Nóminas</a></li>
+                        <li><a data-toggle="tab" href="#empresas">Empresas</a></li>
+                        <li><a data-toggle="tab" href="#Bancos">Datos Bancarios</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body panel-height" style="height:150px" id="panBody">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="datospersonales">
+                        <fieldset>
+
+                            <div class='form-horizontal'>
+                                <div class="col-md-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="col-md-1 ">ID : </label>
+                                        <input type="text" name="ID" class="col-md-2 " disabled />
+                                        <label class="col-md-1 ">Nombres: </label>
+                                        <input type="text" name="Nombres" class="col-md-7 " disabled />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-1 ">Sexo</label>
+                                        <input type="text" name="Sexo" class="col-md-2 " disabled />
+
+                                        <label class="col-md-1 ">CURP: </label>
+                                        <input type="text" name="CURP" class="col-md-3 " disabled />
+                                        <label class="col-md-1 ">RFC: </label>
+                                        <input type="text" name="RFC" class="col-md-3 " disabled />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-1 ">NSS : </label>
+                                        <input type="text" name="NSS" class="col-md-2 " disabled />
+                                        <label class="col-md-1 ">UMF: </label>
+                                        <input type="text" name="UMF" class="col-md-3" disabled />
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </fieldset>
+
+                    </div>
+                    <div class="tab-pane" id="Contratacion">
+                        <fieldset>
+                            <div class="form-horizontal">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-md-2 ">Fecha Alta: </label>
+                                        <input type="text" name="FechaAlta" class="col-md-2 " disabled />
+                                        <label class="col-md-2 ">Fecha Real: </label>
+                                        <input type="text" name="FechaReal" class="col-md-2 " disabled />
+                                        <label class="col-md-2 ">Fecha IMSS: </label>
+                                        <input type="text" name="FechaIMSS" class="col-md-2 " disabled />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2">Tipo de Contrato</label>
+                                        <input type="text" name="Tipo_Contrato" class="col-md-2" disabled />
+                                        <label class="col-md-2">Días Contrato</label>
+                                        <input type="text" name="DiasContrato" class="col-md-2" disabled />
+                                        <label class="col-md-2">Vence Contrato</label>
+                                        <input type="text" name="VenceContrato" class="col-md-2 " disabled />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-2">Día de Descanso</label>
+                                        <input type="text" name="DiaDescanso" class="col-md-2" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="tab-pane" id="nominas">
+                        <fieldset>
+                            <div class="form-horizontal">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-md-2">Tipo de Nómina</label>
+                                        <input type="text" name="TipoNomina" class="col-md-2" disabled />
+                                        <label class="col-md-2">Tipo de pago</label>
+                                        <input type="text" name="TipoPago" class="col-md-2" disabled />
+                                        <label class="col-md-2">Tipo de salario</label>
+                                        <input type="text" name="TipoSalario" class="col-md-2" disabled />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2">SD</label>
+                                        <input type="text" name="SD" class="col-md-2" disabled />
+                                        <label class="col-md-2">SDI</label>
+                                        <input type="text" name="SDI" class="col-md-2" disabled />
+                                        <label class="col-md-2">Salario Real</label>
+                                        <input type="text" name="SalarioReal" class="col-md-2" disabled />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2">Factor Descuento Infonavit</label>
+                                        <input type="text" name="fdc" id="fdc" class="col-md-2" disabled />
+                                        <label class="col-md-2">Descuento Bimestral</label>
+                                        <input type="text" name="dbi" class="col-md-2" disabled />
+                                        <label class="col-md-2">Retención Fonacot</label>
+                                        <input type="text" name="retFonacot" class="col-md-2" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="tab-pane" id="empresas">
+                        <fieldset>
+
+                            <div class="form-horizontal">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-md-2">Fiscal</label>
+                                        <input type="text" name="Fiscal" class="col-md-4" disabled />
+
+                                        <label class="col-md-2">Complemento</label>
+                                        <input type="text" name="Complemento" class="col-md-4" disabled />
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2">Sindicato</label>
+                                        <input type="text" name="Sindicato" class="col-md-4" disabled />
+
+                                        <label class="col-md-2">Asimilado</label>
+                                        <input type="text" name="Asimilado" class="col-md-4" disabled />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </div>
+                    <div class="tab-pane" id="Bancos">
+                        <fieldset>
+                            <div class="form-horizontal">
+                                <div id="contenidoBancos">
+
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+    <table id="empleados" class="display" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Paterno</th>
+                <th>Materno</th>
+                <th>Nombre(s)</th>
+                <th>RFC</th>
+                <th>Fecha de Alta</th>
+                <th>Puesto</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>Paterno</th>
+                <th>Materno</th>
+                <th>Nombre(s)</th>
+                <th>RFC</th>
+                <th>Fecha de Alta</th>
+                <th>Puesto</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr data-idempleado="@a.IdEmpleado">
+                    <td>@a.IdEmpleado</td>
+                    <td>@a.Paterno</td>
+                    <td>@a.Materno</td>
+                    <td>@a.Nombres</td>
+                    <td>@a.RFC</td>
+                    <td>@a.FechaAlta.ToString("dd/MM/yyyy")</td>
+                    <td>@a.Puesto</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<script>
+    $(document).ready(function () {
+        $(document).on("click", "#empleados tbody tr", function () {
+
+            var div = document.getElementById('contenidoBancos');
+            $("input[name= 'Fiscal']").val('');
+            $("input[name= 'Complemento']").val('');
+            $("input[name= 'Sindicato']").val('');
+            $("input[name= 'Asimilado']").val('');
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+            }
+            var $this = $(this);
+            if (!$this.hasClass("selected")) {
+                $(".selected").removeClass("selected");
+                $this.addClass("selected");
+                var $idempleado = $this.data("idempleado");
+
+                //$("#DatosPersonales").load("/Catalogos/DatosPersonales/?id=" + $idempleado);
+                $.ajax({
+                    type: 'POST',
+
+                    contentType: 'application/json',
+                    url: '/Catalogos/DatosPersonales/?id=' + $idempleado,
+                    success: function (data) {
+                        var sexo;
+                        var empdatos = data.empleadodatos;
+                        var emp_empresa = data.emp_empresa;
+                        var emp_banco = data.datosbanco;
+
+                        $.each(data.datosbanco, function (index, item) {
+                            $("#contenidoBancos").append("<div class='col-md-12 divdinamico'><div  class='form-group'><label class='col-md-1'>Banco</label><input type='text' name='Banco" + item.Id + "' class='col-md-3' disabled /><label class='col-md-1'>Siga</label><input type='text' name='NoSiga" + item.Id + "' class='col-md-1' disabled /><label class='col-md-1'>Cuenta</label><input type='text' name='Cuenta" + item.Id + "' class='col-md-2' disabled /><label class='col-md-1'>Tarjeta</label><input type='text' name='Tarjeta" + item.Id + "' class='col-md-2' disabled /></div></div>")
+                            $("input[name= 'Banco" + item.Id + "']").val(item.Banco);
+                            $("input[name= 'NoSiga" + item.Id + "']").val(item.NoSiga);
+                            $("input[name= 'Tarjeta" + item.Id + "']").val(item.NumTarjeta);
+                            $("input[name= 'Cuenta" + item.Id + "']").val(item.CuentaBancaria);
+                        })
+
+
+
+                        $("input[name= 'Fiscal']").val(empdatos.EmpresaFiscal);
+                        $("input[name= 'Complemento']").val(empdatos.EmpresaComplemento);
+                        $("input[name= 'Sindicato']").val(empdatos.EmpresaSindicato);
+                        $("input[name= 'Asimilado']").val(empdatos.EmpresaAsimilado);
+
+
+
+                        $("input[name= 'ID']").val(empdatos.IdEmpleado);
+                        $("input[name= 'Nombres']").val(empdatos.Nombres + " " + empdatos.Paterno + " " + empdatos.Materno);
+                        $("input[name= 'Sexo']").val(empdatos.Sexo);
+                        $("input[name= 'CURP']").val(empdatos.CURP);
+                        $("input[name= 'RFC']").val(empdatos.RFC);
+                        $("input[name= 'NSS']").val(empdatos.NSS);
+                        $("input[name= 'UMF']").val(empdatos.UMF);
+                        $("input[name= 'FechaAlta']").val(empdatos.FechaAlta);
+                        $("input[name= 'FechaReal']").val(empdatos.FechaReal);
+                        $("input[name= 'FechaIMSS']").val(empdatos.FechaIMSS);
+                        $("input[name= 'VenceContrato']").val(empdatos.FechaVigencia);
+                        $("input[name= 'Tipo_Contrato']").val(empdatos.TipoContrato);
+                        $("input[name= 'DiasContrato']").val(empdatos.DiasContrato);
+                        $("input[name= 'DiaDescanso']").val(empdatos.DiaDescanso);
+                        $("input[name= 'TipoNomina']").val(empdatos.TipoNomina);
+                        $("input[name= 'TipoPago']").val(empdatos.TipoPago);
+                        $("input[name= 'TipoSalario']").val(empdatos.TipoSalario);
+                        $("input[name= 'SD']").val(empdatos.SD);
+                        $("input[name= 'SDI']").val(empdatos.SDI);
+                        $("input[name= 'SalarioReal']").val(empdatos.SalarioReal);
+                        $("input[name= 'fdc']").val($.trim(empdatos.FactorDescuento) + "     " + $.trim(empdatos.TipoCredito));
+                        $("input[name= 'dbi']").val(empdatos.DescuentoBimestral);
+                        $("input[name= 'retFonacot']").val( empdatos.RetencionFonacot);
+
+
+
+                    },
+                    error: function (error) {
+                        // si hay un error lanzara el mensaje de error
+
+                    }
+                });
+
+            }
+            else {
+                var $idempleado = $this.data("idempleado");
+
+                //$("#DatosPersonales").load("/Catalogos/DatosPersonales/?id=" + $idempleado);
+                $.ajax({
+                    type: 'POST',
+
+                    contentType: 'application/json',
+                    url: '/Catalogos/DatosPersonales/?id=' + $idempleado,
+                    success: function (data) {
+                        var sexo;
+                        var empdatos = data.empleadodatos;
+                        var emp_empresa = data.emp_empresa;
+                        var emp_banco = data.datosbanco;
+                        $.each(data.datosbanco, function (index, item) {
+                            $("#contenidoBancos").append("<div class='col-md-12 divdinamico'><div  class='form-group'><label class='col-md-1'>Banco</label><input type='text' name='Banco" + item.Id + "' class='col-md-3' disabled /><label class='col-md-1'>Siga</label><input type='text' name='NoSiga" + item.Id + "' class='col-md-1' disabled /><label class='col-md-1'>Cuenta</label><input type='text' name='Cuenta" + item.Id + "' class='col-md-2' disabled /><label class='col-md-1'>Tarjeta</label><input type='text' name='Tarjeta" + item.Id + "' class='col-md-2' disabled /></div></div>")
+                            $("input[name= 'Banco" + item.Id + "']").val(item.Banco);
+                            $("input[name= 'NoSiga" + item.Id + "']").val(item.NoSiga);
+                            $("input[name= 'Tarjeta" + item.Id + "']").val(item.NumTarjeta);
+                            $("input[name= 'Cuenta" + item.Id + "']").val(item.CuentaBancaria);
+                        })
+
+
+                        $("input[name= 'ID']").val(empdatos.IdEmpleado);
+                        $("input[name= 'Nombres']").val(empdatos.Nombres + " " + empdatos.Paterno + " " + empdatos.Materno);
+                        $("input[name= 'Sexo']").val(empdatos.Sexo);
+                        $("input[name= 'CURP']").val(empdatos.CURP);
+                        $("input[name= 'RFC']").val(empdatos.RFC);
+                        $("input[name= 'NSS']").val(empdatos.NSS);
+                        $("input[name= 'UMF']").val(empdatos.UMF);
+                        $("input[name= 'FechaAlta']").val(empdatos.FechaAlta);
+                        $("input[name= 'FechaReal']").val(empdatos.FechaReal);
+                        $("input[name= 'FechaIMSS']").val(empdatos.FechaIMSS);
+                        $("input[name= 'VenceContrato']").val(empdatos.FechaVigencia);
+                        $("input[name= 'Tipo_Contrato']").val(empdatos.TipoContrato);
+                        $("input[name= 'DiasContrato']").val(empdatos.DiasContrato);
+                        $("input[name= 'DiaDescanso']").val(empdatos.DiaDescanso);
+                        $("input[name= 'TipoNomina']").val(empdatos.TipoNomina);
+                        $("input[name= 'TipoPago']").val(empdatos.TipoPago);
+                        $("input[name= 'TipoSalario']").val(empdatos.TipoSalario);
+                        $("input[name= 'SD']").val(empdatos.SD);
+                        $("input[name= 'SDI']").val(empdatos.SDI);
+                        $("input[name= 'SalarioReal']").val(empdatos.SalarioReal);
+                        $("input[name= 'fdc']").val($.trim(empdatos.FactorDescuento) + "     " + $.trim(empdatos.TipoCredito));
+                        $("input[name= 'dbi']").val(empdatos.DescuentoBimestral);
+                        $("input[name= 'retFonacot']").val(empdatos.RetencionFonacot);
+
+
+                    },
+                    error: function (error) {
+                        // si hay un error lanzara el mensaje de error
+
+                    }
+                });
+            }
+
+        });
+
+    });
+
+</script>

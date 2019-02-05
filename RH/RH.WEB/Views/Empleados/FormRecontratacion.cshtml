@@ -1,0 +1,271 @@
+﻿@using RH.Entidades;
+@using RH.BLL;
+@model Empleado_Contrato
+@{ 
+    List<DepartamentoDatos> deptos = ViewBag.Departamentos;
+    List<PuestosDatos> puestos = ViewBag.Puestos;
+    List<RegistroDatos> Empresas = ViewBag.Empresas;
+    List<C_Esquema> esquemas = ViewBag.Esquemas;
+    var date = DateTime.Today.ToString("yyyy-MM-dd");
+}
+
+@using (Ajax.BeginForm("Recontratar", "Empleados", null, new AjaxOptions { OnComplete = "CloseModal()" }, new { id = "formRecontratacion", @class = "formHorizontal tooltipForm" }))
+{
+    @Html.ValidationSummary(true)
+
+    <input type="hidden" name="idEmpleado" id="mr-id-empleado" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IdEmpresaFiscal"  class="control-label">Empresa Fiscal</label><br>
+                <label for="IdEmpresaFiscal" id="lidempf" class="label-anterior"></label>
+                <select name="IdEmpresaFiscal" id="IdEmpresaFiscal" class="form-control">
+                    <option value="">Seleccione una empresa</option>
+                    @foreach (var item in Empresas.Where(x => x.IdEsquema == 1))
+                    {
+                        <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IdEmpresaComplemento" class="control-label">Empresa Complemento</label><br>
+                <label for="IdEmpresaComplemento" id="lidempc" class="label-anterior"></label>
+                <select name="IdEmpresaComplemento" id="IdEmpresaComplemento" class="form-control">
+                    <option value="">Seleccione una empresa</option>
+                    @foreach (var item in Empresas.Where(x => x.IdEsquema == 2))
+                    {
+                        <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IdEmpresaSindicato" class="control-label">Empresa Sindicato</label><br>
+                <label for="IdEmpresaSindicato" id="lidemps" class="label-anterior"></label>
+                <select name="IdEmpresaSindicato" id="IdEmpresaSindicato" class="form-control">
+                    <option value="">Seleccione una empresa</option>
+                    @foreach (var item in Empresas.Where(x => x.IdEsquema == 3))
+                    {
+                        <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IdEmpresaAsimilado" class="control-label">Empresa Asimilado</label><br>
+                <label for="IdEmpresaAsimilado" id="lidempa" class="label-anterior"></label>
+                <select name="IdEmpresaAsimilado" id="IdEmpresaAsimilado" class="form-control">
+                    <option value="">Seleccione una empresa</option>
+                    @foreach (var item in Empresas.Where(x => x.IdEsquema == 4))
+                    {
+                        <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mr-form-group">
+                <label for="FechaAlta" class="control-label">Fecha Alta</label>
+                <label for="FechaAlta" id="lfa" class="label-anterior"></label>
+                <input type="date" name="FechaAlta" id="FechaAlta" class="form-control" required value="@date" data-rule-required="true" data-rule-date="true" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mr-form-group">
+                <label for="FechaReal" class="control-label">Fecha Real</label>
+                <label for="FechaReal" id="lfr" class="label-anterior"></label>
+                <input type="date" name="FechaReal" id="FechaReal" class="form-control" required value="@date" data-rule-required="true" data-rule-date="true" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mr-form-group">
+                <label for="FechaIMSS" id="lfechaimss" class="control-label">Fecha IMSS</label>
+                <label for="FechaIMSS" id="lfi" class="label-anterior"></label>
+                <input type="date" name="FechaIMSS" id="FechaIMSS" class="form-control" data-rule-date="true" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mr-form-group">
+                <label for="TipoContrato" class="control-label">Tipo de Contrato </label>
+                <label for="TipoContrato" id="ltc" class="label-anterior"></label>
+                <select name="TipoContrato" class="form-control" id="TipoContrato" required data-rule-required="true">
+                    <option value="1">Permanente</option>
+                    <option value="2">Temporal</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row hidden" id="camposVigencia">
+        <div class="col-md-6">
+            <div class="form-group mr-form-group">
+                <label for="DiasContrato" class="control-label">Días de contrato</label>
+                <input type="number" name="DiasContrato" id="DiasContrato" class="form-control" data-rule-digits="true" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mr-form-group">
+                <label for="Vigencia" class="control-label">Vigencia</label>
+                <input type="date" name="Vigencia" id="Vigencia" class="form-control" data-rule-date="true" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Puesto" class="control-label">Puesto </label>
+                <label for="Puesto" id="lpuesto" class="label-anterior"></label>
+                <select name="IdPuesto" id="IdPuesto" class="form-control" required>
+                    @if (deptos != null)
+                    {
+                        foreach (var row in deptos)
+                        {
+                            var puesto = puestos.Where(s => s.Departamento == row.Descripcion).ToList();
+
+                            <optgroup label="@row.Descripcion">
+
+                                @foreach (var item in puesto)
+                                {
+                                    <option value="@item.IdPuesto">@item.Descripcion</option>
+                                }
+
+                            </optgroup>
+                        }
+                    }
+                    else
+                    {
+                        <option value="">Por favor asigna departamentos en la configuración de la empresa</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="SalarioReal" class="control-label">Salario Real </label>
+                <label for="SalarioReal" id="lsr" class="label-anterior"></label>
+                <input type="number" step="any" class="form-control" name="SalarioReal" id="SalarioReal" data-rule-number="true" data-rule-required="true" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="SD" class="control-label">SD </label>
+                <label for="SD" id="lsd" class="label-anterior"></label>
+                <input type="number" step="any" class="form-control" name="SD" id="SD" data-rule-number="true" data-rule-required="true" />
+            </div>
+        </div>
+
+        <input type="hidden" value="@ViewBag.Factor" id="Factor"/>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="SDI" class="control-label">SDI </label>
+                <label for="SDI" id="lsdi" class="label-anterior"></label>
+                <input type="number" step="any" class="form-control" name="SDI" id="SDI" data-rule-number="true" data-rule-required="true" />
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="hidden"></button>              
+}
+<script>
+    $(document).ready(function () {
+        $("#btnRecontratar").click(function () {
+            $("#formRecontratacion").submit();
+        });
+
+        $("#TipoContrato").change(function () {
+            if ($(this).val() == 2) {
+                $("#camposVigencia").removeClass("hidden");
+                $("#DiasContrato").attr("data-rule-required", true);
+                $("#Vigencia").attr("data-rule-required", true);
+                setVigencia();
+            }
+            else {
+                $("#camposVigencia").addClass("hidden");
+                $("#DiasContrato").attr("data-rule-required", false);
+                $("#Vigencia").attr("data-rule-required", false);
+                $("#DiasContrato").val("");
+                $("#Vigencia").val("");
+                
+            }
+        });
+
+        //Vigencia del contrato
+        $("#DiasContrato").keyup(function () {
+            setVigencia();
+        });
+
+        $("#FechaAlta").change(function () {
+            if ($("#TipoContrato").val() == "2") {
+                setVigencia();
+            }
+        });
+
+        function setVigencia() {
+            if ($("#FechaAlta").val() == "") {
+                var fecha_inicio = mm + "-" + dd + "-" + yyyy;
+                var vigencia = new Date(fecha_inicio);
+            } else {
+                var fecha_trim = $("#FechaAlta").val().split("-");
+
+                //formato mm/dd/yyyy
+                var vigencia = new Date(fecha_trim[1] + "-" + fecha_trim[2] + "-" + fecha_trim[0]);
+            }
+
+            var i = 0;
+
+            while (i < $("#DiasContrato").val()) {
+                //vigencia.setTime(vigencia.getTime() + 8640000);
+
+                vigencia.setDate(vigencia.getDate() + 1);
+                if (vigencia.getDay() == 0) {
+                    vigencia.setDate(vigencia.getDate() + 1);
+                }
+                i++;
+            }
+
+            var date = concatDate(vigencia);
+            $("#Vigencia").val(date);
+
+        }
+
+        //Recibe un objeto de tipo Date y retorna la fecha concatenada para introducir en un input type date
+        function concatDate(date) {
+            var dd = date.getDate();
+            var mm = date.getMonth() + 1;
+            var yyyy = date.getFullYear();
+
+            dd = dd < 10 ? '0' + dd : dd;
+            mm = mm < 10 ? '0' + mm : mm;
+
+            return yyyy + "-" + mm + "-" + dd;
+        }
+
+        /* Función para generar el salario diario integrado */
+        /* Toma el factor en el input oculto "factor" y lo multiplica por el salario diario */
+        $("#SD").keyup(function () {
+            var sdi = $("#SD").val() * $("#Factor").val();
+            $("#SDI").val(sdi.round(2));
+        });
+
+        Number.prototype.round = function (places) {
+            return +(Math.round(this + "e+" + places) + "e-" + places)
+        }
+    });
+</script>

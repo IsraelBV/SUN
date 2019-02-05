@@ -1,0 +1,245 @@
+html {
+	height: 100%;
+}
+
+body {
+    background: #4a9fce;
+    height: 100%;
+    overflow: hidden;
+}
+
+#login-card {
+	width: 55%;
+	background-color: white;
+	margin: 0 auto;
+	height: 400px;
+	position: relative;
+	top: 20%;
+}
+
+#image-logo {
+	width: 50%;
+	float: left;
+	background: #3a7ea3;
+	height: 100%;
+    text-align: center;
+}
+
+#image-logo img {
+	width: 80%;
+	position: relative;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+#part2 {
+	width: 50%;
+	overflow: hidden;
+	height: 100%;
+    text-align: center;
+}
+
+#welcome-message {
+	float: left;
+	background: #3a7ea3;
+	height: 100%;
+	color: white;
+	width: 100%;
+}
+
+#welcome-message h4{
+	position: relative;
+	top: 40%;
+}
+
+#login-form {
+	width: 100%;
+	height: 100%;
+    max-height: 100%;
+	display: none;
+	margin: 0;
+}
+
+#login-form-title {
+	color: #4a9fce;
+    margin-top: 50px;
+}
+
+#login-form-title h4 { 
+    margin: 0;
+}
+
+#login-form form {
+    height: 75%;
+}
+
+#form-body {
+    height: 156px;
+}
+
+#form-footer {
+    height: calc(100% - 156px);
+    min-height: 85%;
+}
+
+#block {
+	color: #499cea;
+	margin: 0;
+}
+
+.form-field {
+    display: inline-block;
+}
+
+.input-field {
+	text-align: left; 
+}
+
+.input-field input:focus{
+    border-bottom: 1px solid #03a9f4 !important;
+    box-shadow: 0 1px 0 0 #03a9f4 !important;
+}
+
+.input-field input[type=text]:focus + label {
+	color: #3a7ea3;
+}
+
+.input-field input[type=password]:focus + label {
+	color: #3a7ea3;
+}
+
+.input-field .prefix.active {
+    color: #3a7ea3;
+}
+
+.form-field {
+	width: 80%;
+	color: grey;
+}
+
+.form-button {
+	width: 100%;
+}
+
+#btnLogin {
+	padding: 0 6rem !important;
+	background-color: #0097d7 !important;
+	color: white !important;
+}
+
+#imgLoad{
+    margin-top:10px;
+}
+
+a{
+	color: #03a9f4 !important;
+}
+
+#message-container {
+    position: absolute;
+    bottom: 2%;
+}
+
+#message {
+    visibility: hidden;
+    background: #fff;
+    margin: 0 auto;
+    height: 70px;
+    position: relative;
+    width: auto;
+}
+
+#message-image {
+    width: 70px;
+    height: 70px;
+    display: inline-block;
+    background: #afc4da;
+    text-align: center;
+    color: #fff;
+}
+
+#message-image img {
+    width: 100%;
+    height: 100%;
+}
+
+#message-text {
+    width: auto;
+    height: 70px;
+    padding: 13px 10px;
+    float:right;
+    text-align: left;
+    display: inline-block;
+}
+
+#message-text p {
+    margin: 0;
+}
+
+#message-text-title {
+    color: grey;
+    line-height: 20px;
+}
+
+#message-text-subtitle {
+    font-size: 20px;
+    line-height: 20px;
+    max-height: 20px;
+    width: auto;
+}
+
+/*ipad vertical*/
+@media only screen and (min-width: 600px) and (max-width: 992px) { 
+    #login-card {
+        width: 90%;
+        height: 460px;
+        top: 30px;
+        
+    }
+
+    #image-logo {
+        display: none;
+    }
+
+    #part2 {
+        width: 100%;
+    }
+
+    #login-form {
+        top: 80px;
+    }
+}
+
+/*ipad landscape*/
+@media only screen and (min-width: 600px) and (max-width: 992px) { 
+    #login-card {
+        width: 90%;
+        position: relative;
+        top: 200px;
+    }
+}
+
+/* mobile vertical */
+@media only screen and (max-width: 500px) {
+    #login-card {
+        width: 95%;
+        top: 15px;
+    }
+
+    #image-logo {
+        display: none;
+        width: 0;
+    }
+
+    #part2 {
+        width: 100%;
+    }
+}
+/* mobile landscape */
+@media (max-width: 750px) and (max-height: 500px) {
+    #login-card {
+        width: 90%;
+        position: relative;
+        top:0px;
+    }
+}

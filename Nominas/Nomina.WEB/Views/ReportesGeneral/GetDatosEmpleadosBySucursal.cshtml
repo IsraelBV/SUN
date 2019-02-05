@@ -1,0 +1,102 @@
+﻿@using Common.Utils
+@using RH.Entidades.GlobalModel;
+@model IEnumerable<Nomina.BLL.ReportesGenerales.EmpleadosClientes>
+
+
+
+@if (Model.Any())
+{
+    <div>
+        <table id="tblEmpleados" name="tblEmpleados" class="table">
+            <thead>
+                <tr class="info">
+                    <th title="Id del empleado">IdE</th>
+                    <th title="Id del contrato">Contrato</th>
+             
+                    <th class="text-center">Nombre</th>
+                    <th class="text-center">SD</th>
+                    <th class="text-center">SDI</th>
+                    <th class="text-center">SR</th>
+
+                    <th class="text-center">Alta</th>
+                    <th class="text-center">Alta Imss</th>
+                    <th class="text-center">NSS</th>
+                    <th class="text-center">RFC</th>
+                    <th class="text-center">Valid SAT</th>
+                    <th class="text-center">Reingreso</th>
+                    <th class="text-center">Puesto</th>
+                    <th class="text-center">Departamento</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-left">@item.IdEmpleado</td>
+                        <td class="text-left">@item.IdContrato</td>
+                       
+                        <td class="text-left">@item.Nombre</td>
+                        <td class="text-right">@item.Sd</td>
+                        <td class="text-right">@item.Sdi</td>
+                        <td class="text-right">@item.SReal</td>
+                        <td class="text-left">@item.FechaAlta</td>
+                        <td class="text-left">@item.AltaImss</td>
+                        <td class="text-left">@item.Nss</td>
+                        <td class="text-left">@item.Rfc</td>
+                        <td class="text-center">
+                            @switch (@item.ValidSat)
+                            {
+                                case 1:
+                                    <i title="Valido" class="fa fa-check fa-2x" style="color:green"> <span hidden>0</span></i>
+                                    break;
+                                case 0:
+                                    <i title="Icorrecto - no paso la validacion" class="fa fa-times fa-2x" style="color:red"> <span hidden>1</span></i>
+                                    break;
+                                case 2:
+                                    <i title="Pendiente de validar" class="fa fa-exclamation fa-2x" style="color:goldenrod"><span hidden>2</span></i>
+                                    break;
+                            }
+                        </td>
+                        <td class="text-center">@(item.EsReingreso ? "Si" : "-") </td>
+                        <td class="text-left">@item.Puesto</td>
+                        <td class="text-left">@item.Departamento</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+
+        $(document).ready(function () {
+
+
+            var seleccionados = [];
+
+            var table = $("#tblEmpleados").DataTable({
+                //dom: 'Bfrtip',
+                scrollY: '70vh',
+                scrollCollapse: true,
+                paging: false,
+                searching: true,
+                select: { style: 'multi' },
+                "language": { "url": "../scripts/datatables-spanish.json" },
+                info: false
+            });
+
+
+
+
+
+        });//- fin de ready
+    </script>
+
+
+}
+else
+{
+
+}

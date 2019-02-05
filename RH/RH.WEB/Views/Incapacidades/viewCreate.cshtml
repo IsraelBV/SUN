@@ -1,0 +1,118 @@
+﻿@model RH.Entidades.Incapacidades
+
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+@{ 
+    var id = ViewBag.idEmpleado;
+    var date = DateTime.Today.ToString("yyyy-MM-dd");
+}
+<script src="~/Scripts/calcFechas.js"></script>
+<link href="~/Content/modalDesign.css" rel="stylesheet" />
+<link href="~/Content/buttons.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm("Create", "Incapacidades", FormMethod.Post, new { id = "formulario", @class = "tooltipForm" }))
+{
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"><i class="fa fa-plus"></i> Nueva Incapacidad </h4>
+        <input type="hidden" value="@id" id="IdEmpleado" name="IdEmpleado" />
+    </div>
+            <div class="modal-body">
+                <div class="form-horizontal ">
+
+                    @*Primer row*@
+                    <div class="row">
+                        <div class="control-label col-md-2 col-xs-4">
+                            <label><span style="color:red;">*</span> Folio</label>
+                        </div>
+                        <div class="form-group col-md-4 col-xs-8">
+                            <input type="text" name="Folio" class="form-control text-uppercase" placeholder="ej. AC123456" id="Folio" data-rule-required="true" autofocus="autofocus" data-rule-minlength="6" data-rule-maxlength="8" data-rule-folio="true">
+                        </div>
+                        <div class="control-label col-md-2 col-xs-4">
+                            <label>Fecha Inicio</label>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <input type='date' class="form-control" name="FechaInicio" id="FechaInicio" data-rule-required="true" value="@date" />
+                        </div>
+                        
+
+
+                    </div>
+
+                    @*Segundo row*@
+                    <div class="row">
+                        <div class="control-label col-md-2 col-xs-4">
+                            <label><span style="color:red;">*</span> Clase</label>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <select class="form-control" name="Clase" id="Clase" data-rule-required="true">
+                                <option value="">Selecciona...</option>
+                                <option value="Inicial">Inicial</option>
+                                <option value="Subsecuente">Subsecuente</option>
+                                <option value="Recaída">Recaída</option>
+                            </select>
+                        </div>
+
+
+                        <div class="control-label col-md-2 col-xs-4">
+                            <label><span style="color:red;">*</span> Días Totales</label>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <input type="number" name="Dias" class="form-control" id="Dias" data-rule-required="true" data-rule-number="true">
+                        </div>
+                    </div>
+                    @*fin segundo row*@
+
+
+
+                    @*cuarto row*@
+                    <div class="row">
+                        <div class="control-label col-md-2 col-xs-4">
+                            <label><span style="color:red;">*</span> Tipo</label>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <select class="form-control" name="Tipo" id="Tipo" data-rule-required="true">
+                                <option value="">Selecciona...</option>
+                                <option value="Riesgo de trabajo">Riesgo de trabajo</option>
+                                <option value="Enfermedad General">Enfermedad General</option>
+                                <option value="Prematernal">Prematernal</option>
+                                <option value="Maternal de enlace">Maternal de enlace</option>
+                                <option value="Postmaternal">Postmaternal</option>
+                                
+                            </select>
+                        </div>
+
+                        <div class="control-label col-md-2 col-xs-4">
+                            <label>Fecha Final</label>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <input type='date' class="form-control" name="FechaFin" id="FechaFin" data-rule-required="true" />
+                        </div>
+
+                    </div>
+                    @*fin cuarto row*@
+
+                    @*quinto row*@
+                    <div class="row">
+                        <div class="control-label col-md-2 col-xs-4">
+                            <label id="obLabel"><span style="color:red;">*</span>Observaciones</label> 
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <input type="text" name="Observaciones" class="form-control" placeholder="Observaciones" id="Observaciones" data-rule-required="true" data-rule-minlength="3" data-rule-maxlength="50">
+                        </div>
+
+                        <div class="control-label col-md-2 col-xs-4">
+                        </div>
+                        <div class="form-group col-xs-4">  
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary input-group-sm save" value="Guardar" />
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            </div>
+}
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>

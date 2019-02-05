@@ -1,0 +1,244 @@
+﻿
+@using Common.Helpers
+@using RH.Entidades
+@using RH.BLL
+@model RH.Entidades.Cliente
+
+@{
+    ViewBag.Title = "Editar Cliente";
+
+    var slDepto = ViewBag.SelectListDepto as List<ClienteDepartamentos>;
+}
+
+<style>
+    /*.modal-dialog {
+        width: 1100px !important;
+    }*/
+
+    select.selectpicker {
+        display: block !important;
+        float: left;
+        overflow: hidden;
+        height: 34px;
+        width: 0;
+        border: 0;
+        padding: 0;
+        box-shadow: none;
+        color: white;
+    }
+.tooltip {
+    background-color:#000;
+    border:1px solid #fff;
+    padding:10px 15px;
+    width:300px;
+    display:none;
+    color:#fff;
+    text-align:center;
+    font-size:12px;
+    
+ 
+    /* outline radius for mozilla/firefox only */
+    -moz-box-shadow:0 0 10px #000;
+    -webkit-box-shadow:0 0 10px #000;
+}
+.tooltip-inner {
+  max-width: 300px !important; 
+  padding: 3px 8px;
+  color: #fff;
+  text-align: center;
+  background-color: #000;
+  border-radius: 4px;
+}
+</style>
+
+<link href="~/Content/bootstrap-select.css" rel="stylesheet" type="text/css" />
+<div id="divContenido2">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><i class="glyphicon glyphicon-pencil"></i> Editar Cliente</h4>
+    </div>
+
+    @using (Html.BeginForm("EditarVP", "Clientes", FormMethod.Post, new { id = "formulario" }))
+            {
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="idcliente" name="idcliente" value="@Model.IdCliente" />
+        <div class="panel panel-default" id="edit">
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="form-group">
+                            <label class="col-md-4">Nombre del Cliente:</label>
+                            <div class="col-md-8">
+                                @*@Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })*@
+                                <input title="Coloca aquí el nombre del Cliente" class="form-control" type="text"name="Nombre" id="Nombre" value="@Model.Nombre" />
+                            </div>
+
+                        </div>
+                      
+              
+                    </div>
+                    @*<div class="col-md-6 col-xs-12">
+                        <div class="form-group">
+                            <label class="col-md-4">Departamentos</label>
+                            <div class="col-md-8">
+                                <select id="itemsDP" name="itemsDP" class="selectpicker show-tick" multiple data-width="330px" data-actions-box="true" data-live-search="true" title="Selecciona la configuración" data-selected-text-format="count">
+                                    @if (slDepto != null)
+                                    {
+                                        foreach (var item in slDepto)
+                                        {
+                                            if (item.Seleccionado)
+                                            {
+                                                <option value="@item.IdDepartamento" selected="selected">@item.NombreDepartamento</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.IdDepartamento">@item.NombreDepartamento</option>
+                                            }
+                                        }
+                                    }   
+                                </select>
+
+
+                            </div>
+
+                        </div>
+
+                       
+                    </div>*@
+                </div>
+
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="submit" id="idGuardar" class="btn btn-primary input-group-sm" value="Guardar" /> <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        </div>
+    }
+</div>
+
+
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/bootstrap-multiselect.js"></script>
+<script src="~/Scripts/bootstrap-select.min.js"></script>
+<script src="~/Scripts/i18n/defaults-es_CL.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        var orderCount = 0;
+        $(".selectpicker").selectpicker();
+
+
+        $("#formulario").validate({
+
+            rules: {
+                Nombre: {
+                    required: true,//Con esto se espifica que el campo no puede quedar vacio
+                    minlength: 3,//que la palabra tiene que ser mayor a 2 caracteres
+                    maxlength: 50,
+                    RegPat: true,
+                    RegDep: true
+                },
+
+            },
+            messages: {
+                Nombre: {
+                    required: "1) Escriba el nombre del Cliente"
+                }
+
+            },
+
+            highlight: function (element) {
+
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                $(element).next('.glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+                // ValidarRegistros(element);
+                //ValidarDepartamentos(element);
+            },
+            unhighlight: function (element) {
+
+
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                $(element).nextAll('.glyphicon').removeClass('glyphicon-remove').addClass('glyphicon-ok');
+
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.length) {
+                    error.insertAfter(element);
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+
+
+
+        $.validator.addMethod("RegPat", ValidarRegistros, "2) Seleccione las Empresas para el Cliente");
+        $.validator.addMethod("RegDep", ValidarDepartamentos, "3) Seleccione los Departamentos");
+
+        //Metodo para validar que se haya selecciona los registros patronales
+        function ValidarRegistros(e) {
+
+            var rPseleccionados = $('#itemsRP').val();
+
+            if (rPseleccionados === null) {
+                $('#itemsRP').next('.btn-group').children(":button").removeClass('btn-success').addClass('btn-danger');
+                $('#itemsRP').nextAll("#icoRP1").show();
+                return false;
+
+            } else {
+                $('#itemsRP').next('.btn-group').children(":button").removeClass('btn-danger').addClass('btn-success');
+                $('#itemsRP').nextAll("#icoRP1").show();
+                return true;
+            }
+
+        }
+
+
+        //Metodo que valida que se seleccione los departamentos
+        function ValidarDepartamentos(e) {
+
+            var dPseleccionados = $('#itemsDP').val();
+
+            if (dPseleccionados === null) {
+                $('#itemsDP').next('.btn-group').children(":button").removeClass('btn-success').addClass('btn-danger');
+                $('#itemsDP').nextAll("#icoDP1").show();
+                return false;
+
+            } else {
+
+                $('#itemsDP').next('.btn-group').children(":button").removeClass('btn-danger').addClass('btn-success');
+                $('#itemsDP').nextAll("#icoDP1").show();
+                return true;
+            }
+
+
+        }
+
+    });
+
+</script>
+<script>
+
+    // select all desired input fields and attach tooltips to them
+    $("#formulario :input").tooltip({
+
+        // place tooltip on the right edge
+        position: "center right",
+
+        // a little tweaking of the position
+        offset: [-2, 10],
+
+        // use the built-in fadeIn/fadeOut effect
+        effect: "fade",
+
+        // custom opacity setting
+        opacity: 0.7
+
+    });
+
+</script>
+<script src="~/Scripts/validator/metodos_adicionales.js"></script>

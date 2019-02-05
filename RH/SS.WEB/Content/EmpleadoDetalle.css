@@ -1,0 +1,24 @@
+﻿.panel-body {
+    min-height: 300px;
+    overflow: hidden;
+}
+
+.disabledTab {
+    pointer-events: none;
+}
+
+#panel-boton-activado {
+    display: none;
+}
+
+#panel-fonacot {
+    display: none;
+}
+
+#panel-infonavit, #panel-infonavit .btnSaveInfonavit, #panel-infonavit .btnAgregarInfonavit {
+    display: none;
+}
+
+.btn-table {
+    padding: 0 15px !important;
+}

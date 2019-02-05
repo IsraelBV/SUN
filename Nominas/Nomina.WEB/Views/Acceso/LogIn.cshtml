@@ -1,0 +1,95 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+    <title>SUNRH | Nóminas</title>
+    <link rel="icon" href="~/Images/favicon.png" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    
+    <!-- jQuery -->
+    <script src="~/Scripts/jquery-3.1.0.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+    <!-- MAterial Design Lite -->
+    <link href="~/Content/CSSLocal/fontw.css" rel="stylesheet">
+    @*<link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.blue_grey-red.min.css" />
+    <script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script>*@
+    <script src="~/Scripts/material.min.js"></script>
+    <link href="~/Content/material.blue_grey-red.min.css" rel="stylesheet" />
+    
+
+    <!-- Jquery UI -->
+    <link rel="stylesheet" href="~/Content/jquery-ui.min.css">
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+
+    <!-- Estílos de la página -->
+    <link rel="stylesheet" href="~/Content/login.css">
+    <script src="~/Scripts/login.js"></script>
+</head>
+<body>
+    <div id="background-tile"></div>
+    <div id="card-container">
+        <div id="login-card">
+            <div id="header">
+                <div id="img-container">
+                    <img src="../../Images/logo2.png" id="imgUser">
+                </div>
+                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" id="btnBack"><i class="material-icons">navigate_before</i></button>
+            </div>
+            <div id="body">
+                <h2 id="welcome">¡Bienvenido!</h2>
+                <h3 id="username-text"></h3>
+                <p id="instruction">Ingresa tu nombre de usuario</p>
+                <div id="form-content">
+                    @using (Ajax.BeginForm("AutenticarNombreUsuario", "Acceso", new AjaxOptions { OnSuccess = "nextStep", OnBegin = "disableBtn", OnFailure = "OnFailure", OnComplete = "enableBtn" }, new { id = "frmUser" })) 
+                    {
+                        <div class="userStep">
+                            <div class="col 12">
+                                <div class="mdl-textfield mdl-js-textfield" id="user-name-field">
+                                    <input class="mdl-textfield__input" type="text" id="username" name="username" autocomplete="off" >
+                                    <label class="mdl-textfield__label" for="sample1">Nombre de Usuario</label>
+                                    <span class="mdl-textfield__error" id="errorMessage"></span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                    <div class="passwordStep">
+                        <div class="mdl-textfield mdl-js-textfield" id="password-field">
+                            <input class="mdl-textfield__input" type="password" id="password" name="password">
+                            <label class="mdl-textfield__label" for="sample1">Contraseña</label>
+                            <span class="mdl-textfield__error" id="errorMessageLogin">Contraseña incorrecta</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="footer">
+                <div class="userStep">
+                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="btnNext">
+                        Siguiente <i class="material-icons">navigate_next</i>
+                    </button>
+                </div>
+                <div class="passwordStep">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="btnLogin">
+                        Iniciar Sesión
+                    </button>
+                </div>
+            </div>
+            <div class="progress">
+                <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+</body>
+</html>

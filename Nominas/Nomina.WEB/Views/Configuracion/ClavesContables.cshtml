@@ -1,0 +1,105 @@
+﻿@using Nomina.BLL;
+@using RH.Entidades;
+@using Common.Enums;
+@using Common.Helpers;
+@using RH.BLL;
+@model List<SucursalesEmpresa> 
+
+@if (Model == null)
+{
+    <label>  Elija una sucursal</label>
+}
+else
+{
+    <table id="contables" data-keyboard="false" class="table table-striped" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Empresa</th>
+                <th>Clave Contable</th>
+
+            </tr>
+        </thead>
+        <tbody id="prueba">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="IdSucursal">@item.IdTabla  </td>
+                    <td>@item.Nombre</td>
+                   
+                    <td>
+                       @if (@item.ClaveContable == null)
+                            {
+                                <div id="cuadro"><label id="clave" class="Cambio">Nuevo</label></div>
+                       }
+                       else
+                       {
+                        <div id="cuadro">
+                        <label id="clave" class="Cambio" >@item.ClaveContable</label>
+                        </div>
+                       }
+                    </td>
+                    
+                    
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+     
+    <script>
+        //Modificacion de Claves contables 
+        $(".Cambio").click(function (f) {
+            $("#prueba").find(':input[type=text]').each(function () {
+                $(this).next('#clave').css("display", "block");
+                $(this).remove();
+
+            });
+            var textoactual = $(this).text();
+            if (textoactual == '...') {
+                var input = "<input type='text'id='p' maxlength='20' class='input-group-sm' value =''/>"//agregamos el el cuadro de texto
+            } else {
+                var input = "<input type='text'id='p' maxlength='20'  class='input-group-sm' value ='" + textoactual + "'/>"//agregamos el el cuadro de texto
+            }
+            // $(this).empty();
+            $(this).css("display", "none");//oculta el label
+            $(this).parent("#cuadro").prepend(input);
+            document.getElementById("p").focus();
+            var idsucu = $(this).parent("#cuadro").parent().parent().find(".IdSucursal").html();
+            var inp = $("#p")//obtenemos el selector
+            inp.keydown(function (e) {//evento
+                var code = e.keyCode;//obtenemos el codigo del enter
+                if (code == 13) {
+                    var textonuevo = $(this).val();
+                    if (textonuevo == '') {
+                        textonuevo = '...';
+                    }
+                    $(this).next("#clave").text(textonuevo)
+                    $(this).next('#clave').css("display", "block");
+                    var request = $.ajax({
+                        url: "/Configuracion/EditarClaveContable/",
+                        method: "POST",
+                        data: {
+                            Id: idsucu,
+                            ClaveContable: textonuevo
+                        }
+                    });
+
+                    $(this).remove();//quitamos el cuadro
+                } else if (code == 9 || code == 27) {
+                    $(this).next("#clave").text(textoactual)
+                    $(this).next('#clave').css("display", "block");
+                    $(this).remove();//quitamos el cuadro
+                }
+            });
+        });
+        //fin modificacion de Claves contables
+
+    </script>
+

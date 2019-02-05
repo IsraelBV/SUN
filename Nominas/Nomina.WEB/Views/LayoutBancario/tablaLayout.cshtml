@@ -1,0 +1,32 @@
+﻿@using Nomina.BLL
+@using Common.Utils
+@using RH.Entidades.GlobalModel
+@model List<LayoutBanco>
+
+<table id="EmpleadosTesoreria" class="display EmpleadosTesoreria" width="100%">
+    <thead>
+        <tr>
+            <th>No Siga</th>
+            <th>Cuenta bancaria</th>
+            <th>Empleado</th>
+            <th>Empresa</th>
+            <th>No Emisor</th>
+            <th>Importe</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+                <tr data-idempleado="@e.IdEmpleado" data-importe="@e.Importe">
+                    <td>@e.NoSiga</td>
+                    <td>@e.CuentaBancaria</td>
+                    <td>@e.Paterno @e.Materno @e.Nombres</td>
+                    <td>@e.NombreEmpresa</td>
+                    <td>@e.NoEmisor</td>
+                    <td>@Utils.TruncateDecimalesAbc(e.Importe, 2)</td>                    
+                </tr>
+        }
+
+
+    </tbody>
+</table>

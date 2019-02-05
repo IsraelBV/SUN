@@ -1,0 +1,335 @@
+﻿@using RH.Entidades;
+@using Common.Helpers;
+@model List<NOM_PeriodosPago>
+@{
+    var depa = ViewBag.usuarios;
+    var strNumEmp = "";
+    var strNumNom = "";
+    var strNumTim = "";
+
+    var seleccionado = ViewBag.SelectedEf;
+    var listaEjercicios = ViewBag.Ejercicios as List<NOM_Ejercicio_Fiscal>;
+   
+
+}
+<style>
+    /*.modal-body{
+        overflow-y: hidden !important;
+    }*/
+
+
+    .badge_ne {
+        color: #000;
+        font-weight: 700;
+    }
+
+    .badge_noCompleto {
+        color: #000;
+        background-color: #ffc107;
+    }
+
+    .badge_cero {
+        color: #000;
+        background-color: #777;
+    }
+</style>
+<div class="table-panel">
+    <div class="checkbox" style="display: inline-block">
+
+        <label class="radio-inline">
+            <strong>Ejercicio Fiscal : </strong>
+            @if (listaEjercicios != null)
+            {
+            <select class="" id="selejercicio">
+                @foreach (var item in listaEjercicios)
+                {
+                    if (item.IdEjercicio == seleccionado)
+                    {
+                    <option value="@item.IdEjercicio" selected="selected">@item.Anio</option>
+                    }
+                    else
+                    {
+                    <option value="@item.IdEjercicio">@item.Anio</option>
+                    }
+                }
+
+
+            </select>
+            }
+        </label>
+        @if (depa != 5)
+        {
+        <label class="radio-inline">
+            <input type="radio" name="optradio" checked="checked" onclick="mostrarPeriodos(1)">Activos
+        </label>
+
+        } 
+        <label class="radio-inline">
+            <input type="radio" name="optradio" @(depa == 5 ? "checked='checked'" : "") onclick="mostrarPeriodos(2)">Autorizados
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="optradio" onclick="mostrarPeriodos(4)">Pagados
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="optradio" onclick="mostrarPeriodos(3)">Todos
+        </label>
+
+
+
+    </div>
+</div>
+
+    <table id="tblSeleccionPeriodo" class="display" data-count="#count-periodos" width="100%" style="height:80% !important;">
+        <thead>
+            <tr>
+                <th title="Id del Periodo">Id</th>
+                <th>Nombre del Periodo</th>
+                <th>Días</th>
+                <th title="Bimestre">B</th>
+                <th title="Fecha de Inicio del periodo">Inicio</th>
+                <th title="Fecha fin del periodo">Fin</th>
+                <th class="text-center"></th>
+                <th class="text-center" title="Numero de empleados en el periodo">Ne</th>
+                <th class="text-center" title="Numero de nominas generadas">Nn</th>
+                <th class="text-center" title="Numero de nominas Timbradas">Nt</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var prClass = item.Autorizado == true ? (item.Pagado == true? "periodoPagado" : "periodoInactivo") : "periodoActivo";
+                var hidden = item.Autorizado == true ? (depa == 5 ? (item.Pagado == true ? "style=display:none;" : "style=display:table-row;") : "style=display:none;") : "style=display:table-row;";
+                var label = item.Autorizado == true ? (item.Pagado == true ? "PAGADO" : "AUTORIZADO") : "ACTIVO";
+
+                var labelClass = item.Autorizado == true ? (item.Pagado == true ? "label-default" : "label-primary") : "label-success";
+                strNumEmp = $"ne{item.IdPeriodoPago}";
+                strNumNom = $"nn{item.IdPeriodoPago}";
+                strNumTim = $"nt{item.IdPeriodoPago}";
+
+                <tr data-idperiodo="@item.IdPeriodoPago" class="@prClass unselected  @(item.SoloComplemento == true ? "text-danger" : "")" @hidden>
+                    <td>@item.IdPeriodoPago</td>
+                    <td>@item.Descripcion</td>
+                    <td class="text-center">@item.DiasPeriodo
+                    @if (depa == 5)
+                    {
+                        if (item.Autorizado == true && item.Pagado == false)
+                        {
+                            <button class="btn btn-danger btn-sm pagar-periodo" style="padding:2px;">PAGAR</button>
+                        }
+                    }
+                    </td>
+                    <td class="text-center">@item.Bimestre</td>
+                    <td>@item.Fecha_Inicio.ToString("dd-MM-yyyy")</td>
+                    <td>@item.Fecha_Fin.ToString("dd-MM-yyyy")</td>
+                    <td>
+                        <span class="label @labelClass" style="display: block;">@label</span>
+                    </td>
+                    <td class="text-center"><span id="@strNumEmp" class=" badge_ne ">-</span></td>
+                    <td class="text-center"><span id="@strNumNom" class="badge ">-</span></td>
+                    <td class="text-center"><span id="@strNumTim" class="badge ">-</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+<script>
+    $(document).ready(function () {
+        $('#tblSeleccionPeriodo tbody').on('click', 'tr', function () {
+
+            $('#tblSeleccionPeriodo tbody tr').each(function () {
+                $(this).removeClass('selected');
+            });
+
+            $(this).addClass('selected');
+            $("#btnSelectPeriodo").attr("disabled", false);
+
+
+            $('input[type=search]').focus();
+        });
+        
+        $('#tblSeleccionPeriodo tbody').on('dblclick', 'tr', function () {
+            //alert();
+            var periodo = $(this).data("idperiodo");
+            $(this).toggleClass('selected');
+
+            var request = selectPeriodoPago(periodo);
+
+
+            if (request !== false) {
+                request.done(function () {
+                    $("#modal-periodos").modal("hide");
+                    location.reload();
+                });
+            }
+        });
+
+        $('#tblSeleccionPeriodo tbody').on('click', '.pagar-periodo', function () {
+            var rowPeriodo = $(this).closest("tr");
+            var btnPagar = $(this);
+            $.ajax({
+                url: "/Home/SetPeriodoPagado/",
+                method: "POST",
+                data: {
+                    IdPeriodo: rowPeriodo.data('idperiodo')
+                }
+            }).done(function (data) {
+
+                if (data) {
+                    btnPagar.remove();
+                    rowPeriodo.removeClass("periodoInactivo selected");
+                    rowPeriodo.addClass("periodoPagado");
+                    rowPeriodo.find("span.label").removeClass("label-primary");
+                    rowPeriodo.find("span.label").addClass("label-default").text("PAGADO");
+                    mostrarPeriodos($.trim($("input[name=optradio]:checked").parent().text()));
+                } else {
+                    utils.showMessage("ATENCION", "No se pudo registrar el pago.", 3000, "warning");
+                }
+                
+            });
+        });
+        actualizarInfoPeriodos();
+
+        $("#selejercicio").on('change', function() {
+
+            var r = this.value;
+
+         //------->
+       
+                var request = $.ajax({
+                    url: "/Home/GetPeriodosPago/",
+                    method: "POST",
+                    data: {
+                        id: r//ejercicio fiscal
+                    }
+                });
+
+                request.done(function (data) {
+                    $("#modal-periodos-body").html(data);
+
+                    $("#tblSeleccionPeriodo").DataTable({
+                        "paging": false,
+                        "searching": true,
+                        "info": false,
+                        "scrollY": '58vh',
+                        "scrollX": true,
+                        "scrollCollapse": true,
+                        "order": [[0, "desc"]]
+                    });
+
+
+                    $("#modal-periodos").modal("show");
+                });
+
+            //---------->
+
+
+
+        });
+
+    });//--> fin ready
+
+
+    function mostrarPeriodos(expr) {
+        switch (expr) {
+            case 1 ://Activos
+            case "Activos"://Activos
+                
+                $("#tblSeleccionPeriodo").find(".periodoInactivo").hide();
+                $("#tblSeleccionPeriodo").find(".periodoActivo").show();
+                $("#tblSeleccionPeriodo").find(".periodoPagado").hide();
+                break;
+            case 2: //Autorizados
+            case "Autorizados": //Autorizados
+                
+                $("#tblSeleccionPeriodo").find(".periodoInactivo").show();
+                $("#tblSeleccionPeriodo").find(".periodoActivo").hide();
+                $("#tblSeleccionPeriodo").find(".periodoPagado").hide();
+                break;
+            case 3 : // Todos
+            case "Todos": // Todos
+               
+                $("#tblSeleccionPeriodo").find(".periodoInactivo").show();
+                $("#tblSeleccionPeriodo").find(".periodoActivo").show();
+                $("#tblSeleccionPeriodo").find(".periodoPagado").show();
+                break;
+            case 4 : // Pagados
+            case "Pagados": // Pagados
+                
+                $("#tblSeleccionPeriodo").find(".periodoInactivo").hide();
+                $("#tblSeleccionPeriodo").find(".periodoActivo").hide();
+                $("#tblSeleccionPeriodo").find(".periodoPagado").show();
+                break;
+            default:
+        }
+
+        var table = $("#tblSeleccionPeriodo");
+        countNumRows(table);
+
+    }
+
+    function actualizarInfoPeriodos() {
+
+        var request = $.ajax({
+            url: "/Home/GetPeriodoInfo/",
+            method: "POST",
+            data: {
+                id: 0
+            }
+        });
+
+        
+        request.done(function (data) {
+
+            $.each(data, function (index, v) {
+                //actualizar spam
+                var nespan = "#ne" + v.IdPeriodo;
+                var nnspan = "#nn" + v.IdPeriodo;
+                var ntspan = "#nt" + v.IdPeriodo;
+
+                $(nespan).text(v.NumEmpleados);
+                $(nnspan).text(v.NumNominas);
+                $(ntspan).text(v.NumTimbrados);
+
+                var inte = parseInt(v.NumEmpleados);
+                var intn = parseInt(v.NumNominas);
+                var intt = parseInt(v.NumTimbrados);
+
+
+
+                //numero de nominas
+                if (intn > 0) {
+
+                    if (intn < inte) {
+                        $(nnspan).addClass('badge_noCompleto');
+                    }
+                    else if (intn === inte) {
+                        $(nnspan).removeClass('badge');
+                    }
+                }
+
+                //numero de timbrados - solo si es fiscal
+                if (!v.EsComplemento) {
+
+                    if (intt > 0) {
+
+                        if (intt < inte) {
+                            $(ntspan).addClass('badge_noCompleto');
+                        } else if (intt === inte) {
+                            $(ntspan).removeClass('badge');
+                        }
+                    }
+                } else {//si el periodo es de complemento removemos el badge
+                    $(ntspan).removeClass('badge');
+                }
+
+
+
+            });
+            
+        });
+
+
+    }
+
+</script>

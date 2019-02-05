@@ -1,0 +1,237 @@
+﻿@using Common.Utils
+@using RH.Entidades.GlobalModel;
+@model IEnumerable<Nomina.BLL.DatosTimbradoCancelacion>
+
+@{
+    List<NotificationSummary> summary = ViewBag.Summary;
+
+    int contentSumary = summary.Count;
+}
+
+@if (Model.Any())
+{
+    <div>
+        <table id="table-cancelar-cfdi" class="table">
+            <thead>
+                <tr class="info">
+                    <th>Nombre Empleado</th>
+                    <th class="text-center" title="Total de la Nómina">Total</th>
+                    <th class="text-center" title="Fecha de Certificacion o Timbrado">Fecha Cer.</th>
+                    <th class="text-center">Folio Fiscal- UUID</th>
+                    <th class="text-center" title="RFC de la empresa">RFC Emisor</th>
+                    <th class="text-center">RFC Receptor</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var strId = $"IdTim: {item.IdTimbrado}   IdNom: {item.IdNomina}   IdFin: {@item.IdFiniquito}";
+
+                    <tr data-idTimbre="@item.IdTimbrado" data-idEmisor="@item.IdEmisor">
+                        <td title="@strId">@item.Paterno @item.Materno @item.Nombres</td>
+                        <td class="text-right" title="@strId">@item.Total.ToCurrencyFormat(signo: false)</td>
+                        <td class="text-center">@item.FechaTimbrado</td>
+                        <td class="text-right">@item.FolioFiscal</td>
+                        <td class="text-right">@item.RfcEmisor</td>
+                        <td class="text-right">@item.RfcReceptor</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal Summary-->
+    <div id="summaryModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Summary</h4>
+                </div>
+                <div class="modal-body">
+                    @if (summary.Any())
+                {
+                    foreach (var itemS in summary)
+                    {
+                            <div class="alert alert-danger">
+                                <strong>ID: @itemS.Reg</strong> @MvcHtmlString.Create(itemS.Msg1).
+                                @itemS.Msg2
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <strong>Info!</strong> Muestra información del procesado actual.
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function() {
+
+            var activaIcon = 0;
+            activaIcon = @contentSumary;
+
+            var textSum = "Summary";
+
+            if (activaIcon > 0) {
+                textSum = "<span class='badge badge-danger'>"+activaIcon+"</span> Summary";
+            } else {
+                textSum = "<span class='badge'>"+activaIcon+"</span>  Summary";
+            }
+
+
+
+
+            var seleccionados = [];
+
+            var table = $("#table-cancelar-cfdi").DataTable({
+                dom: 'Bfrtip',
+                scrollY: '70vh',
+                scrollCollapse: true,
+                paging: false,
+                searching: true,
+                "language": { "url": "../scripts/datatables-spanish.json" },
+                info: false,
+                "buttons": [
+                    {
+                        className: 'seleccionarall',
+                        text: 'Seleccionar: Todos',
+                        action: function() {
+                            table.rows().select();
+                        },
+                        key: {
+                            key: 'a'
+                        }
+                    },
+                    {
+                        className: 'seleccionarcero',
+                        text: 'Seleccionar: Ninguno',
+                        action: function() {
+                            table.rows().deselect();
+                        },
+                        key: {
+                            key: ''
+
+                        }
+                    },
+                    {
+                        className: 'cancelarCFDI',
+                        text: 'Cancelar Timbrados',
+                        action: function() {
+
+                            var btnCanCfdi = $('.cancelarCFDI');
+
+                            var selected = $("#table-cancelar-cfdi").find(".selected");
+
+                            var idTimbrados = [];
+                            var emisores = [];
+
+
+                            selected.each(function() {
+                                var idTim = parseInt($(this).data("idtimbre"));
+
+                                idTimbrados.push(idTim);
+
+                                var idEmi = parseInt($(this).data("idemisor"));
+                                emisores.push(idEmi);
+
+                            });
+
+
+                            if (selected.length > 0) {
+                                utils.confirmDialog("¿DESEA CONTINUAR?",
+                                    "SE CANCELARÁN " + idTimbrados.length + " CFDI's",
+                                    "CONFIRMAR",
+                                    "CANCELAR",
+                                    function(confirm) {
+                                        if (confirm) {
+                                            var request = $.ajax({
+                                                url: "/CancelarTimbres/CancelarTimbres",
+                                                method: "POST",
+                                                data: { idTimbrados: idTimbrados, idEmisores: emisores },
+                                                beforeSend: function() {
+                                                    waitingDialog.show('Cancelando CFDIs ...');
+                                                    btnCanCfdi.addClass('disabled');
+                                                    btnCanCfdi
+                                                        .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> Cancelando cfdi...");
+                                                    OBGenerateCFDIs();
+                                                }
+                                            });
+
+                                            request.done(function(data) {
+                                                waitingDialog.hide();
+                                                utils.LoadActivePage();
+
+                                                btnCanCfdi.removeClass('disabled');
+                                                btnCanCfdi.html("<span>Cancelar Timbrados</span>");
+
+                                                utils.showMessage("PROCESO DE CANCELADO COMPLETADO", "... ", 1000);
+
+                                                $("#btnBuscar").click();
+                                                //  onChangeTableCFDIs(selected);
+                                            });
+
+                                            // request.always(OCGenerateCFDIs);
+                                        }
+                                    });
+                            } else {
+                                utils.showMessage("CFDI ", "Debe seleccionar los registros a cancelar", 1000, "info");
+                            }
+                        }
+
+                    },
+                    {
+                        className: 'btnsummary',
+                        text:  textSum,
+                        action: function () {var modalSummary = $("#summaryModal"); modalSummary.modal();},
+                        key: {key:'s'}
+                    }
+                ]
+            });
+
+
+            //Evento Select
+            $('#table-cancelar-cfdi tbody').on('click',
+                'tr',
+                function() {
+                    var id = this.id;
+
+                    var index = $.inArray(id, seleccionados);
+
+                    if (index === -1) {
+                        seleccionados.push(id);
+                    } else {
+                        seleccionados.splice(index, 1);
+                    }
+
+                    $(this).toggleClass('selected');
+
+                    $('input[type=search]').focus();
+                });
+
+
+        });//- fin de ready
+    </script>
+}
+else
+{
+    <div>
+        <div class="alert alert-warning">
+            <h4>...</h4>
+            <h4> <strong>Info!</strong> No se encontrarón recibos timbrados en el periodo <span class="label label-default">@ViewBag.IdPeriodo</span></h4>
+        </div>
+    </div>
+
+}

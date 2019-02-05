@@ -1,0 +1,140 @@
+﻿#alert-message {
+    display: none;
+}
+
+.btn-toolbar-hidden, .btn-toolbar-inactivos-hidden {
+    display: none;
+}
+
+#tblKardex {
+    display: block;
+    height: 300px;
+}
+
+#tblKardex tr td {
+    width: 25%;
+    min-width: 200px;
+    height:20px;
+}
+
+/*Botones Index*/
+#btnKardex{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:19px;
+}
+
+#btnKardex:hover{
+    background-color:#0664A4;
+}
+
+#btnDetalle{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:19px;
+}
+
+#btnDetalle:hover{
+    background-color:#0664A4;
+}
+
+tr {
+    cursor: pointer;
+}
+
+select.selectpicker {
+    display: block !important;
+    float: left;
+    overflow: hidden;
+    height: 34px;
+    width: 0;
+    border: 0; 
+    padding: 0; 
+    box-shadow: none; 
+    color: white; 
+}
+
+#btnModalBaja{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:19px;
+}
+
+#btnContrato{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:19px;
+}
+
+#btnContrato:hover{
+    background-color:#0664A4;
+}
+
+#btnTransfer{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:19px;
+}
+
+#btnTransfer:hover{
+    background-color:#0664A4;
+}
+
+#btnModalRecontratacion{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:19px;
+}
+
+#btnPlantillaBaja{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:19px;
+}
+
+#btnExp{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:19px;
+}
+
+#btnImp{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:19px;
+}
+
+#btnNewEmp{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:19px;
+}
+
+span.select-info{
+    position:absolute;
+    top:25px;
+    right:33px;
+}
+.label-anterior{
+    color:dodgerblue
+}

@@ -1,0 +1,164 @@
+﻿<script type="text/javascript">
+
+        //Capturo el evento submit del formulario y hago peticion ajax
+       document.getElementById('uploader').onsubmit = function () {
+
+        //Muestro un gif animado para simular tiempo de espera
+        document.getElementById('resultado').innerHTML = '<img src="../Images/animado1.gif"/>';
+
+         //El input submit del form lo deshabilito
+        apagarInputSubmit();
+
+        var formdata = new FormData(); //FormData object
+        var fileInput = document.getElementById('fileInput');
+        
+
+        //Extraer el primer archivo que se selecciono desde el input
+       formdata.append(fileInput.files[0].name, fileInput.files[0]);
+       
+        //Crear un XMLHttpRequest y enviar petición
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/ComparaExcelXML/EnviarAComparar2');
+        xhr.send(formdata);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                
+                //alert(xhr.responseText);  aqui esta la respuesta del controlador 
+
+               
+                var myArr = JSON.parse(this.responseText);
+
+                var i; var s = "";
+
+                s = "<thead><tr><th>UUID</th>";
+                s = s + "<th>UUID</th>"; s = s + "<th>Total</th> <th>RFC Receptor</th> <th>Fecha timbrado</th>";
+                s = s + "</tr></thead>";
+                s = s + "<tbody>";
+
+                for (i = 0; i < myArr.length; i++) {
+                    s = s + "<tr><td>";
+                    s = s + myArr[i].FilaExcel.Uuid + "</td>";
+
+                    if (myArr[i].EsIgualUuid == true) {
+                        s = s + '<td><span class="glyphicon glyphicon-ok"></span></td>';
+                    }
+                    else {
+                        s = s + '<td><span class="glyphicon glyphicon-remove"></span></td>';
+                    }
+
+
+                    if (myArr[i].EsIgualTotal == true) {
+                        s = s + '<td><span class="glyphicon glyphicon-ok"></span></td>';
+                    } 
+
+                    else {
+                        s = s + '<td><span class="glyphicon glyphicon-remove"></span>';
+                        s = s + '<span class="text-warning">Total en excel: ' + myArr[i].FilaExcel.TotalNeto + '</span> ';
+                        s = s + '<span class="text-warning">Total en XML: ' + myArr[i].ResumenXML.Total + '</span>';
+                        s = s + "</td>";
+                    }
+
+                    if (myArr[i].EsIgualRfcReceptor == true) {
+                        s = s + '<td><span class="glyphicon glyphicon-ok"></span></td>';
+                    }
+
+                    else  {
+                        s = s + '<td><span class="glyphicon glyphicon-remove"></span>';
+                        s = s + '<span class="text-warning">RFC en excel: ' + myArr[i].FilaExcel.RfcReceptor + '</span> ';
+                        s = s + '<span class="text-warning">RFC en XML: ' + myArr[i].ResumenXML.RfcReceptor + '</span>';
+                        s = s + '</td>';
+                    }
+
+
+                    if (myArr[i].EsIgualFechaTimbrado == true) {
+                        s = s + '<td><span class="glyphicon glyphicon-ok"></span></td>';
+                    }
+
+                    else {
+
+                        s = s + '<td><span class="glyphicon glyphicon-remove"></span>';
+                        s = s + '<span class="text-warning">Fecha en excel: ' + myArr[i].FilaExcel.Fecha + '</span> ';
+                        s = s + '<span class="text-warning">Fecha en XML(MDA): ' + ToJavaScriptDate(myArr[i].ResumenXML.FechaTimbrado) + '</span>';
+                        s = s + '</td>';
+                    }
+
+
+                    s = s + "</tr>";
+                }
+
+                s = s + '</tbody>';
+                reinicializarDivResultado();  //Borrar contenido de div donde se mostrara resultado
+                document.getElementById('miTabla').innerHTML = s; //Asignarle contenido a la tabla
+                aplicarDataTables();   //enlazar jquerytables a mi tabla
+                encenderInputSumit();  //encender el boton de submit
+            }
+            
+        }
+        return false;
+    }   
+
+
+    // regresa en formato mes, dia , anio
+    function ToJavaScriptDate(value) {
+        var pattern = /Date\(([^)]+)\)/;
+        var results = pattern.exec(value);
+        var dt = new Date(parseFloat(results[1]));
+        return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+    }
+
+
+
+    //aplicarle jquery tables a la tabla 
+    function aplicarDataTables() {
+        $('#miTabla').dataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+            }
+        } );       
+    }
+
+
+    //Si ya conecte una tabla con jquery, debo reconstruir el elemento que lo contiene para poder borrar esa tabla
+    function reinicializarDivResultado() {
+        document.getElementById('resultado').innerHTML = ' <fieldset><legend>Resultado de comparar cada linea con su XML</legend></fieldset>' + '<table id= "miTabla" class="table" ></table >';
+            
+    }
+
+    function apagarInputSubmit() {
+        document.getElementById('btnSubmit').disabled = true;
+    }
+
+    function encenderInputSumit() {
+        document.getElementById('btnSubmit').disabled = false;
+    }
+</script>
+
+
+
+
+<div class="main-content-title">
+    <h4>Comparar excel vs XML</h4>   
+</div>
+
+
+
+<div class="col-md-12">
+    <form id="uploader" style="padding-top:25px;">
+        <fieldset>
+            <div class="form-group">
+                <input id="fileInput" type="file" required/>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-lg" value="Enviar archivo"  id="btnSubmit" />
+            </div>
+        </fieldset>              
+    </form>
+</div>
+
+
+
+<div id="resultado" class="col-md-12">
+    <fieldset><legend>Resultado de comparar cada linea con su XML</legend></fieldset>
+    <table id="miTabla" class="table"></table>
+</div>

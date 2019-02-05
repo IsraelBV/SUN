@@ -1,0 +1,127 @@
+﻿@using RH.Entidades;
+@using RH.BLL;
+@model Empleado_Contrato
+
+
+@using (Ajax.BeginForm("Cambiosalario", "Empleados", new AjaxOptions { OnSuccess = "OnSuccess", OnFailure = "OnFailure", OnBegin = "OnBegin", OnComplete = "UpdateSection2" }, new { id = "formcambiosalario", @class = "formHorizontal tooltipForm" }))
+{
+    @Html.ValidationSummary(true)
+
+    <input type="hidden" name="idContrato" id="cs_idContrato" />
+   
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <span><strong>Nombre:</strong></span> 
+                <span class="pull-right" id="spnombre"></span>                              
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <span><strong>FechaIMSS:</strong></span>
+                <span  id="spfechaimss"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <span><strong>Factor:</strong></span>
+                <span id="spfactor"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mr-form-group">
+                <label for="FechaAlta" class="control-label">Fecha Inicio</label>
+                <label for="FechaAlta" id="lfa" class="label-anterior"></label>
+                <input type="date" name="Fechainicio" id="Fechainicio" class="form-control" data-rule-required="true" required />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="SalarioReal" class="control-label">Salario Real </label>
+                <label for="SalarioReal" id="lsrc" class="label-anterior"></label>
+                <input type="number" step="any" class="form-control" name="SalarioReal" id="SalarioReal" data-rule-number="true"  />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="SD" class="control-label">SD </label>
+                <label for="SD" id="lsdc" class="label-anterior"></label>
+                <input type="number" step="any" class="form-control" name="SD" id="SDc" data-rule-number="true"  />
+            </div>
+        </div>
+
+        <input type="hidden" value="@ViewBag.Factor" id="Factor"/>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="SDI" class="control-label">SDI </label>
+                <label for="SDI" id="lsdic" class="label-anterior"></label>
+                <input type="number" step="any" class="form-control" name="SDI" id="SDIc" data-rule-number="true" />
+            </div>
+        </div>
+    </div>
+    
+    <button type="submit" class="hidden"></button>              
+}
+<script>
+    $(document).ready(function () {
+
+       //Bloqueamos el calendario para solo fechas antes de hoy
+        cancelaDateFoward();
+      
+        $("#btncambioS").click(function () {       
+                $("#formcambiosalario").submit();
+                $("#modal-cambiosalario").modal("hide");
+            
+        });
+
+        /* Función para generar el salario diario integrado */
+        /* Toma el factor en el input oculto "factor" y lo multiplica por el salario diario */
+        $("#SDc").keyup(function () {
+            var sd = parseFloat($("#SDc").val());
+            var sdi = sd * $("#Factor").val();
+            $("#SDIc").val(sdi.round(4));
+        });
+
+        $("#Fechainicio").focusout(function () {
+            var fecha = $("#spfechaimss").html();
+            var fechai = $("#Fechainicio").val();
+            $.ajax({
+                type: "POST",
+                url: "/Empleados/ObtenerFactor",
+                data: {
+                    fechaReal: fecha,
+                    fechaNomina: fechai
+                },             
+                success: function (response) {
+                    $("#Factor").val(response);
+                    $("#spfactor").html(response);
+                },
+                failure: function (response) {
+                    alert("Error al buscar factor.");
+                }
+            });
+
+        });
+
+        Number.prototype.round = function (places) {
+            return +(Math.round(this + "e+" + places) + "e-" + places)
+        }
+        function cancelaDateFoward() {
+            var date = new Date();
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            if (month < 10) month = "0" + month;
+            if (day < 10) day = "0" + day;
+            var today = year + "-" + month + "-" + day;
+            $("#Fechainicio").attr("max", today);
+        }
+
+    });
+</script>

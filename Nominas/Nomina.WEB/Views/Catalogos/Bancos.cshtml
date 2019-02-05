@@ -1,0 +1,26 @@
+﻿@using RH.Entidades
+
+@model List<C_Banco_SAT>
+
+
+<table id="Bancos" class="table table-striped" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Descripción</th>
+            <th>Clave SAT</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var b in Model)
+        {
+            <tr>
+                <td>@b.IdBanco  </td>
+                <td>@b.Descripcion</td>
+                <td>@b.CveSat.ToString().PadLeft(3, '0')</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

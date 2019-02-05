@@ -1,0 +1,116 @@
+﻿@using RH.BLL;
+@using Common.Enums;
+@using Common.Helpers;
+@using SYA.BLL;
+@model List<DatosEmpleado>
+
+@{
+    ViewBag.Title = "Préstamos";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    var usuario = SessionHelpers.GetIdUsuario();
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/pdfmake-0.1.18,dt-1.10.11,b-1.1.2,b-html5-1.1.2,b-print-1.1.2,kt-2.1.1,r-2.0.2/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+
+
+<div class="panel with-nav-tabs panel-primary" id="panelEmpleados">
+    <div class="panel-heading clearfix text-center">
+        <div class="pull-left">
+            <h4 class="panel-title">Préstamos</h4>
+            <br />
+        </div>
+    </div>
+        <div class="panel-body" id="panBody">
+            <div id="contenido">
+                <table class="table table-hover table-striped" id="tblPrestamos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Fecha Alta</th>
+                            <th>Status</th>
+                            <th>Cantidad de Préstamos</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                                <tr>
+                                    <td>@item.IdEmpleado</td>
+                                    <td>@item.Nombres @item.Paterno @item.Materno</td>
+                                    <td>
+                                        @if (item.FechaAlta != null)
+                                        {
+                                            @item.FechaAlta.ToString("dd-MM-yyyy")
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Status == true)
+                                        {
+                                            <input type="checkbox" checked disabled />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" disabled />
+                                        }
+                                    </td>
+                                    <td>@item.Prestamos</td>
+                                    <td class="text-right">
+                                        @if (ControlAcceso.ValidarEjecutarAccion(Modulos.Prestamos, AccionCrud.Consultar, usuario))
+                                        {
+                                            <a class="btn btn-default btnDetalle" title="Detalles" href="~/Prestamos/Detalle?empleado=@item.IdEmpleado" data-ajax-update="#contenido" data-ajax-mode="replace" data-ajax="true">
+                                                <i class="fa fa-money"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                </div>
+                <script type="text/javascript" src="https://cdn.datatables.net/t/bs/pdfmake-0.1.18,dt-1.10.11,b-1.1.2,b-html5-1.1.2,b-print-1.1.2,kt-2.1.1,r-2.0.2/datatables.min.js"></script>
+                <script>
+                    $("#tblPrestamos").DataTable({
+                        "lengthMenu": [[7, 15, 30], [7, 15, 30]],
+                        "language": {
+                            "sInfoFiltered": "(filtrado de un total de _MAX_ Empleados)",
+                            "sInfo": "Del _START_ al _END_ de un total de _TOTAL_ empleados",
+                            "sZeroRecords": "No se encontraron resultados",
+                            "infoEmpty": "No se encontraron registros",
+                            "sEmptyTable": "Ningún dato disponible en esta tabla",
+                            "sLoadingRecords": "Cargando...",
+                            "sLengthMenu": "Mostrar _MENU_ Empleados",
+                            "sSearch": "Buscar:",
+                            "oPaginate": {
+                                "sFirst": "Primero",
+                                "sLast": "Último",
+                                "sNext": "Siguiente",
+                                "sPrevious": "Anterior"
+                            }
+                        },
+                        "scrollY": "440px",
+                        "scrollCollapse": true,
+                        "paging": true,
+                        "aoColumnDefs": [
+                            { "bSortable": false, "aTargets": [5] },
+                            { "bSearchable": false, "aTargets": [5] }
+                        ],
+                        "buttons": [
+                            "pdf"
+                        ]
+                    }).columns.adjust().responsive.recalc();
+                    $('[data-tooltip="tooltip"]').tooltip();
+
+                </script>
+            </div>
+            </div>
+       
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+
+

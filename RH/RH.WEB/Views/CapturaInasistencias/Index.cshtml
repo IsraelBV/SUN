@@ -1,0 +1,251 @@
+﻿@using RH.BLL;
+@using RH.Entidades
+@using Common.Enums
+@using Common.Helpers
+@using Common.Utils;
+@model List<DatosEmpleado>
+@{
+    ViewBag.Title = "Captura de Inasistencias";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    List<C_TiposInasistencia> tipos = ViewBag.TiposInasistencias;
+}
+
+<link rel="stylesheet" type="text/css" href="~/Content/Inasistencias.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.css" />
+<link href="~/Content/animate.min.css" rel="stylesheet" />
+<link type="text/css" rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+<link href="~/Content/PanelWithTabs2.css" rel="stylesheet" />
+
+<script src="~/Content/MultiDate/js/jquery-ui-1.11.1.js"></script>
+<script src="~/Content/MultiDate/jquery-ui.multidatespicker.js"></script>
+
+<link href="~/Content/MultiDate/css/mdp.css" rel="stylesheet" />
+
+<div class="panel with-nav-tabs panel-primary" id="panelEmpleados">
+    <div class="panel-heading clearfix text-center">
+        <div class="pull-left">
+            <h4 class="panel-title">Captura de Faltas e Inasistencias</h4>
+            <br />
+        </div>
+        <div class="">
+            <div class="btn-group pull-right" id="control-panel">
+                <ul class="nav nav-tabs">
+                    <li>
+
+                        @if (SYA.BLL.ControlAcceso.ValidarEjecutarAccion(Modulos.RHInasistencias, AccionCrud.Agregar, SessionHelpers.GetIdUsuario()))
+                        {
+                            <button id="btnAgregar" title="Nueva Incidencia" class="btn btn-default hovernuevo" data-toggle="modal" href='#modalCalendar'>
+                                <i class="fa fa-plus"></i> Capturar
+                            </button>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    @*<div class="btn-group pull-left" role="group" id="control-panel">
+
+            @if (SYA.BLL.ControlAcceso.ValidarEjecutarAccion(Modulos.CapturaInasistencias, AccionCrud.Agregar, SessionHelpers.GetIdUsuario()))
+            {
+                <a id="btnAgregar" title="Nueva Incidencia" class="btn btn-default btn-sm" data-toggle="modal" href='#modal-captura'>
+                    <i class="fa fa-plus"></i> Capturar
+                </a>
+            }
+            @if (SYA.BLL.ControlAcceso.ValidarEjecutarAccion(Modulos.CapturaInasistencias, AccionCrud.Consultar, SessionHelpers.GetIdUsuario()))
+            {
+                <button id="btnHistorial" title="Historial" class="btn btn-sm btn-primary">
+                    <i class="fa fa-info-circle fa-lg"></i> Detalle
+                </button>
+            }
+        </div>*@
+
+    <table class="table table-hover table-striped" id="tblEmpleados">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Contrato</th>
+                <th>Estatus</th>
+                <th>Inasistencias</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var fechabaja = item.FechaBaja != null ? item.FechaBaja.Value.ToString("yyyy-MM-dd") : "";
+                var contrato = item.FechaBaja != null ? item.FechaAlta.ToString("dd/MM/yyyy") + " - " + item.FechaBaja.Value.ToString("dd/MM/yyyy") : item.FechaAlta.ToString("dd/MM/yyyy") + " - Presente";
+                var status = "ACTIVO";
+                var classStatus = "label-success";
+                if (!item.Status)
+                {
+                    status = "INACTIVO";
+                    classStatus = "label-default";
+                }
+                <tr data-idempleado="@item.IdEmpleado" data-fecha-alta="@item.FechaAlta.ToString("yyyy-MM-dd")" data-fecha-baja="@fechabaja">
+                    <td>@item.IdEmpleado</td>
+                    <td>@UtilsEmpleados.GetNombreCompletoEmpleado(@item.Nombres, @item.Paterno, @item.Materno)</td>
+                    <td>@contrato</td>
+                    <td>
+                        <span class="label @classStatus">@status</span>
+                    </td>
+                    <td>@Html.ActionLink("DETALLES", "Detalle", new { id = item.IdEmpleado }, new {@class= "label label-primary" })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="table-info">
+        <p id="numEmpleados">1 empleado seleccionado</p>
+    </div>
+
+    <div class="modal fade" id="modal-captura">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Capturar Inasistencias</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal tooltipForm">
+                        <div class="row">
+                            <div class="col-md-8">
+                                @*<div class="form-group">
+                                        <label for="IdTipoInasistencia">Tipo</label>
+                                        <select name="IdTipoInasistencia" id="IdTipoInasistencia" class="form-control">
+                                            @foreach (var item in tipos)
+                                            {
+                                                <option value="@item.IdTipoInasistencia">@item.Descripcion</option>
+                                            }
+                                        </select>
+                                    </div>*@
+                            </div>
+                            <div class="col-md-3 col-md-offset-1">
+                                <div class="form-group">
+                                    <label for="Dias">Días</label>
+                                    <input type="number" name="Dias" id="Dias" min="1" required class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="Fecha">Fecha</label>
+                                    <input type="date" name="Fecha" id="Fecha" required class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-5 col-md-offset-2">
+                                <div class="form-group">
+                                    <label for="FechaFin">Fecha Fin (Opcional)</label>
+                                    <input type="date" name="FechaFin" id="FechaFin" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="hidden"></button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary hovernuevo" id="btnGuardarCaptura">Guardar</button>
+                    <button type="button" class="btn btn-default hovercancelado" data-dismiss="modal">Cancelar</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalCalendar" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Capturar Inasistencias</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="demos">
+                        <ul id="demos-list">
+                            <li class="demo first">
+                                <div>
+                                    <label for="simpliest-usage">Fecha</label>
+                                </div>
+                                <div id="simpliest-usage" class="box"></div>
+                                <div class="code-box">
+                                 
+                                </div>
+                            </li>
+                            <li class="demo first">
+                                <label for="IdTipoInasistencia">Tipo</label>
+                                <select name="IdTipoInasistencia" id="IdTipoInasistencia" class="form-control col-md-2">
+                                    <option value="16">Falta Justificada</option>
+                                    <option value="8">Falta Injustificada</option>
+                                    <option value="9">Falta Ausentismo</option>
+                                    @*@foreach (var item in tipos)
+                                    {
+                                        <option value="@item.IdTipoInasistencia">@item.Descripcion</option>
+                                    }*@
+                                </select>
+                                <div class="code-box" style="color: rgba(0, 0, 0, .1)">.</div>
+                                <button type="button" class="btn btn-default hovernuevo" id="btnResetFechas" onclick="resetDays()">Reset fechas</button>
+                                <div class="code-box" style="color: rgba(0, 0, 0, .1)">.</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary hovernuevo" id="btnGuardarInasistencia">Guardar</button>
+                    <button type="button" class="btn btn-default hovercancelado" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap-notify.min.js"></script>
+
+<!-- Scripts para el validador -->
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>
+<script src="~/Scripts/inasistencias.js"></script>
+<script>
+    $('[data-tooltip="tooltip"]').tooltip();
+
+    var fechasSeleccionadas = [];
+    $(function () {
+        $('#simpliest-usage').multiDatesPicker();
+    });
+
+
+    $(document).on("click", "#btnGuardarInasistencia", function () {
+
+        var dias = $('#simpliest-usage').multiDatesPicker('getDates');
+
+        console.log(dias.length);
+
+        if (dias.length <= 0)
+            {
+         $.notify({
+            title: '<strong>Captura de Faltas:</strong>',
+            message: 'Para guardar los datos es necesario que seleccione las fechas para las faltas.'
+        }, {
+            type: "info",
+            animate: {
+                enter: 'animated fadeInDown',
+                exit: 'animated fadeOutUp'
+            },
+            placement: { from: 'top', align: 'center' },
+            offset: 55, timer: 5000, z_index: 11031
+        });
+        }
+        else
+            {
+ $("form").submit();
+}
+    });
+
+    function resetDays() {
+        $('#simpliest-usage').multiDatesPicker('resetDates');
+    }
+
+</script>

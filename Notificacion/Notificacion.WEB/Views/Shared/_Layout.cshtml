@@ -1,0 +1,283 @@
+﻿@using SYA.BLL;
+@using Common.Enums;
+@{ 
+    var user = @ControlAcceso.GetUsuarioEnSession();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>SUNRH | Notificaciones</title>
+    <link rel="icon" href="~/Images/logo2.png" />
+    <!--Hojas de Estilo-->
+    <link rel="stylesheet" type="text/css" href="~/content/jquery-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/content/materialize/css/materialize.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/content/normalize.css" />
+    <link href="~/content/layout/filtro.css" rel="stylesheet" />
+    <link href="~/content/layout/menu.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script src="~/Scripts/jquery-3.1.0.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/materialize/materialize.min.js"></script>
+    <script src="~/Scripts/jsPDF/jspdf.min.js"></script>
+    <script src="~/Scripts/push.min.js"></script>
+    <script src="~/Scripts/interval.js"></script>
+    <script src="~/Scripts/menu.js"></script>
+
+</head>
+<body>
+    <div class="navbar-fixed">
+        <ul id="menu-dropdown" class="dropdown-content">
+            <li><a class="btnSearch">Buscar</a></li>
+            <li><a href="/Acceso/LogOut">Cerrar Sesión</a></li>
+        </ul>
+        <nav id="main-menu">
+            <div class="nav-wrapper">
+                <form id="search-form">
+                    <div class="input-field">
+                        <input type="search" id="search" name="keyword" required autocomplete="off" />
+                        <label for="search"><i class="material-icons">search</i></label>
+                        <i class="material-icons">close</i>
+                    </div>
+                </form>
+                <div class="other-items-in-nav">
+                    <a href="/" id="btnInicio" class="brand-logo center tooltipped" data-position="right" data-delay="50"
+                       data-tooltip="Regresar a Inicio">
+                        <i class="material-icons left">brightness_5</i> <span class="hide-on-small-only">Notificaciones</span>
+                    </a>
+                    <ul class="right" id="defaultNav">
+                        <li class="search-li">
+                        
+                        </li>
+                        <li class="hide-on-small-only">
+                            <a class="btnSearch">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </li>
+                        <li class="hide-on-small-only">
+                            <a id="bells"><i class="material-icons">notifications</i></a>
+                            <a id="bell" hidden><i class="material-icons">notifications_off</i></a>
+                        </li>
+                        <li class="liSelectAll hide-on-small-only">
+                            <a class="btnSelectAll">
+                                <i class="material-icons">select_all</i>
+                            </a>
+                        </li>
+                        <li class="hide-on-small-only">
+                            <a href="/Acceso/LogOut">
+                                <i class="material-icons">exit_to_app</i>
+                            </a>
+                        </li>
+                        <li class="hide-on-med-and-up">
+                            <a class="dropdown-button" data-activates="menu-dropdown">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="right" id="actionNav">
+                        <li id="liAtendida">
+                            <a id="btnNavAtendida">
+                                <i class="material-icons">work</i>
+                            </a>
+                        </li>
+                        <li id="liAbierta">
+                            <a id="btnNavLeida">
+                                <i class="material-icons">drafts</i>
+                            </a>
+                        </li>
+                        
+                        <li class="liSelectAll">
+                            <a class="btnSelectAll">
+                                <i class="material-icons">select_all</i>
+                            </a>
+                        </li>
+                        <li class="liClearAll">
+                            <a class="btnClearAll">
+                                <i class="material-icons">clear_all</i>
+                            </a>
+                        </li>
+                        
+                        <li id="liPrint">
+                            <a id="btnNavPrint">
+                                <i class="material-icons">print</i>
+                            </a>
+                        </li>
+                        <li id="liLoading">
+                            <a id="btnNavLoading">
+                                <i class="material-icons">refresh</i>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="left">
+                        <li>
+                            <a id="btnCollapseSidebar">
+                                <i class="material-icons">menu</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <nav id="side-bar">
+        <ul>
+            <li>
+                <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Buen día, @user.Nombres">
+                    <img src="@ControlUsuario.GetCurrentUserProfilePicture()" class="circle left" id="user-image" />
+                </a>
+            </li>
+            <li class="liactive">
+                <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Bandeja" data-filter="0" id="btnInbox">
+                    <i class="material-icons left light-blue-text text-lighten-1">inbox</i>
+                </a>
+            </li>
+            <li>
+                <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Favoritas" data-filter="1">
+                    <i class="material-icons left amber-text text-lighten-1">star</i>
+                </a>
+            </li>
+            <li>
+                <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Nuevas" data-filter="2" data-filter-extra="2">
+                    <i class="material-icons left teal-text text-darken-3 ">mail</i>
+                </a>
+            </li>
+            <li>
+                <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Leídas" data-filter="2" data-filter-extra="1">
+                    <i class="material-icons left red-text text-darken-1">drafts</i>
+                </a>
+            </li>
+            <li>
+                <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Atendidas" data-filter="2" data-filter-extra="3">
+                    <i class="material-icons left brown-text text-darken-3">work</i>
+                </a>
+            </li>
+            
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.Alta, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Alta" data-filter="3" data-filter-extra="1">
+                        <i class="material-icons left" id="filAltas">group_add</i>
+                    </a>
+                </li>
+            }
+
+            @if (ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.Baja, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Bajas" data-filter="3" data-filter-extra="2">
+                        <i class="material-icons left red-text text-accent-4">backspace</i>
+                    </a>
+                </li>
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.Salarios, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Salarios" data-filter="3" data-filter-extra="4">
+                        <i class="material-icons left yellow-text text-darken-2">monetization_on</i>
+                    </a>
+                </li>
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.Puesto, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Cambio de Puesto" data-filter="3" data-filter-extra="5">
+                        <i class="material-icons left blue-grey-text">swap_vertical_circle</i>
+                    </a>
+                </li>
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.Empresa, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Cambio de Empresa" data-filter="3" data-filter-extra="6">
+                        <i class="material-icons left orange-text text-accent-4">transfer_within_a_station</i>
+                    </a>
+                </li>
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.Permisos, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Permisos" data-filter="3" data-filter-extra="12">
+                        <i class="material-icons left light-blue-text text-darken-4">thumbs_up_down</i>
+                    </a>
+                </li>
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.Reingresos, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Reingresos" data-filter="3" data-filter-extra="7">
+                        <i class="material-icons left deep-purple-text text-lighten-2">sync</i>
+                    </a>
+                </li> 
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.IMSS, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="IMSS" data-filter="3" data-filter-extra="3">
+                        <i class="material-icons left" id="filIMSS">domain</i>
+                    </a>
+                </li>
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.Cumple_IMSS, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Cumple IMSS" data-filter="3" data-filter-extra="8">
+                        <i class="material-icons left purple-text text-accent-3">cake</i>
+                    </a>
+                </li>
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.BajaIMSS, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Baja IMSS" data-filter="3" data-filter-extra="13">
+                        <i class="material-icons left" id="filBajaIMSS">backspace</i>
+                    </a>
+                </li>
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.INFONAVIT, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="INFONAVIT" data-filter="3" data-filter-extra="9">
+                        <i class="material-icons left cyan-text text-darken-1">home</i>
+                    </a>
+                </li>
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.Vacaciones, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Vacaciones" data-filter="3" data-filter-extra="10">
+                        <i class="material-icons left lime-text text-darken-2">pool</i> 
+                    </a>
+                </li>
+            }
+
+            @if(ControlAcceso.AccesoFiltroNotificacion(TiposNotificacion.Incapacidades, user))
+            {
+                <li>
+                    <a class="truncate btn-side-bar tooltipped" data-position="right" data-delay="50" data-tooltip="Incapacidades" data-filter="3" data-filter-extra="11">
+                        <i class="material-icons left brown-text text-darken-2">accessible</i>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+
+    <div style="clear: both;"></div>
+
+    <main class="container main-collapsed">
+        @RenderBody()
+    </main>
+</body>
+</html>

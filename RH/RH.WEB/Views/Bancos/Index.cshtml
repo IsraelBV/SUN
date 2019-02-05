@@ -1,0 +1,106 @@
+﻿@using RH.BLL;
+@using RH.Entidades;
+@using Common.Helpers;
+@using Common.Enums;
+@using SYA.BLL;
+@model IEnumerable<RH.Entidades.C_Banco_SAT>
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Lista de Bancos</h2>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<p>
+    @*@if (ControlAcceso.ValidarEjecutarAccion(Modulos.Bancos, AccionCrud.Agregar, SessionHelpers.GetIdUsuario()))
+    {*@
+        @Html.ActionLink("Create New", "Create")
+        <a href="/Bancos/CrearVP" data-ajax-update="#divContenido" data-ajax-mode="replace" data-ajax="true" data-toggle="modal" data-target="#ventanaModal">
+            Crear Nuevo Banco
+        </a>
+    @*}*@
+
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IdBanco)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdBanco)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            @*<td>
+                @if (ControlAcceso.ValidarEjecutarAccion(Modulos.Bancos, AccionCrud.Editar, SessionHelpers.GetIdUsuario()))
+                {
+                    @Html.ActionLink("Edit", "Edit", new {id = item.IdBanco})
+                    <text>|</text>
+                }
+                @if (ControlAcceso.ValidarEjecutarAccion(Modulos.Bancos, AccionCrud.Consultar, SessionHelpers.GetIdUsuario()))
+                {
+                    @Html.ActionLink("Details", "Details", new {id = item.IdBanco})
+                    <text>|</text>
+                }
+                @if (ControlAcceso.ValidarEjecutarAccion(Modulos.Bancos, AccionCrud.Eliminar, SessionHelpers.GetIdUsuario()))
+                {
+                    @Html.ActionLink("Delete", "Delete", new {id = item.IdBanco})
+                    <a href="/Bancos/DeleteVP/@item.IdBanco" data-ajax-update="#divContenido" data-ajax-mode="replace" data-ajax="true" data-toggle="modal" data-target="#ventanaModal" >
+                        Eliminar
+                    </a>
+
+                }
+            </td>*@
+        </tr>
+    }
+
+</table>
+<div id="divContenido2"></div>
+<!-- Modal -->
+<div id="ventanaModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Banco</h4>
+            </div>
+            <div class="modal-body">
+                <p>Cargando ...</p>
+                <img src="~/Content/imagenes/animatedEllipse.gif" />
+                <div id="divContenido"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    
+    function openPopup() {
+        $("#result").dialog("open");
+    }
+
+</script>

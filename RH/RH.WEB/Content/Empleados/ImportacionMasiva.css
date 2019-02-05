@@ -1,0 +1,38 @@
+﻿.panel-heading {
+    padding-bottom: 5%;
+}
+.btnPanel {
+    width: 100%;
+}
+
+.panel-body {
+    display: none;
+}
+
+#tblRecords {
+    height: 460px;
+}
+
+#btnUploadRecords {
+    display: none;
+}
+#countRecords {
+    display: none;
+}
+
+.collapse {
+    padding:5px;
+}
+
+.heading-warnings {
+    padding-bottom: 10px;
+}
+
+.alert {
+    margin-bottom: 5px;
+}
+
+h5 {
+margin-bottom:5px;
+margin-top:5px;
+}

@@ -1,0 +1,128 @@
+﻿@using RH.Entidades
+@model List<Empresa>
+
+<h1>Reporte Incapacidades <span> <i class="fa fa-wheelchair" aria-hidden="true"></i> </span></h1>
+<div class="jumbotron">
+    <div class="row">
+            <div class="col-md-12" style="padding-bottom: 1.5em;">
+                <div class="form-group">
+                    <select id="tipoReporte" name="tipoReporte" class="form-control col-md-12" data-rule-required="true">
+                        <option value="0" selected>GENERAL</option>
+                        <option value="1">DESGLOSADO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="ejercicio">
+                    <div class="form-group">
+                        <label>Empresa : </label>
+                        @if (Model != null)
+                    {
+                        <select id="selectEmpresas" name="selectEmpresas" class="form-control " data-rule-required="true">
+                            @foreach (var Item in Model)
+                        {
+                            <option value="@Item.IdEmpresa">@Item.RazonSocial</option>
+                    }
+                        </select>
+                }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="ejercicio">
+                    <div class="form-group">
+                        <label title="Fechas en las que fueron registradas al sat">Fecha Inicio Timbrado sat: </label>
+                        <input type="date" class="form-control " id="fechaInicio" name="fechaInicio" data-rule-required="true" data-rule-date="true" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="ejercicio">
+                    <div class="form-group">
+                        <label title="Fechas en las que fueron registradas al sat">Fecha Final Timbrado sat: </label>
+                        <input type="date" class="form-control " id="fechaFin" name="fechaFin" data-rule-required="true" data-rule-date="true" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <a class="btn btn-primary " id="descargarReporteIncap">Generar reporte  Incapacidades  </a>
+
+    </div>
+<script>
+    $(document).ready(function () {
+
+        $("#descargarReporteIncap").click(function () {
+
+            var sendData = true;
+
+            var empresa = $('#selectEmpresas').val();
+            var fechaInicio = $("#fechaInicio").val();
+            var fechaFin = $("#fechaFin").val();
+            var tipo = $("#tipoReporte").val();
+
+
+
+            if (fechaFin === "") {
+                sendData = false;
+                utils.showMessage("WAR ", "Establesca la fecha fin", 4000, "danger");
+                $('#fechaFin').focus();
+            }
+
+            if (fechaInicio === "") {
+                sendData = false;
+                utils.showMessage("WAR ", "Establesca la fecha inicio", 4000, "danger");
+                $('#fechaInicio').focus();
+            }
+
+            if (empresa < 0) {
+                sendData = false;
+                utils.showMessage("WAR ", "Seleccione una empresa", 4000, "danger");
+                $('#selectEmpresas').focus();
+            }
+
+
+            if (sendData)
+            {
+                var xhr = $.ajax({
+                    url: '/Reportes/ReporteIncapacidad/',
+                    method: "POST",
+                    data: {
+                        idEmpresa: empresa,
+                        fechaI: fechaInicio,
+                        fechaF: fechaFin,
+                        tipo: tipo
+                    },
+                    beforeSend: function (xhr) {
+                        waitingDialog.show('Generando Reporte de Incapacidades...');
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#downReporteInfo").attr("href", data.resultPath);
+                            window.location = data.resultPath;
+                        } else {
+                            utils.showMessage("WAR", data.error, 8000);
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.error);
+                    },
+                    complete: function (data) {
+                        waitingDialog.hide();
+
+                    }
+                });
+
+                }
+
+
+
+
+        });
+
+    });
+</script>
+<script type="text/javascript" src="~/scripts/bootstrap-notify.min.js"></script>
+

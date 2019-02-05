@@ -1,0 +1,201 @@
+﻿
+@using Nomina.BLL
+@using RH.Entidades
+@model List<EmpresasCuentas>
+
+<table class="display   compact " id="clavescontables">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Descripcion</th>
+            <th>Clave SAT</th>
+            <th>Tipo Concepto</th>
+            <th>Cuenta Deudora</th>
+            <th>Cuenta Acreedora</th>
+        </tr>
+    </thead>
+    <tbody id="prueba">
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td class="IdConcepto">@c.IdConcepto</td>
+                <td>@c.Descripcion</td>
+                <td>@c.ClaveSat</td>
+                <td>@c.Tipo</td>
+                <td>
+                    <div id="cuadroDeudora">
+                        @if (c.Cuenta_Deudora == "" || c.Cuenta_Deudora == null)
+                        {
+                            <label id="Deudora" class="Deudora">...</label>
+                        }
+                        else
+                        {
+                            <label id="Deudora" class="Deudora">@c.Cuenta_Deudora</label>
+                        }
+                    </div>
+
+
+                </td>
+                <td>
+                    <div id="cuadro">
+                        @if (c.Cuenta_Acreedora == "" || c.Cuenta_Acreedora == null)
+                        {
+                            <label id="cuentas" class="Claves">...</label>
+                        }
+                        else
+                        {
+                            <label id="cuentas" class="Claves">@c.Cuenta_Acreedora</label>
+                        }
+
+                    </div>
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<script>
+    var table1 = $('#clavescontables').DataTable({
+        //dom: 'Bfrtip',
+        "scrollY": "350px",
+        "scrollCollapse": true,
+        "paging": false,
+        "searching": false,
+        "bInfo": false,
+        "columnDefs": [
+    { "width": "5%", "targets": 0 },
+    { "width": "20%", "targets": 1 }
+        ],
+        //buttons: [{
+        //    //extend: 'excelHtml5',
+        //    //text: 'Descargar Layout',
+        //    //exportOptions: {
+        //    //    modifier: {
+        //    //        page: 'current'
+        //    //    }
+        //    //},
+        //    //customize: function (xlsx) {
+        //    //    var sheet = xlsx.xl.worksheets['CuentasContables.xml'];
+
+        //    //    $('row c[r^="C"]', sheet).attr('s', '2');
+        //    //}
+        //}]
+    });
+
+    $(".Deudora").click(function (f) {
+
+        $("#prueba").find(':input[type=text]').each(function () {
+            $(this).next('#Deudora').css("display", "block");
+            $(this).remove();
+
+        });
+        var textoactual = $(this).text();
+        if (textoactual == '...') {
+            var input = "<input type='text'id='p' maxlength='20' class='input-group-sm' value =''/>"//agregamos el el cuadro de texto
+        } else {
+            var input = "<input type='text'id='p' maxlength='20'  class='input-group-sm' value ='" + textoactual + "'/>"//agregamos el el cuadro de texto
+        }
+       //  $(this).empty();
+        $(this).css("display", "none");//oculta el label
+        $(this).parent("#cuadroDeudora").prepend(input);
+        document.getElementById("p").focus();
+        var idconcepto = $(this).parent("#cuadroDeudora").parent().parent().find(".IdConcepto").html();
+        var inp = $("#p")//obtenemos el selector
+        inp.keydown(function (e) {//evento
+            var code = e.keyCode;//obtenemos el codigo del enter
+            if (code == 13) {
+                var textonuevo = $(this).val();
+                if (textonuevo == '') {//si el texto esta vacio le inserta "..."
+                    textonuevo = '...';
+                }
+                $(this).next("#Deudora").text(textonuevo)
+                $(this).next('#Deudora').css("display", "block");
+               // $("#00").css("display", "block");
+
+                var empresa = $('select[id=empresa]').val();
+                var request = $.ajax({
+                    url: "/Contabilidad/EditarCuentaDeudora/",
+                    method: "POST",
+                    data: {
+                        Id: idconcepto,
+                        ClaveContable: textonuevo,
+                        IdEmpresa: empresa
+                    },
+                    dataType: "json",
+                    beforesend: function () {
+                        waitingDialog.show("Guardando Registro...........");
+                    }
+                });
+                request.done(function (resultado) {
+                    waitingDialog.hide();
+                    if (resultado == true) {
+                        notification = utils.showMessage("Guardando Datos", "¡Datos guardados exitosamente!", 1000, "");
+                    } else {
+                        notification = utils.showMessage("Error al guardar datos", "¡Se ingreso un valor no valido o se excedio la longitud!", 1000, "danger");
+                    }
+
+                })
+
+                $(this).remove();//quitamos el cuadro
+            } else if (code == 9 || code == 27) {
+                $(this).next("#Deudora").text(textoactual)
+                $(this).next('#Deudora').css("display", "block");
+                $(this).remove();//quitamos el cuadro
+            }
+        });
+    });
+
+
+    $(".Claves").click(function (f) {
+
+        $("#prueba").find(':input[type=text]').each(function () {
+            $(this).next('#cuentas').css("display", "block");
+            $(this).remove();
+
+        });
+        var textoactual = $(this).text();
+        if (textoactual == '...') {
+            var input = "<input type='text'id='p' maxlength='20' class='input-group-sm' value =''/>"//agregamos el el cuadro de texto
+        } else {
+            var input = "<input type='text'id='p' maxlength='20'  class='input-group-sm' value ='" + textoactual + "'/>"//agregamos el el cuadro de texto
+        }
+        // $(this).empty();
+        $(this).css("display", "none");//oculta el label
+        $(this).parent("#cuadro").prepend(input);
+        document.getElementById("p").focus();
+        var idconcepto = $(this).parent("#cuadro").parent().parent().find(".IdConcepto").html();
+        var inp = $("#p")//obtenemos el selector
+        inp.keydown(function (e) {//evento
+            var code = e.keyCode;//obtenemos el codigo del enter
+            if (code == 13) {
+                var textonuevo = $(this).val();
+                if (textonuevo == '') {//si el texto esta vacio le inserta "..."
+                    textonuevo = '...';
+                }
+                $(this).next("#cuentas").text(textonuevo)
+                $(this).next('#cuentas').css("display", "block");
+                //$("#00").css("display", "block");
+
+
+                var empresa = $('select[id=empresa]').val();
+                var request = $.ajax({
+                    url: "/Contabilidad/EditarCuentaAcredora/",
+                    method: "POST",
+                    data: {
+                        Id: idconcepto,
+                        ClaveContable: textonuevo,
+                        IdEmpresa: empresa
+                    }
+                });
+                $(this).remove();//quitamos el cuadro
+            } else if (code == 9 || code == 27) {
+                $(this).next("#cuentas").text(textoactual)
+                $(this).next('#cuentas').css("display", "block");
+                $(this).remove();//quitamos el cuadro
+            }
+        });
+    });
+</script>

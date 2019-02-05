@@ -1,0 +1,110 @@
+﻿@using SUNInbox.WEB.ViewModels;
+@model LogInViewModel
+    @{ Layout = null;}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log In</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="~/content/materialize/css/materialize.min.css">
+    <link rel="stylesheet" href="~/content/jquery-ui.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="~/content/login.css" rel="stylesheet" />
+    <link rel="icon" href="~/Images/logo2.png" />
+</head>
+<body>
+    <div id="login-card">
+        <div id="image-logo">
+            <img src="~/Images/logo2-shadow.png" alt="">
+        </div>
+        <div id="part2">
+            <div id="welcome-message">
+                <h4>¡Bienvenido!</h4>
+            </div>
+            <div id="login-form">
+                <div id="login-form-title">
+                    <h4>Iniciar Sesión</h4>
+                </div>
+                @using (Ajax.BeginForm("LogIn", "Acceso", new AjaxOptions { OnSuccess = "OnSuccess", OnFailure = "OnFailure", OnBegin = "Loading" }))
+                {
+                    <div id="form-body">
+                        <div class="form-field">
+                            <div class="input-field">
+                                <i class="material-icons prefix">account_circle</i>
+                                <input type="text" name="User" class="validate">
+                                <label for="">Nombre de Usuario</label>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <div class="input-field">
+                                <i class="material-icons prefix">lock</i>
+                                <input type="password" name="Password" class="validate">
+                                <label for="Password">Contraseña</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="form-footer">
+                        <div class="form-button">
+                            <button type="submit" class="waves-effect waves-light btn-large" id="btnLogin">
+                                <span id="in">Ingresar</span>
+                                <div class="preloader-wrapper small active" id="imgLoad">
+                                    <div class="spinner-layer spinner-red">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="spinner-layer spinner-yellow">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="spinner-layer spinner-green">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="">
+                            <a href="">¿Olvidaste tu contraseña?</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div id="message-container">
+        <div id="message">
+            <div id="message-image">
+                <h4 id="user-image"></h4>
+            </div>
+            <div id="message-text">
+                <p id="message-text-title"></p>
+                <p id="message-text-subtitle"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/scripts/jquery-3.1.0.min.js"></script>
+    <script src="~/scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/scripts/materialize.min.js"></script>
+    <script src="~/scripts/jquery-ui.min.js"></script>
+    <script src="~/scripts/login.js"></script>
+</body>
+</html>

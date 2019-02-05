@@ -1,0 +1,108 @@
+﻿@using RH.BLL
+@using RH.Entidades
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    
+     
+        var empresas = ViewBag.empresas as List<Empresa>;
+        var clientes = ViewBag.sucursales as List<SucursalDatos>;
+    
+}
+
+
+<h1>Reporte <span><i class="fa fa-home" aria-hidden="true"></i> </span></h1>
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>Empresa : </label>
+                    <select id="empresa" class="form-control">
+                        <option value="0">Todas las Empresas </option>
+                        @foreach (var em in empresas)
+                        {
+                            <option value="@em.IdEmpresa">@em.IdEmpresa - @em.RazonSocial</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>Cliente: </label>
+                    <select id="clientes" class="form-control">
+                        <option value="0">Todos los clientes</option>
+                        @foreach (var cli in clientes)
+                        {
+                            <option value="@cli.IdSucursal">@cli.Cliente - @cli.Sucursal</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <a class="btn btn-primary " id="descargarReporteActivos">Reporte Activos </a>
+        </div>
+        <div class="col-md-2">
+            <a class="btn btn-primary " id="descargarReporteActivos">Reporte Activos </a>
+        </div>
+        <div class="col-md-2">
+            <a class="btn btn-primary " id="descargarReporteActivos">Reporte Activos </a>
+        </div>
+    </div>
+
+
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        
+        $("#descargarReporteActivos").click(function () {
+
+            var cliente = $('#clientes').val();
+            var empresa = $('#empresa').val();
+                
+
+            var xhr = $.ajax({
+                url: '/Reportes/ReporteEmpleados/',
+                method: "POST",
+                data: {
+                    idEmpresa: empresa,
+                    idSucursal: cliente,
+                    status:1//activo
+                },
+                beforeSend: function (xhr) {
+                    waitingDialog.show('Generando Reporte ...');
+                },
+                success: function (data) {
+                    if (data.success) {
+                      
+                        window.location = data.resultPath;
+                    } else {
+                        utils.showMessage("WAR", data.error, 8000);
+                    }
+                },
+                error: function (data) {
+                    alert(data.error);
+                },
+                complete: function (data) {
+                    waitingDialog.hide();
+
+                }
+            });
+        });
+
+    });
+
+
+ 
+    
+        
+    
+</script>

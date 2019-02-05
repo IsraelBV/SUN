@@ -1,0 +1,121 @@
+﻿@using RH.Entidades
+@{
+
+    var listaEmpresas = ViewBag.ListaEmpresas as List<SelectListItem>;
+    var listaEjercicio = ViewBag.ListaEjercicios as List<NOM_Ejercicio_Fiscal>;
+}
+
+<h1>Reporte 3 % <span><i class="fa fa-home" aria-hidden="true"></i> </span></h1>
+<div class="jumbotron">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="ejercicio">
+                    <div class="form-group">
+                        <label>Empresa : </label>
+                        @if (listaEmpresas != null)
+                        {
+                            <select id="selectEmpresas" name="selectEmpresas" class="form-control " data-rule-required="true">
+                                @foreach (var listItem in listaEmpresas)
+                                {
+                                    <option value="@listItem.Value">@listItem.Text</option>
+                                }
+                            </select>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="ejercicio">
+                    <div class="form-group">
+                        <label>Fecha Inicio: </label>
+                        <input type="date" class="form-control " id="fechaInicio" name="fechaInicio" data-rule-required="true" data-rule-date="true" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="ejercicio">
+                    <div class="form-group">
+                        <label>Fecha Final: </label>
+                        <input type="date" class="form-control " id="fechaFin" name="fechaFin" data-rule-required="true" data-rule-date="true" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    <a class="btn btn-primary " id="descargarReporte3">Generar reporte 3  </a>
+
+</div>
+<script>
+    $(document).ready(function () {
+
+        $("#descargarReporte3").click(function () {
+
+            var sendData = true;
+           
+            var empresa = $('#selectEmpresas').val();
+            var fechaInicio = $("#fechaInicio").val();
+            var fechaFin = $("#fechaFin").val();
+
+
+
+            if (fechaFin === "") {
+                sendData = false;
+                utils.showMessage("WAR ", "Establesca la fecha fin", 4000, "danger");
+                $('#fechaFin').focus();
+            }
+
+            if (fechaInicio === "") {
+                sendData = false;
+                utils.showMessage("WAR ", "Establesca la fecha inicio", 4000, "danger");
+                $('#fechaInicio').focus();
+            }
+
+            if (empresa < 0) {
+                sendData = false;
+                utils.showMessage("WAR ", "Seleccione una empresa", 4000, "danger");
+                $('#selectEmpresas').focus();
+            }
+
+            
+            if (sendData)
+            {
+                var xhr = $.ajax({
+                    url: '/Reportes/Reporte3P/',
+                    method: "POST",
+                    data: {
+                        idEmpresa: empresa,
+                        fechaI: fechaInicio,
+                        fechaF: fechaFin
+                    },
+                    beforeSend: function (xhr) {
+                        waitingDialog.show('Generando Reporte de 3 %...');
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#downReporteInfo").attr("href", data.resultPath);
+                            window.location = data.resultPath;
+                        } else {
+                            utils.showMessage("WAR", data.error, 8000);
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.error);
+                    },
+                    complete: function (data) {
+                        waitingDialog.hide();
+
+                    }
+                });
+
+                }
+
+
+
+
+        });
+
+    });
+</script>
+<script type="text/javascript" src="~/scripts/bootstrap-notify.min.js"></script>

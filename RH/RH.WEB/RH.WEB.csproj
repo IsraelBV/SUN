@@ -1,0 +1,592 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{41C14336-3843-4231-9477-D168D272F402}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RH.WEB</RootNamespace>
+    <AssemblyName>RH.WEB</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DocX">
+      <HintPath>..\..\..\..\..\Users\Desarrollo Safe\Desktop\DocX.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\alinear.css" />
+    <Content Include="Content\animate.css" />
+    <Content Include="Content\animate.min.css" />
+    <Content Include="Content\bootstrap-select.css" />
+    <Content Include="Content\bootstrap-select.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\buttons.css" />
+    <Content Include="Content\DepaIndex.css" />
+    <Content Include="Content\Empleados\DetalleEmpleado.css" />
+    <Content Include="Content\Empleados\EmpleadosFrm.css" />
+    <Content Include="Content\Empleados\EmpleadoIndex.css" />
+    <Content Include="Content\Empleados\ImportacionMasiva.css" />
+    <Content Include="Content\errores.css" />
+    <Content Include="Content\Inasistencias.css" />
+    <Content Include="Content\incapacidades.css" />
+    <Content Include="Content\index.css" />
+    <Content Include="Content\indexSucursales.css" />
+    <Content Include="Content\Login.css" />
+    <Content Include="Content\menuSecundario.css" />
+    <Content Include="Content\modalDesign.css" />
+    <Content Include="Content\modalEdit.css" />
+    <Content Include="Content\modalIncid.css" />
+    <Content Include="Content\modalPuestos.css" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_diagonal-maze_20_6e4f1c_10x10.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_diagonal-maze_40_000000_10x10.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_fine-grain_10_eceadf_60x60.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_fine-grain_10_f8f7f6_60x60.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_fine-grain_15_d3c05a_60x60.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_fine-grain_15_eceadf_60x60.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_fine-grain_15_ffffff_60x60.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_fine-grain_65_654b24_60x60.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_fine-grain_68_b83400_60x60.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="Content\MultiDate\css\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="Content\MultiDate\css\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\MultiDate\css\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Content\MultiDate\css\images\ui-icons_3572ac_256x240.png" />
+    <Content Include="Content\MultiDate\css\images\ui-icons_8c291d_256x240.png" />
+    <Content Include="Content\MultiDate\css\images\ui-icons_b83400_256x240.png" />
+    <Content Include="Content\MultiDate\css\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="Content\MultiDate\css\images\ui-icons_fbdb93_256x240.png" />
+    <Content Include="Content\MultiDate\css\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="Content\MultiDate\css\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\MultiDate\css\jquery-ui.css" />
+    <Content Include="Content\MultiDate\css\jquery-ui.structure.css" />
+    <Content Include="Content\MultiDate\css\jquery-ui.theme.css" />
+    <Content Include="Content\MultiDate\css\mdp.css" />
+    <Content Include="Content\MultiDate\css\pepper-ginder-custom.css" />
+    <Content Include="Content\MultiDate\css\prettify.css" />
+    <Content Include="Content\MultiDate\favicon.ico" />
+    <Content Include="Content\MultiDate\img\github-fork-ribbon.png" />
+    <Content Include="Content\MultiDate\img\sflogo.gif" />
+    <Content Include="Content\MultiDate\img\valid-html401-blue.png" />
+    <Content Include="Content\MultiDate\jquery-ui.multidatespicker.js" />
+    <Content Include="Content\MultiDate\js\jquery-1.11.1.js" />
+    <Content Include="Content\MultiDate\js\jquery-2.1.1.js" />
+    <Content Include="Content\MultiDate\js\jquery-ui-1.11.1.js" />
+    <Content Include="Content\MultiDate\js\lang-css.js" />
+    <Content Include="Content\MultiDate\js\prettify.js" />
+    <Content Include="Content\MultiDate\mdp-icon.png" />
+    <Content Include="Content\normalize.css" />
+    <Content Include="Content\PanelWithTabs.css" />
+    <Content Include="Content\PanelWithTabs2.css" />
+    <Content Include="Content\Perfil.css" />
+    <Content Include="Content\tablas\diseño.css" />
+    <Content Include="Content\tablas\tamaño.css" />
+    <Content Include="Content\titulos.css" />
+    <Content Include="Content\validator\TooltipValidator.css" />
+    <Content Include="Content\_Layout.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Images\404.png" />
+    <Content Include="Images\500.png" />
+    <Content Include="Images\ajax-loader.gif" />
+    <Content Include="Images\animatedEllipse.gif" />
+    <Content Include="Images\denied.png" />
+    <Content Include="Images\error.png" />
+    <Content Include="Images\fondo1.jpg" />
+    <Content Include="Images\fondo2.jpg" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Images\fondo3.jpeg" />
+    <Content Include="Images\fondo3.jpg" />
+    <Content Include="Images\letrasfull.png" />
+    <Content Include="Images\loading.gif" />
+    <Content Include="Images\locks.png" />
+    <Content Include="Images\logoSun.jpg" />
+    <Content Include="Images\noti.png" />
+    <Content Include="Images\profpic.png" />
+    <Content Include="Images\prog.gif" />
+    <Content Include="Images\smile.gif" />
+    <Content Include="Scripts\bootstrap-multiselect.js" />
+    <Content Include="Scripts\bootstrap-notify.js" />
+    <Content Include="Scripts\bootstrap-notify.min.js" />
+    <Content Include="Scripts\bootstrap-select.js" />
+    <Content Include="Scripts\bootstrap-select.min.js" />
+    <Content Include="Scripts\bootstrap-waitingfor.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\calcFechas.js" />
+    <Content Include="Scripts\datepicker\bootstrap-datepicker.js" />
+    <Content Include="Scripts\datepicker\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\DepaDelete.js" />
+    <Content Include="Scripts\editIncidencias.js" />
+    <Content Include="Scripts\editPuesto.js" />
+    <Content Include="Scripts\Empleados\Contrato.js" />
+    <Content Include="Scripts\Empleados\Detalle.js" />
+    <Content Include="Scripts\Empleados\Documentos.js" />
+    <Content Include="Scripts\Empleados\EmpleadoFrm.js" />
+    <Content Include="Scripts\Empleados\EmpleadoIndex.js" />
+    <Content Include="Scripts\Empleados\EmpleadosActivos.js" />
+    <Content Include="Scripts\Empleados\EmpleadosInactivos.js" />
+    <Content Include="Scripts\Empleados\ImportacionMasiva.js" />
+    <Content Include="Scripts\i18n\defaults-ar_AR.js" />
+    <Content Include="Scripts\i18n\defaults-ar_AR.min.js" />
+    <Content Include="Scripts\i18n\defaults-bg_BG.js" />
+    <Content Include="Scripts\i18n\defaults-bg_BG.min.js" />
+    <Content Include="Scripts\i18n\defaults-cro_CRO.js" />
+    <Content Include="Scripts\i18n\defaults-cro_CRO.min.js" />
+    <Content Include="Scripts\i18n\defaults-cs_CZ.js" />
+    <Content Include="Scripts\i18n\defaults-cs_CZ.min.js" />
+    <Content Include="Scripts\i18n\defaults-da_DK.js" />
+    <Content Include="Scripts\i18n\defaults-da_DK.min.js" />
+    <Content Include="Scripts\i18n\defaults-de_DE.js" />
+    <Content Include="Scripts\i18n\defaults-de_DE.min.js" />
+    <Content Include="Scripts\i18n\defaults-en_US.js" />
+    <Content Include="Scripts\i18n\defaults-en_US.min.js" />
+    <Content Include="Scripts\i18n\defaults-es_CL.js" />
+    <Content Include="Scripts\i18n\defaults-es_CL.min.js" />
+    <Content Include="Scripts\i18n\defaults-eu.js" />
+    <Content Include="Scripts\i18n\defaults-eu.min.js" />
+    <Content Include="Scripts\i18n\defaults-fa_IR.js" />
+    <Content Include="Scripts\i18n\defaults-fa_IR.min.js" />
+    <Content Include="Scripts\i18n\defaults-fi_FI.js" />
+    <Content Include="Scripts\i18n\defaults-fi_FI.min.js" />
+    <Content Include="Scripts\i18n\defaults-fr_FR.js" />
+    <Content Include="Scripts\i18n\defaults-fr_FR.min.js" />
+    <Content Include="Scripts\i18n\defaults-hu_HU.js" />
+    <Content Include="Scripts\i18n\defaults-hu_HU.min.js" />
+    <Content Include="Scripts\i18n\defaults-id_ID.js" />
+    <Content Include="Scripts\i18n\defaults-id_ID.min.js" />
+    <Content Include="Scripts\i18n\defaults-it_IT.js" />
+    <Content Include="Scripts\i18n\defaults-it_IT.min.js" />
+    <Content Include="Scripts\i18n\defaults-ko_KR.js" />
+    <Content Include="Scripts\i18n\defaults-ko_KR.min.js" />
+    <Content Include="Scripts\i18n\defaults-lt_LT.js" />
+    <Content Include="Scripts\i18n\defaults-lt_LT.min.js" />
+    <Content Include="Scripts\i18n\defaults-nb_NO.js" />
+    <Content Include="Scripts\i18n\defaults-nb_NO.min.js" />
+    <Content Include="Scripts\i18n\defaults-nl_NL.js" />
+    <Content Include="Scripts\i18n\defaults-nl_NL.min.js" />
+    <Content Include="Scripts\i18n\defaults-pl_PL.js" />
+    <Content Include="Scripts\i18n\defaults-pl_PL.min.js" />
+    <Content Include="Scripts\i18n\defaults-pt_BR.js" />
+    <Content Include="Scripts\i18n\defaults-pt_BR.min.js" />
+    <Content Include="Scripts\i18n\defaults-pt_PT.js" />
+    <Content Include="Scripts\i18n\defaults-pt_PT.min.js" />
+    <Content Include="Scripts\i18n\defaults-ro_RO.js" />
+    <Content Include="Scripts\i18n\defaults-ro_RO.min.js" />
+    <Content Include="Scripts\i18n\defaults-ru_RU.js" />
+    <Content Include="Scripts\i18n\defaults-ru_RU.min.js" />
+    <Content Include="Scripts\i18n\defaults-sk_SK.js" />
+    <Content Include="Scripts\i18n\defaults-sk_SK.min.js" />
+    <Content Include="Scripts\i18n\defaults-sl_SI.js" />
+    <Content Include="Scripts\i18n\defaults-sl_SI.min.js" />
+    <Content Include="Scripts\i18n\defaults-sv_SE.js" />
+    <Content Include="Scripts\i18n\defaults-sv_SE.min.js" />
+    <Content Include="Scripts\i18n\defaults-tr_TR.js" />
+    <Content Include="Scripts\i18n\defaults-tr_TR.min.js" />
+    <Content Include="Scripts\i18n\defaults-ua_UA.js" />
+    <Content Include="Scripts\i18n\defaults-ua_UA.min.js" />
+    <Content Include="Scripts\i18n\defaults-zh_CN.js" />
+    <Content Include="Scripts\i18n\defaults-zh_CN.min.js" />
+    <Content Include="Scripts\i18n\defaults-zh_TW.js" />
+    <Content Include="Scripts\i18n\defaults-zh_TW.min.js" />
+    <Content Include="Scripts\inasistencias.js" />
+    <Content Include="Scripts\IncaEdit.js" />
+    <Content Include="Files\ExportarReporte.xlsx" />
+    <Content Include="Files\ImportacionMasiva\Plantilla.xlsx" />
+    <Content Include="Content\bootstrap-select.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <None Include="Properties\PublishProfiles\RH.pubxml" />
+    <None Include="Scripts\jquery-3.1.0.intellisense.js" />
+    <Content Include="Scripts\bootstrap-confirmation.min.js" />
+    <Content Include="Scripts\jquery-3.1.0.js" />
+    <Content Include="Scripts\jquery-3.1.0.min.js" />
+    <Content Include="Scripts\jquery-3.1.0.slim.js" />
+    <Content Include="Scripts\jquery-3.1.0.slim.min.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.form.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\login.js" />
+    <Content Include="Scripts\menuSecundario.js" />
+    <Content Include="Scripts\notify.js" />
+    <Content Include="Scripts\Permisos\Permisos.js" />
+    <Content Include="Scripts\picImage.js" />
+    <Content Include="Scripts\Prestamos\Nuevo.js" />
+    <Content Include="Scripts\utils.js" />
+    <Content Include="Scripts\vacaciones\vacaciones.js" />
+    <Content Include="Scripts\validator\bootstrap.js" />
+    <Content Include="Scripts\validator\jquery.validate.1.15.js" />
+    <Content Include="Scripts\validator\messages_es.js" />
+    <Content Include="Scripts\validator\metodos_adicionales.js" />
+    <Content Include="Scripts\validator\Rule List.txt" />
+    <Content Include="Scripts\validator\TooltipValidator.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccesoController.cs" />
+    <Compile Include="Controllers\BancosController.cs" />
+    <Compile Include="Controllers\CapturaInasistenciasController.cs" />
+    <Compile Include="Controllers\CumpleIMSSController.cs" />
+    <Compile Include="Controllers\DepartamentosController.cs" />
+    <Compile Include="Controllers\EmpleadosController.cs" />
+    <Compile Include="Controllers\ClientesController.cs" />
+    <Compile Include="Controllers\FactoresDeIntegracionController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InasistenciasController.cs" />
+    <Compile Include="Controllers\IncapacidadesController.cs" />
+    <Compile Include="Controllers\ReportesController.cs" />
+    <Compile Include="Controllers\TiposInasistenciaController.cs" />
+    <Compile Include="Controllers\PeriodoVacacionesController.cs" />
+    <Compile Include="Controllers\PermisosController.cs" />
+    <Compile Include="Controllers\PlantillasController.cs" />
+    <Compile Include="Controllers\PrestamosController.cs" />
+    <Compile Include="Controllers\PuestosController.cs" />
+    <Compile Include="Controllers\RegistrosPatronalesController.cs" />
+    <Compile Include="Controllers\SucursalController.cs" />
+    <Compile Include="Controllers\UsuariosController.cs" />
+    <Compile Include="Controllers\VacacionesController.cs" />
+    <Compile Include="Controllers\valRFCController.cs" />
+    <Compile Include="Filtros\AccesoAplicacionAttribute.cs" />
+    <Compile Include="Filtros\AccesoModuloAttribute.cs" />
+    <Compile Include="Filtros\AccesoSucursalAttribute.cs" />
+    <Compile Include="Filtros\AutenticadoAttribute.cs" />
+    <Compile Include="Filtros\SessionExpireAttribute.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\LoginViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Acceso\LogIn.cshtml" />
+    <Content Include="Views\Bancos\Index.cshtml" />
+    <Content Include="Views\Bancos\Details.cshtml" />
+    <Content Include="Views\Bancos\Create.cshtml" />
+    <Content Include="Views\Bancos\Edit.cshtml" />
+    <Content Include="Views\Bancos\Delete.cshtml" />
+    <Content Include="Views\Shared\_LayoutSucursales.cshtml" />
+    <Content Include="Views\Shared\_MenuSecundario.cshtml" />
+    <Content Include="Views\Sucursal\Index.cshtml" />
+    <Content Include="Views\Shared\_HomeIndexSucursales.cshtml" />
+    <Content Include="Views\Home\SucursalesPaginador.cshtml" />
+    <Content Include="Views\RegistrosPatronales\DropEstados.cshtml" />
+    <Content Include="Views\RegistrosPatronales\editar.cshtml" />
+    <Content Include="Views\RegistrosPatronales\Index.cshtml" />
+    <Content Include="Views\RegistrosPatronales\NuevoRegistro.cshtml" />
+    <Content Include="Views\Home\SucursalesRecientes.cshtml" />
+    <Content Include="Views\FactoresDeIntegracion\Crear.cshtml" />
+    <Content Include="Views\FactoresDeIntegracion\Editar.cshtml" />
+    <Content Include="Views\FactoresDeIntegracion\Index.cshtml" />
+    <Content Include="Views\FactoresDeIntegracion\NuevoFactor.cshtml" />
+    <Content Include="Views\Empleados\Index.cshtml" />
+    <Content Include="Views\Empleados\NuevoRegistro.cshtml" />
+    <Content Include="Views\Empleados\KardexEmpleado.cshtml" />
+    <Content Include="Views\Empleados\ImportacionMasiva.cshtml" />
+    <Content Include="Views\Empleados\UploadFile.cshtml" />
+    <Content Include="Views\Vacaciones\Index.cshtml" />
+    <Content Include="Views\Vacaciones\VacacionesMenu.cshtml" />
+    <Content Include="Views\Vacaciones\_FormularioVacaciones.cshtml" />
+    <Content Include="Views\Vacaciones\_HistorialVacaciones.cshtml" />
+    <Content Include="Views\Vacaciones\_PeriodoVacaciones.cshtml" />
+    <Content Include="Views\Incapacidades\Details.cshtml" />
+    <Content Include="Views\Incapacidades\Index.cshtml" />
+    <Content Include="Views\Incapacidades\viewEdit.cshtml" />
+    <Content Include="Views\Prestamos\Index.cshtml" />
+    <Content Include="Views\Prestamos\Detalle.cshtml" />
+    <Content Include="Views\Prestamos\Nuevo.cshtml" />
+    <Content Include="Views\Prestamos\Historial.cshtml" />
+    <Content Include="Views\Departamentos\DetalleDepartamento.cshtml" />
+    <Content Include="Views\Departamentos\Edit.cshtml" />
+    <Content Include="Views\Departamentos\Index.cshtml" />
+    <Content Include="Views\Departamentos\NuevoRegistro.cshtml" />
+    <Content Include="Views\Departamentos\viewDelete.cshtml" />
+    <Content Include="Views\TiposInasistencia\Index.cshtml" />
+    <Content Include="Views\TiposInasistencia\viewEdit.cshtml" />
+    <Content Include="Views\Puestos\Index.cshtml" />
+    <Content Include="Views\Puestos\viewEdit.cshtml" />
+    <Content Include="Views\Clientes\CrearSucursalVP.cshtml" />
+    <Content Include="Views\Clientes\CrearVP.cshtml" />
+    <Content Include="Views\Clientes\Create.cshtml" />
+    <Content Include="Views\Clientes\DetalleSucursalVP.cshtml" />
+    <Content Include="Views\Clientes\DetalleVP.cshtml" />
+    <Content Include="Views\Clientes\EditarSucursalVP.cshtml" />
+    <Content Include="Views\Clientes\EditarVP.cshtml" />
+    <Content Include="Views\Clientes\Index.cshtml" />
+    <Content Include="Views\Clientes\IndexSucursales.cshtml" />
+    <Content Include="Views\Vacaciones\_HistorialPeriodo.cshtml" />
+    <Content Include="Views\Permisos\Index.cshtml" />
+    <Content Include="Views\Permisos\_HistorialPermisos.cshtml" />
+    <Content Include="Views\Permisos\_Permiso.cshtml" />
+    <Content Include="Views\Empleados\GetContrato.cshtml" />
+    <Content Include="Views\Empleados\FormDatosPersonales.cshtml" />
+    <Content Include="Views\Empleados\EmpleadosActivos.cshtml" />
+    <Content Include="Views\Empleados\EmpleadosInactivos.cshtml" />
+    <Content Include="Views\Empleados\Detalle.cshtml" />
+    <Content Include="Views\Empleados\GetEmpleado.cshtml" />
+    <Content Include="Views\Empleados\GetDatosBancarios.cshtml" />
+    <Content Include="Views\Empleados\NewDatosBancarios.cshtml" />
+    <Content Include="Views\Empleados\GetDatosBancariosById.cshtml" />
+    <Content Include="Views\TiposInasistencia\viewCreate.cshtml" />
+    <Content Include="Views\Plantillas\Index.cshtml" />
+    <Content Include="Views\Plantillas\ListaPlantilla.cshtml" />
+    <Content Include="Views\Empleados\FormRecontratacion.cshtml" />
+    <Content Include="Views\Plantillas\Details.cshtml" />
+    <Content Include="Views\Home\AccesoDenegado.cshtml" />
+    <Content Include="Views\Home\GetErrorHttp.cshtml" />
+    <Content Include="Views\Usuarios\Index.cshtml" />
+    <Content Include="Scripts\bootstrap-select.js.map" />
+    <Content Include="Scripts\jquery-3.1.0.min.map" />
+    <Content Include="Scripts\jquery-3.1.0.slim.min.map" />
+    <Content Include="Views\Empleados\ExportarReporte.cshtml" />
+    <Content Include="Views\Vacaciones\_submenuperiodo.cshtml" />
+    <Content Include="Views\CapturaInasistencias\Index.cshtml" />
+    <Content Include="Views\CapturaInasistencias\Detalle.cshtml" />
+    <Content Include="Views\Empleados\NewContrato.cshtml" />
+    <Content Include="Views\Empleados\GetDocumentosEmpleado.cshtml" />
+    <Content Include="Views\Incapacidades\viewDelete.cshtml" />
+    <Content Include="Views\Incapacidades\viewCreate.cshtml" />
+    <Content Include="Views\Inasistencias\Index.cshtml" />
+    <Content Include="Views\valRFC\Index.cshtml" />
+    <Content Include="Views\valRFC\RFCNoValidos.cshtml" />
+    <Content Include="Views\RegistrosPatronales\_DetallesEmpresa.cshtml" />
+    <Content Include="Views\RegistrosPatronales\_EmpresasActivas.cshtml" />
+    <Content Include="Views\RegistrosPatronales\_EmpresasInactivas.cshtml" />
+    <Content Include="Views\Departamentos\_DepartamentosCliente.cshtml" />
+    <Content Include="Views\Departamentos\_ListaDepartamentos.cshtml" />
+    <Content Include="Views\Puestos\viewCreate.cshtml" />
+    <Content Include="Views\CumpleIMSS\cumpleIMSSCliente.cshtml" />
+    <Content Include="Views\CumpleIMSS\cumpleIMSSEmpresa.cshtml" />
+    <Content Include="Views\CumpleIMSS\cumpleIMSSSucursal.cshtml" />
+    <Content Include="Views\CumpleIMSS\Index.cshtml" />
+    <Content Include="Views\Permisos\_PermisosActivos.cshtml" />
+    <Content Include="Views\Permisos\_PermisosInnactivos.cshtml" />
+    <Content Include="Views\Permisos\_PermisosPorDias.cshtml" />
+    <Content Include="Views\Permisos\_PermisosPorHoras.cshtml" />
+    <Content Include="Views\Home\AccesoDenegadoSuc.cshtml" />
+    <Content Include="Views\RegistrosPatronales\_DetallesEliminar.cshtml" />
+    <Content Include="Views\Reportes\Index.cshtml" />
+    <Content Include="Views\Empleados\FormCambiosalario.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Files\ExportarReporte\" />
+    <Folder Include="Files\Plantillas\Generados\" />
+    <Folder Include="Files\valRFC\3\1\" />
+    <Folder Include="Files\valRFC\4\1\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SYA\SYA.BLL\SYA.BLL.csproj">
+      <Project>{eba96154-7f94-4421-be43-839caaa78a23}</Project>
+      <Name>SYA.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{20dcbdf8-2407-4a4d-9842-aa7277cd676e}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RH.BLL\RH.BLL.csproj">
+      <Project>{907adfc2-db13-40d2-859f-f5a03d7506ae}</Project>
+      <Name>RH.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RH.DAL\RH.DAL.csproj">
+      <Project>{90b8c565-0c9d-4229-ac43-052610ce3228}</Project>
+      <Name>RH.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RH.Entidades\RH.Entidades.csproj">
+      <Project>{6d3c701f-1e8f-4a6c-a377-bbf87b8fdac1}</Project>
+      <Name>RH.Entidades</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>12432</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:12432/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

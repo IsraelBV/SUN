@@ -1,0 +1,126 @@
+﻿@model RH.Entidades.SYA_Usuarios
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/picImage.js"></script>
+<link href="~/Content/Perfil.css" rel="stylesheet" />
+<link href="~/Content/buttons.css" rel="stylesheet" />
+
+<div class="panel-heading" id="titulo">
+    <h2>Perfil del Usuario</h2>
+
+    <a class="btn btn-danger cancel" href="/Home/Index"><i class="fa fa-undo"></i> Regresar</a>
+    <hr />
+    <br />
+</div>
+
+<div class="panel">
+    <div class="col-md-12">
+        @*Primer Columna*@
+        <div class="col-md-6">
+            <div id="picLabel"> <strong> Foto de Perfil </strong></div>
+            @using(Html.BeginForm("UploadPicture", "Usuarios", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="PicImage" id="foto">
+                
+                         
+                    <a href="#"><img style="max-height:400px; max-width:400px;" src="@ViewBag.UserPicture" /></a>
+                
+                        <div style="margin-left:12.5%;">
+
+                        <small> Al hacer click en la imagen aparecerá el menú de imagen de usuario</small>
+
+                        </div>
+                </div>
+
+                <div id="prox">
+                    <div class="form-group">
+                        <p class="help-block" style="margin-left:23%;">Subir Imagen</p>
+                        <input type="file" id="exampleInputFile" name="picture">
+                        <button class="btn-danger upCancel" type="button">Cancelar</button>
+                        <button class="btn-default upload" type="submit">Subir</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @*Segunda Columna*@
+        <div class="col-md-2">
+            <div class="" id="_idu">
+                <strong> @Html.DisplayNameFor(model => model.IdUsuario) </strong>
+            </div>
+
+            <div class="" id="_username">
+                <strong> @Html.DisplayNameFor(model => model.Usuario) </strong>
+            </div>
+
+            <div class="" id="_name">
+                <strong> <label>Nombre/s</label></strong>
+            </div>
+
+            <div class="" id="_ap">
+                <strong> @Html.DisplayNameFor(model => model.ApPaterno) </strong>
+            </div>
+
+            <div class="" id="_am">
+                <strong> @Html.DisplayNameFor(model => model.ApMaterno) </strong>
+            </div>
+
+            <div class="" id="_email">
+                <strong> <label>E-Mail</label></strong>
+            </div>
+        </div>
+
+        @*Tercera columna*@
+        <div class="col-md-4">
+            <div class="" id="idu" style="text-align:center;">
+                @Html.DisplayFor(model => model.IdUsuario)
+            </div>
+
+            <div class="" id="username" style="text-align:center;">
+                @Html.DisplayFor(model => model.Usuario)
+            </div>
+
+            <div class="" id="name" style="text-align:center;">
+                @Html.DisplayFor(model => model.Nombres)
+            </div>
+
+            <div class="" id="ap" style="text-align:center;">
+                @if (Model.ApPaterno == null || Model.ApPaterno == "")
+                {
+                    <i class="fa fa-ban" aria-hidden="true"></i>
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.ApPaterno)
+                }
+            </div>
+
+            <div class="" id="am" style="text-align:center;">
+                @if (Model.ApMaterno == null || Model.ApMaterno == "")
+                {
+                    <i class="fa fa-ban" aria-hidden="true"></i>
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.ApMaterno)
+                }
+            </div>
+
+            <div class="" id="email" style="text-align:center;">
+                @if (Model.Correo == null)
+                {
+                    <i class="fa fa-ban" aria-hidden="true"></i>
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.Correo)
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿@using RH.BLL;
+@model List<DatosEmpleado>
+    @{ 
+        List<int> empleadosSeleccionados = ViewBag.EmpleadosSeleccionados;
+    }
+<div class="main-content-title">
+    <h4 class="pull-left">Seleccionar Empleados</h4>
+    <a class="btn btn-primary pull-right btnAsignarEmpleadosPeriodo">GUARDAR CAMBIOS</a>
+</div>
+<div class="main-content-body">
+    <input type="hidden" value="@ViewBag.IdPeriodo" id="IdPeriodoPago" />
+    <table class="table table-condensed table-hover ajax-table table-nomina table-select DataTable" id="tblEmpleadosPeriodo">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre Completo</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var label = "label-default";
+                var status = "INACTIVO";
+                var selected = "unselected";
+                if(item.Status)
+                {
+                    label = "label-success";
+                    status = "ACTIVO";
+                }
+                if (empleadosSeleccionados.Contains(item.IdEmpleado))
+                {
+
+                    selected = "selected";
+                }
+                <tr data-idempleado="@item.IdEmpleado" class="@selected">
+                    <td>@item.IdEmpleado</td>
+                    <td>@item.Paterno @item.Materno @item.Nombres</td>
+                    <td><span class="label @label">@status</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

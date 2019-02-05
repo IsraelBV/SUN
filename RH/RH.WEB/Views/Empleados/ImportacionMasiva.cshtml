@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Empleados";
+    ViewBag.EXTRA = "Importación Masiva";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+
+    var asignados = ViewBag.DepartamentosAsignados;
+}
+
+
+@if (asignados > 0)
+{
+    <link rel="stylesheet" href="~/Content/Empleados/ImportacionMasiva.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/pdfmake-0.1.18,dt-1.10.11,b-1.1.2,b-html5-1.1.2,b-print-1.1.2,kt-2.1.1,r-2.0.2/datatables.min.css" />
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="col-md-3">
+                <a href="@Url.Action("DescargarPlantilla", "Empleados")" class="btn btn-default btnPanel"><i class="fa fa-file-excel-o"></i> Descargar Plantilla</a>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="file" class="form-control" accept=".xlsx, .xls" id="fileInput" name="file" required />
+                </div>
+            </div>
+            <div class="col-md-3 text-right">
+                <button class="btn btn-default btnPanel" id="btnProcesar" disabled><i class="fa fa-download"></i> Guardar </button>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div id="records"></div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="https://cdn.datatables.net/t/bs/pdfmake-0.1.18,dt-1.10.11,b-1.1.2,b-html5-1.1.2,b-print-1.1.2,kt-2.1.1,r-2.0.2/datatables.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/Empleados/ImportacionMasiva.js"></script>
+}
+else
+{
+    <h3>No hay departamentos asignados a este cliente.</h3>
+}

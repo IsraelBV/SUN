@@ -1,0 +1,32 @@
+﻿@using Nomina.BLL
+@model List<MensajePac>
+@{
+
+}
+
+<div class="well" style="margin-top: 20px; overflow-y: scroll; max-height: 70vh">
+    @if (Model != null)
+    {
+        if (Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <div class="alert alert-danger">
+                    <strong>Cod: @item.Codigo </strong> @item.Mensaje
+                </div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <strong>Info!</strong> No se encontrarón datos para mostrar.
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <strong>Info!</strong> Seleccione un registro para ver sus mensajes de validación.
+        </div>
+    }
+</div>

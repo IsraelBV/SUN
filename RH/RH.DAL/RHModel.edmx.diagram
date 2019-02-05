@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6100d50d0110499bb5104c03b411e05d" Name="Diagram1" ZoomLevel="68">
+        <EntityTypeShape EntityType="SUNRHModel.Notificacion_Departamento" Width="1.5" PointX="8.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SUNRHModel.SYA_Aplicaciones" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SUNRHModel.SYA_Departamentos" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SUNRHModel.SYA_Modulos" Width="1.5" PointX="11.125" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SUNRHModel.SYA_Usuarios_Modulos" Width="1.5" PointX="12.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SUNRHModel.SYA_Recientes" Width="1.5" PointX="0.75" PointY="15.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Departamento" Width="1.5" PointX="15.375" PointY="7.75" />
+        <EntityTypeShape EntityType="SUNRHModel.PeriodoVacaciones" Width="1.5" PointX="16.375" PointY="16.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Permisos" Width="1.5" PointX="9.375" PointY="17.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Cliente_Departamento" Width="1.5" PointX="5.375" PointY="18.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Plantilla" Width="1.5" PointX="19.375" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Notificacion_Comentarios" Width="1.5" PointX="11.375" PointY="9.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Notificaciones_Favoritas" Width="1.5" PointX="11.375" PointY="19.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Cliente_Conceptos" Width="1.5" PointX="15.375" PointY="20.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Ejercicio_Fiscal" Width="1.5" PointX="21.375" PointY="3.75" />
+        <EntityTypeShape EntityType="SUNRHModel.DocumentosEmpleados" Width="1.5" PointX="5.375" PointY="3.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Empleado_Conceptos" Width="1.5" PointX="19.375" PointY="20.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Empleado_Fonacot" Width="1.5" PointX="15.375" PointY="10.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Prestamos" Width="1.5" PointX="24.375" PointY="20.75" />
+        <EntityTypeShape EntityType="SUNRHModel.HistorialPagos" Width="1.5" PointX="25.375" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Notificacion_Status" Width="1.5" PointX="9.375" PointY="4.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Nomina_Detalle" Width="1.5" PointX="26.375" PointY="8.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_Metodos_Pago" Width="1.5" PointX="21.375" PointY="22.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_DiasFestivos" Width="1.5" PointX="5.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_DocumentosTipo" Width="1.5" PointX="3.75" PointY="6.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_Esquema" Width="1.5" PointX="5.75" PointY="6.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_Estado" Width="1.5" PointX="0.75" PointY="8.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_FactoresIntegracion" Width="1.5" PointX="5.75" PointY="13.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_NOM_Conceptos_SAT" Width="1.5" PointX="18.75" PointY="14.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_NOM_Tabla_IMSS" Width="1.5" PointX="21.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_NOM_Tabla_ISR" Width="1.5" PointX="23.75" PointY="12.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_NOM_Tabla_Subsidio" Width="1.5" PointX="26.75" PointY="20.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_NotificacionTipo" Width="1.5" PointX="3.75" PointY="27.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_PeriodicidadPago_SAT" Width="1.5" PointX="16.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_TipoContrato_SAT" Width="1.5" PointX="3.75" PointY="21.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_TipoIncapacidad_SAT" Width="1.5" PointX="5.75" PointY="21.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_TipoJornada_SAT" Width="1.5" PointX="3.75" PointY="24.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_TipoNomina_SAT" Width="1.5" PointX="21.75" PointY="25.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_TipoRegimen_SAT" Width="1.5" PointX="26.75" PointY="23.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_TiposInasistencia" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.SYA_GlobalConfig" Width="1.5" PointX="26.75" PointY="26.75" />
+        <EntityTypeShape EntityType="SUNRHModel.SYA_Perfiles" Width="1.5" PointX="17.75" PointY="11.75" />
+        <EntityTypeShape EntityType="SUNRHModel.SYA_Usuarios" Width="1.5" PointX="28.75" PointY="9.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_Banco_SAT" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_TipoOtroPago_SAT" Width="1.5" PointX="17.375" PointY="3.75" />
+        <EntityTypeShape EntityType="SUNRHModel.UserConfig" Width="1.5" PointX="20.375" PointY="10.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Kardex" Width="1.5" PointX="29.375" PointY="17.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_RegimenFiscal_SAT" Width="1.5" PointX="11.375" PointY="16.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Puesto" Width="1.5" PointX="7.375" PointY="10.75" />
+        <EntityTypeShape EntityType="SUNRHModel.ZonaSalario" Width="1.5" PointX="8.375" PointY="21.75" />
+        <EntityTypeShape EntityType="SUNRHModel.ParametrosConfig" Width="1.5" PointX="9.375" PointY="12.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Facturacion" Width="1.5" PointX="6.375" PointY="25.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_FacturacionSindicato" Width="1.5" PointX="13.375" PointY="26.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_NOM_Conceptos" Width="1.5" PointX="29.375" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Empleado_Complemento" Width="1.5" PointX="18.375" PointY="17.75" />
+        <EntityTypeShape EntityType="SUNRHModel.CumpleIMSS" Width="1.5" PointX="0.75" PointY="18.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Empresa" Width="1.5" PointX="21.375" PointY="15.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_FacturacionC_Finiquito" Width="1.5" PointX="8.375" PointY="26.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_FacturacionComplemento" Width="1.5" PointX="10.375" PointY="26.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_FacturacionF_Finiquito" Width="1.5" PointX="3.375" PointY="30.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Empleado_Infonavit" Width="1.5" PointX="12.375" PointY="22.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Empleado_Sindicato" Width="1.5" PointX="30.375" PointY="5.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Nomina_Ajuste" Width="1.5" PointX="31.375" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.ClavesContables" Width="1.5" PointX="30.375" PointY="14.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Finiquito_Descuento_Adicional" Width="1.5" PointX="22.375" PointY="6.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Empleado_PeriodoPago" Width="1.5" PointX="27.375" PointY="14.75" />
+        <EntityTypeShape EntityType="SUNRHModel.C_NOM_Conceptos_C" Width="1.5" PointX="25.375" PointY="17.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Nomina_Detalle_C" Width="1.5" PointX="7.375" PointY="31.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Finiquito_Detalle" Width="1.5" PointX="24.375" PointY="4.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Sucursal_Empresa" Width="1.5" PointX="9.375" PointY="31.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Sucursal" Width="1.5" PointX="11.375" PointY="31.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_CFDI_Timbrado" Width="1.5" PointX="20.375" PointY="29.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Notificaciones" Width="1.5" PointX="31.375" PointY="9.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Inasistencias" Width="1.5" PointX="17.375" PointY="6.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Incapacidades" Width="1.5" PointX="13.375" PointY="31.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Vacaciones" Width="1.5" PointX="13.375" PointY="16.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Aguinaldo" Width="1.5" PointX="31.75" PointY="17.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Cuotas_IMSS" Width="1.5" PointX="0.75" PointY="22.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Empleado_Asimilado" Width="1.5" PointX="3.75" PointY="9.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Cliente" Width="1.5" PointX="11.375" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Nomina" Width="1.5" PointX="29.375" PointY="26.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Incapacidad" Width="1.5" PointX="19.375" PointY="6.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_CalculoAnual" Width="1.5" PointX="18.375" PointY="23.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_AplicacionSaldo" Width="1.5" PointX="24.375" PointY="31.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_PeriodosPago" Width="1.5" PointX="13.375" PointY="0.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Finiquito" Width="1.5" PointX="15.375" PointY="23.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Finiquito_Complemento" Width="1.5" PointX="17.375" PointY="28.75" />
+        <EntityTypeShape EntityType="SUNRHModel.DatosBancarios" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Empleado" Width="1.5" PointX="0.75" PointY="28.75" />
+        <EntityTypeShape EntityType="SUNRHModel.Empleado_Contrato" Width="1.5" PointX="31.75" PointY="26.75" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

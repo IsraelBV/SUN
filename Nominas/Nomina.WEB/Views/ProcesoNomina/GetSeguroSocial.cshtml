@@ -1,0 +1,120 @@
+﻿@model RH.Entidades.NOM_Cuotas_IMSS
+<style>
+    div.container {
+        width: 100%;
+    }
+</style>
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table" id="table-detalle-ss" width="100%">
+                <thead>
+                    <tr class="info">
+                        <th>Nombre Concepto</th>
+                        <th class="text-right">Carga Patronal</th>
+                        <th class="text-right">Carga Obrera</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="success">
+                        <th>TOTALES</th>
+                        <th class="data-number text-right">@Model.TotalPatron</th>
+                        <th class="data-number text-right">@Model.TotalObrero</th>
+                    </tr>
+                    <tr>
+                        <th>CUOTA FIJA</th>
+                        <td class="data-number text-right">@Model.Cuota_Fija_Patron</td>
+                        <td class="data-number-invalid text-right">N/A</td>
+                    </tr>
+                    <tr>
+                        <th>EXCEDENTE</th>
+                        <td class="data-number text-right">@Model.Excedente_Patron</td>
+                        <td class="data-number text-right">@Model.Excedente_Obrero</td>
+                    </tr>
+                    <tr>
+                        <th>PRESTACIONES</th>
+                        <td class="data-number text-right">@Model.PrestacionesDinero_Patron</td>
+                        <td class="data-number text-right">@Model.PrestacionesDinero_Obrero</td>
+                    </tr>
+                    <tr>
+                        <th>PENSIONADOS</th>
+                        <td class="data-number text-right">@Model.Pensionados_Patron</td>
+                        <td class="data-number text-right">@Model.Pensionados_Obrero</td>
+                    </tr>
+                    <tr>
+                        <th>INVALIDEZ VIDA</th>
+                        <td class="data-number text-right">@Model.InvalidezVida_Patron</td>
+                        <td class="data-number text-right">@Model.InvalidezVida_Obrero</td>
+                    </tr>
+                    <tr>
+                        <th>PRESTACIÓN GUARDERÍA</th>
+                        <td class="data-number text-right">@Model.GuarderiasPrestaciones_Patron</td>
+                        <td class="data-number-invalid text-right">N/A</td>
+                    </tr>
+                    <tr>
+                        <th>SEGURO RETIRO</th>
+                        <td class="data-number text-right">@Model.SeguroRetiro_Patron</td>
+                        <td class="data-number-invalid text-right">N/A</td>
+                    </tr>
+                    <tr>
+                        <th>CESANTÍA VEJÉZ</th>
+                        <td class="data-number text-right">@Model.CesantiaVejez_Patron</td>
+                        <td class="data-number text-right">@Model.CesantiaVejez_Obrero</td>
+                    </tr>
+                    <tr>
+                        <th>INFONAVIT</th>
+                        <td class="data-number text-right">@Model.Infonavit_Patron</td>
+                        <td class="data-number-invalid text-right">N/A</td>
+                    </tr>
+                    <tr>
+                        <th>RIESGO TRABAJO</th>
+                        <td class="data-number text-right">@Model.RiesgoTrabajo_Patron</td>
+                        <td class="data-number-invalid text-right">N/A</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <table class="table" id="table-detalle-ss" width="100%">
+        <thead>
+            <tr class="info">
+                <th>Nombre Concepto</th>
+                <th class="text-right">Carga Patronal</th>
+                <th class="text-right">Carga Obrera</th>
+            </tr>
+        </thead>
+    <tbody>
+    <tr class="success">
+        <th>TOTALES</th>
+        <th class="data-number text-right">0</th>
+        <th class="data-number text-right">0</th>
+    </tr>
+    </tbody>
+    </table>   
+            
+
+        }
+            <script>
+
+                $(document).ready(function () {
+                    var table = $("#table-detalle-ss").DataTable({
+
+                        paging: false,
+                        searching: false,
+                        info: false,
+                        select: true,
+                        ordering: false
+
+                    });
+
+
+                    //-->
+                });
+
+
+            </script>

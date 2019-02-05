@@ -1,0 +1,29 @@
+﻿/*.catEmpleado{
+    width: 1250px !important;
+    height: 550px !important;
+}
+/*.*/
+/*.modal-body{
+    max-height:none;
+}*/
+
+/*.modal-open .modal {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}*/
+
+.asignarConcepto{
+ width: 1200px !important;
+ height: 80% !important;
+}
+
+.catEmpleadoNom {
+ width: 80% !important;
+ height: 80% !important;
+}
+
+.catClientesNom {
+ width: 800px !important;
+ height: 80% !important;
+}
+

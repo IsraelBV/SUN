@@ -1,0 +1,28 @@
+﻿@using Nomina.BLL;
+@using RH.Entidades;
+@using Common.Enums;
+@using Common.Helpers;
+@model List<C_NOM_Tabla_IMSS>
+
+
+<table id="tblIMSS" class="table table-striped" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Descripción</th>
+            <th>Obrero</th>
+            <th>Empresa</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var imss in Model)
+        {
+            <tr>
+                <td>@imss.Descripcion  </td>
+                <td>@imss.Obrero</td>
+                <td>@imss.Patron</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

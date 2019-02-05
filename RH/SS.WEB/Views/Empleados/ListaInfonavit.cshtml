@@ -1,0 +1,68 @@
+﻿@model IEnumerable<RH.Entidades.Empleado_Infonavit>
+@using Common.Utils;
+@using Common.Enums;
+
+@if(Model.Where(x => x.Status == false).ToList().Count == Model.Count())
+{
+    <script>
+        $("#panel-infonavit").show();
+    </script>
+}
+else
+{
+    <script>
+        $("#panel-infonavit").hide();
+    </script>
+}
+
+<table class="table table-condensed table-striped">
+    <thead>
+        <tr>
+            <th>
+                # Crédito
+            </th>
+            <th>
+                Tipo de Crédito
+            </th>
+            <th>
+                Factor Descuento
+            </th>
+            <th>
+                Fecha Suspensión
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var TipoCredito = ((TipoCreditoInfonavit)item.TipoCredito).ToString().Replace('_', ' ');
+            var FechaSuspension = Extensores.ToStringOrEmptyDate<DateTime>(item.FechaSuspension);
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumCredito)
+                </td>
+                <td>
+                    @TipoCredito
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FactorDescuento)
+                </td>
+                <td>
+                    @FechaSuspension
+                </td>
+                <td>
+                    <button class="btn btn-primary btn-table btnDetalleInfonavit" data-id-infonavit="@item.Id"> 
+                        <span class="glyphicon glyphicon-info-sign"></span> 
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-primary btn-table btnHistorialPagoInfonavit" data-id-infonavit="@item.Id">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

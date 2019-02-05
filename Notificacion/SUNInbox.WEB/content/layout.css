@@ -1,0 +1,923 @@
+html, body {
+	height: 100%;
+	max-width: 100%;
+	width: 100%;
+	overflow-x: hidden;
+	font-family: 'Roboto', sans-serif;
+}
+
+:focus {
+    outline: none;
+}
+
+.navbar {
+	margin-bottom: 0;
+	border-radius: 0;
+	border: 0;
+    height: 50px !important;
+}
+
+.navbar a{
+	color: #fff;
+    padding: 15px !important;
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+	background: transparent !important;
+}
+
+.dark {
+	background: #272727;
+}
+
+.dark-lighten {
+	background: #303030;
+}
+
+.white-text {
+	color: #fff;
+}
+
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+	background-color: initial;
+	border-color: transparent;
+}
+
+.dropdown-menu {
+	background-color: #303030;
+}
+
+.dropdown-menu>li>a {
+	color: #fff;
+}
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+	background: initial;
+	color: #fff;
+}
+
+.page-body {
+	height: calc(100% - 50px);
+}
+
+.sidebar {
+	width: 270px;
+	height: 100%;
+	overflow-x: hidden;
+	position: fixed;
+	left: 0;
+}
+
+.sidebar>.navigation {
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+}
+
+.btn-principal {
+	display: block;
+	width: 100%;
+	padding: 10px;
+	position: relative;
+	background: #3b6e8b;
+	color: #ccc;
+	border-radius: 0;
+}
+
+.btn-principal:hover{
+	background: #3a7799;
+	color: #fff;
+}
+
+.sidebar>.navigation>.menu-sidebar {
+	padding-top: 20px;
+	color: #525252;
+	text-transform: uppercase;
+}
+
+.sidebar>.navigation>.menu-sidebar a:hover {
+	text-decoration: none;
+}
+
+.sidebar>.navigation>.menu-sidebar>ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+.sidebar>.navigation>.menu-sidebar>ul>li {
+	padding: 0;
+}
+
+.btn-menu-sidebar-title {
+	padding: 0 20px;
+	font-weight: bold;
+	font-size: 80%;
+	color: #737373;
+	display: block;
+}
+
+.btn-menu-sidebar-title:hover {
+	color: inherit;
+}
+
+.sidebar>.navigation>.menu-sidebar>ul>li>ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+.sidebar>.navigation>.menu-sidebar>ul>li>ul>li {
+	padding: 0;
+	margin: 0;
+	line-height: 38px;
+}
+
+.sidebar>.navigation>.menu-sidebar>ul>li>ul>li:hover {
+	color: #000 !important;
+}
+
+.btn-sidebar {
+	color: #C7C7C7;
+	font-weight: initial;
+	display: block;
+	padding-left: 30px;
+    text-transform: uppercase;
+}
+
+.btn-sidebar.active {
+	color: #fff;
+	font-weight: bold;
+	background: #242424 !important;
+	text-decoration: none;
+}
+
+.btn-sidebar:hover {
+	color: #C7C7C7;
+	background: #242424;
+}
+
+.menu-labels {
+	margin-top: 10px;
+	padding: 0 30px !important;
+}
+
+.menu-labels .label {
+	cursor: pointer;
+}
+
+.menu-labels li{
+	line-height: 22px !important;
+}
+
+/*.label-active:hover {
+	background: #ccc !important;
+	color: #000 !important;
+}*/
+
+.label-inactive {
+	background: #ccc !important;
+	color: #000 !important;
+}
+
+.label-alta {
+	background: #03CE47;
+}
+
+.label-inactive.label-alta:hover {
+    background: #03CE47;
+}
+
+.label-baja {
+	background: #d50000;
+}
+
+.label-salario {
+	background: #fbc02d;
+}
+
+.dark .label-salario {
+	color: #000;
+}
+
+.label-puesto {
+	background: #607d8b;
+}
+
+.label-empresa {
+    background: #ff6d00;
+}
+
+.dark .label-empresa {
+	color: #000;
+}
+
+.label-imss {
+    background: #00C993;
+}
+
+.label-baja-imss {
+	background: #034701;
+}
+
+.label-reingreso {
+    background: #9575cd;
+}
+
+.label-cumple-imss {
+    background: #d500f9;
+}
+
+.label-infonavit {
+    background: #00acc1;
+}
+
+.label-vacaciones {
+    background: #afb42b;
+}
+
+.dark .label-vacaciones {
+	color: #000;
+}
+
+.label-incapacidades {
+    background: #5d4037;
+}
+
+.label-permiso {
+    background: #01579b;
+}
+
+.main-page {
+	width: calc(100% - 270px);
+	height: 100%;
+	float: right;
+	background: #272727;
+}
+
+.notification-master {
+	width: 30%;
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+	display: inline-block;
+	border-right: none;
+	float:left;
+	background: #272727;
+    position: relative;
+}
+
+.notification-master>.search-filter {
+    height: 34px;
+}
+
+.notification-master>.search-filter>.input-group {
+	border-bottom: none;
+}
+
+.notification-master>.search-filter>.input-group>.input-group-addon {
+	border-radius: 0;
+	background-color: #303030;
+	border: none;
+	color: #999;
+}
+
+.notification-master>.search-filter>.input-group>.form-control {
+	border-radius: 0;
+	border: none;
+	padding: 6px;
+	text-transform: uppercase;
+	background: #303030;
+}
+
+.notification-master>.search-filter>.input-group>.form-control:focus {
+    outline: none;
+    border: none;
+    color: #999;
+    -webkit-box-shadow: none !important;
+}
+
+.notification-master>.search-filter>.input-group> #clearKeyword {
+    cursor: pointer;
+}
+.notification-master>.search-filter>.input-group> #clearKeyword.disabled {
+    color: #303030;
+}
+
+.notification-master>.pagination-filter {
+	width: 100%;
+	text-align: right;
+	padding: 0 10px;
+	border-bottom: none;
+	height: 40px;
+	max-height: 40px;
+	min-height: 40px;
+	line-height: 20px;
+	background: #303030;
+	color: #999;
+}
+
+#buzon-title {
+	font-weight: bold;
+	float: left;
+	position: relative;
+	top: 10px;
+}
+
+#buzon-title:hover {
+	color: #3a7799;
+	cursor: pointer;
+}
+
+.notification-master>.pagination-filter>p {
+	display: inline-block;
+	position: relative;
+	top: 7.5px;
+	margin-right: 5px;
+	margin-bottom: 0;
+}
+
+.notification-master>.pagination-filter>.btn-group {
+	line-height: 15px;
+	top: 6.5px;
+	margin-left: 5px;
+}
+
+.btn-pagination {
+	padding: 4px 8px;
+	font-size: 12px;
+	float: left;
+    color: inherit;
+}
+
+.btn-transparent {
+	display: inline-block;
+	margin-bottom: 0;
+	font-weight: 400;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	cursor: pointer;
+	border: none;
+	position: relative;
+	background: transparent;
+}
+.notification-master>.pagination-filter .btn-pagination[disabled]{
+    cursor: not-allowed;
+    color: #555;
+}
+
+.notification-master>.pagination-filter .btn-pagination:hover {
+	color: #3a7799;
+}
+
+.notification-master > .notification-list {
+    height: calc(100% - 74px);
+    overflow-y: auto;
+}
+
+.notification-master .buttonToTop {
+    padding: 10px;
+    text-align:center;
+    color: #999;
+    cursor: pointer;
+}
+
+.notification {
+	border-left: 5px solid #303030;
+	width: 100%;
+	display: block;
+	color: #999;
+	padding: 10px;
+	border-bottom: 1px solid #555;
+	min-height: 80px;
+    height: 80px;
+	background: #303030;
+}
+
+.notification.new {
+	border-left: 5px solid #3b6e8b;
+}
+
+.notification:hover, .notification.active {
+	background: #242424;
+}
+
+.notification-selector {
+	width: 5%;
+	height: 100%;
+	display: inline-block;
+	position: relative;
+	float: left;
+    color: inherit;
+}
+
+.notification-selector button {
+    color: inherit;
+	position: relative;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.notification-body {
+	width: 70%;
+	display: inline-block;
+	padding-left: 10px;
+    text-transform: uppercase;
+}
+
+.notification-body > .notification-remitent {
+	font-weight: bold;
+	font-size: 120%;
+    max-width: 100%;
+}
+
+.notification-body > .notification-title, .notification-body > .notification-client {
+	font-size: 80%;
+	color: #777;
+}
+
+.notification .notification-extra {
+	width: 20%;
+	height: 100%;
+	float: right;
+	text-align: right;
+	line-height: 15px;
+    position: relative; top: 15px;
+}
+
+.notification .notification-extra .date {
+    font-size: 80%;
+    color: #777;
+}
+
+/* Button Toolbar */
+.toolbar {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 100%;
+    height: 40px;
+    background: rgba(39, 39, 39, 0.96);
+    z-index: 50;
+    display: none;
+}
+
+.toolbar .btn-toolbar {
+    position:relative;
+    padding: 5px;
+    padding-top: 7px;
+    font-size: 20px;
+    color: #fff;
+    border: none;
+    margin: 0;
+    height: 100%;
+    width: 20%;
+    float:left;
+    background: #3b6e8b;
+}
+
+.toolbar .btn-toolbar:hover {
+    background: #284758;
+}
+
+/* Área del Detalle de la Notificación */
+
+.notification-detail {
+	width: 70%;
+	height: 100%;
+	display: inline-block;
+	overflow-x: hidden;
+	overflow-y: auto;
+	float: right;
+    background-color: #fff;
+}
+
+.notification-detail .empty-cover {
+    background: url("../Images/logo2-shadow-trans.png");
+	background-size: 30%;
+	background-position: center;
+	background-repeat: no-repeat;
+    background-color: #272727;
+    height: 100%;
+    width: 100%;
+}
+
+.notification-detail .detail {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    display: none;
+}
+
+.notification-detail .detail .header {
+    position: relative;
+    border-bottom: 1px solid #ccc;
+    height: 90px;
+    background: #fff;
+}
+
+.notification-detail .detail .header .header-content {
+    width:100%;
+    height: 100%;
+    display: block;
+}
+
+.notification-detail > .detail > .header > .header-content > .remitent-info {
+    width: 70%;
+    height: 100%;
+    line-height: 14px;
+    float: left;
+}
+
+.notification-detail > .detail > .header > .header-content > .remitent-info > .remitent-img {
+    width: 50px;
+    margin-left: 10px;
+    float: left;
+    position:relative;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.notification-detail > .detail > .header > .header-content > .remitent-info > .remitent-info-text {
+    position:relative;
+    display: inline-block;
+    top: 50%;
+    transform: translate(0, -50%);
+    width: calc(100% - 60px);
+}
+
+.notification-detail > .detail > .header > .header-content > .remitent-info > .remitent-info-text > .notification-date {
+    margin-left: 12px;
+    margin-top: 7px;
+    margin-bottom: 0;
+    display: inline-block;
+    width: 100%;
+    font-weight: 200;
+    font-size: 80%;
+    color: #999;
+}
+
+.notification-detail > .detail > .header > .header-content > .remitent-info > .remitent-info-text >  .remitent-name {
+    margin-left: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+    display: inline-block;
+    width: 100%;
+}
+
+.notification-detail > .detail > .header > .header-content > .remitent-info > .remitent-info-text > .notification-title {
+    display: inline-block;
+    margin-top: 0;
+    margin-left: 12px;
+    font-size: 80%;
+}
+
+.notification-detail > .detail > .header > .header-content > .action-panel {
+    float: right;
+    width: 30%;
+    height: 100%;
+    padding: 3%;
+    text-align: right;
+}
+
+.notification-detail > .detail > .header > .header-content > .action-panel > button {
+    font-size: 130%;
+    position: relative;
+    top: 50%;
+    transform:translate(0, -50%);
+}
+
+.notification-detail > .detail > .header > .header-content > .action-panel > .btnArchiveNotification {
+    color: #525252;
+}
+
+.notification-detail > .detail > .header > .header-content > .action-panel > .btnPrintNotification {
+    color: #a85656;
+}
+
+.notification-detail > .detail > .header > .header-content > .action-panel > .btnFavoriteNotification {
+    color: #b7a84f;
+}
+
+.notification-detail > .detail > .body {
+    position:relative;
+    height: calc(100% - 90px);
+}
+
+.notification-detail > .detail > .body > .body-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+
+.notification-detail > .detail > .body > .body-list > .collection {
+    position: relative;
+    list-style-type: none;
+    padding-left: 0;
+    display: inline-block;
+    width: 100%;
+}
+
+.notification-detail > .detail > .body > .body-list > .collection > .collection-item {
+    padding: 10px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    overflow: auto;
+}
+
+.notification-detail > .detail > .body > .body-list > .collection > .collection-item > .secondary-content {
+    float: right;
+    word-wrap: break-word;
+    max-width: 50%;
+    text-align: right;
+}
+
+.notification-detail > .detail > .body > .comments-section {
+    width: 50%;
+    float:right;
+    height: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    position:relative;
+    background: #939393;
+}
+
+.notification-detail > .detail > .body > .comments-section > .comment-list {
+    width: 100%;
+    height: calc(100% - 80px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px;
+    
+}
+
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    overflow:hidden;
+    border-bottom: none;
+    display: table-row;
+}
+
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment:last-child {
+    border-bottom: 1px solid #ccc;
+}
+
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment > .comment-image {
+    width: 20%;
+    display: table-cell;
+    float: right;
+    height: 100%;
+    text-align:center;
+}
+
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment.currentUser > .comment-image {
+    float: left !important;
+}
+
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment > .comment-image > img {
+    width: 60%;
+    position: relative;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment > .comment-content {
+    width: 80%;
+    background: #fff;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: table-cell;
+    float: left;
+    position: relative;
+    margin-bottom: 2%;
+}
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment.currentUser > .comment-content {
+    float: right !important;
+}
+
+.otherUser .comment-content:after, .comment-content:before {
+	left: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.otherUser .comment-content:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-left-color: #fff;
+	border-width: 10px;
+	margin-top: -8px;
+}
+
+.currentUser .comment-content:after, .currentUser .comment-content:before {
+	right: 100%;
+	top:50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.currentUser .comment-content:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-right-color: #fff;
+	border-width: 10px;
+	margin-top: -8px;
+}
+
+
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment > .comment-content > .comment-title {
+    width: 100%;
+    display: inline-block;
+}
+
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment > .comment-content > .comment-title > h4 {
+    margin-bottom: 0;
+    display: inline-block;
+    float: left;
+}
+
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment > .comment-content > .comment-title > p {
+    margin-bottom: 0;
+    margin-top: 10px;
+    font-size: 80%;
+    color: #999;
+    display: inline-block;
+    float: right;
+    text-align: right;
+}
+
+.notification-detail > .detail > .body > .comments-section > .comment-list > .comment > .comment-content > .comment-body > p {
+    margin-top: 0;
+}
+
+.notification-detail > .detail > .body > .comments-section > .new-comment {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    width: 97%;
+    height: 80px;
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+.notification-detail > .detail > .body > .comments-section > .new-comment.error {
+    border-color: #d50000;
+}
+
+.notification-detail > .detail > .body > .comments-section > .new-comment > form > .text-area {
+    position: relative;
+}
+
+.notification-detail > .detail > .body > .comments-section > .new-comment > form >  .text-area > .form-control {
+    border-radius: unset;
+    border: none;
+}
+
+.notification-detail > .detail > .body > .comments-section > .new-comment > form > .text-area > .form-control:focus {
+    outline: none;
+    border: none;
+    -webkit-box-shadow: unset;
+}
+
+.notification-detail > .detail > .body > .comments-section > .new-comment > form > .secondary-area {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.notification-detail > .detail > .body > .comments-section > .new-comment > form > .secondary-area > .btn-send {
+    position:relative;
+    text-align: right;
+    float: right;
+    color: #3b6e8b;
+    font-weight: bold;
+}
+
+.notification-detail > .detail > .body > .comments-section > .new-comment.error > form > .secondary-area > .counter-area {
+    color: #d50000;
+}
+
+.notification-detail > .detail > .body > .comments-section > .new-comment > form > .secondary-area > .counter-area {
+    float:left;
+    padding: 6px 12px;
+    margin: 0;
+    color: #999;
+}
+
+.toast {
+    position: fixed;
+    bottom: 10px;
+    margin: 0 25%;
+    color: #fff;
+    padding: 14px 24px;
+    background: rgba(0, 0, 0, 0.80);
+    width: 50%;
+    min-height: 48px;
+    height:auto;
+    border-radius: 1px;
+    display: none;
+    z-index: 5000;
+}
+
+.toast .confirmTxt {
+    float:right;
+    color: #fbc02d;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+    .navbar-header {
+        display: inline-block;
+    }
+
+    .navbar-nav {
+        display: inline-block;
+        float:right;
+        margin: 0;
+    }
+    
+    .nav>li {
+        display: inline-block;
+    }
+    
+    .navbar-toggle {
+        display: block;
+        color:#fff;
+        float: left;
+        padding: 15px 0 15px 15px;
+        margin: 0;
+    }
+    
+    .sidebar {
+        display: none;
+        z-index: 50;
+    }
+
+    .main-page {
+        width: 100%;
+    }
+
+    .notification-master {
+        width: 100%;
+        z-index: 1;
+    }
+
+    .notification-detail {
+        width: 100%;
+        display: none;
+        z-index: 5;
+        position:absolute;
+    }
+
+    .toast {
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        z-index: 2000;
+    }
+}
+
+/* Helpers */
+.truncate { 
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+/* END OF helpers*/
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+    width: 4px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #3a7799; 
+    -webkit-box-shadow: inset 0 0 6px #3a7799; 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: #3a7799;
+}

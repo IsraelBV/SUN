@@ -1,0 +1,16 @@
+﻿@model Notificacion.BLL.ComentariosDatos
+@using Common.Helpers;
+<div class="comment comment-hidden currentUser" data-id-comentario="@Model.IdComentario">
+    <div class="comment-image">
+        <img src="@Model.ProfPic" />
+    </div>
+    <div class="comment-content">
+        <div class="comment-title">
+            <h4>@Model.Usuario</h4>
+            <p>@NotificationHelpers.getFechaDeNotificacion(Model.Fecha)</p>
+        </div>
+        <div class="comment-body">
+            <p>@Model.Comentario</p>
+        </div>
+    </div>
+</div>

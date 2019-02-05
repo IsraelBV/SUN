@@ -1,0 +1,288 @@
+﻿@using Common.Helpers
+@using RH.BLL
+@using Common.Enums
+@using SYA.BLL
+@{  
+    SucursalDatos sucursal;
+    sucursal = Session["Sucursal"] as SucursalDatos;
+    var usuario = @ControlAcceso.GetUsuarioEnSession();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SUNRH | @ViewBag.Title</title>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+    <!-- Bootstrap Core  -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-confirmation.min.js"></script>
+
+    <!-- Awesome fonts -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-hQpvDQiCJaD2H465dQfA717v7lu5qHWtDbWNPvaTJ0ID5xnPUlVXnKzq7b8YUkbN" crossorigin="anonymous">
+    <script src="~/Scripts/bootstrap-waitingfor.min.js"></script>
+    <!-- Normalizador CSS-->
+    <link rel="stylesheet" href="~/Content/normalize.css" />
+    <link rel="icon" href="" />
+
+    <!-- Recursos de esta página -->
+    <link rel="stylesheet" href="~/Content/menuSecundario.css" />
+    <script src="~/Scripts/menuSecundario.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="dropdown"]').tooltip();
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('[data-toggle="tooltip"]').click(function () {
+                $('.tooltip').fadeOut('fast');
+            });
+            $('[data-toggle="dropdown"]').click(function () {
+                $('.tooltip').fadeOut('fast');
+            });
+        });
+    </script>
+
+    <!-- notify-->
+    <link rel="stylesheet" href="~/Content/bootstrap-notify.css" />
+    <script src="~/Scripts/bootstrap-notify.min.js"></script>
+    <script src="~/Scripts/Utils.js"></script>
+
+</head>
+<body>
+@if (SessionHelpers.IsAutenticado())
+{
+    if (sucursal != null)
+    {
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-principal, #menuModular">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="@Url.Action("Index", "Home")" class="navbar-brand" id="aIndex"><i class="fa fa-sun-o fa-lg"></i> SUNRH</a>
+                </div>
+
+                <div id="menuModular" class="collapse in">
+                    <ul class="nav navbar-nav modularNav">
+                        <li class="liMenuWhite liMenu">
+                            <a href="@Url.Action("Index","Empleados")" class="empleados"><i class="fa fa-users fa-lg iconoMenu"></i> Empleados </a>
+                        </li>
+
+                        <li class="dropdown liMenu">
+                            <a href="#" class="dropdown-toggle incidencias" data-toggle="dropdown" data-placement="bottom"><i class="fa fa-bar-chart fa-lg iconoMenu"></i> Incidencias <i class="caret iconoMenu"></i></a>
+                            <ul class="dropdown-menu" id="inAnimated">
+                                <li>
+                                    <a href="/CapturaInasistencias/" class="ul-li-incidencias"><i class="fa fa-calendar-times-o"></i> Inasistencias</a>
+                                </li>
+                                <li>
+                                    <a href="/Incapacidades/" class="ul-li-incidencias"><i class="fa fa-wheelchair" aria-hidden="true"></i> Incapacidades</a>
+                                </li>
+                                <li>
+                                    <a href="/Permisos/" class="ul-li-incidencias"><i class="fa fa-check"></i> Permisos</a>
+                                </li>
+                                <li>
+                                    <a href="/Vacaciones/" class="ul-li-incidencias"><i class="fa fa-plane"></i> Vacaciones</a>
+                                </li>
+                                <li>
+                                    <a href="/Reportes/" class="ul-li-incidencias"><i class="fa fa-pie-chart"></i> Reportes</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown liMenu">
+                            <a href="" class="dropdown-toggle operaciones" data-toggle="dropdown" data-placement="bottom"><i class="fa fa-tasks fa-lg iconoMenu"></i> Operaciones <i class="caret iconoMenu"></i></a>
+                            <ul class="dropdown-menu" id="opAnimated">
+                                @*<li>
+                                    <a href="/Prestamos/" class="ul-li-operaciones"><i class="fa fa-money"></i> Préstamos</a>
+                                </li>*@
+                                <li>
+                                    <a href="/valRFC/" class="ul-li-operaciones"><i class="fa fa-check-square"></i> Validador de RFC</a>
+                                </li>
+                                <li>
+                                    <a href="/CumpleIMSS/Index" class="ul-li-operaciones"><i class="fa fa-check-square"></i>Cumpleaños IMSS</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li class="dropdown liMenu">
+                            <a href="#" class="dropdown-toggle catalogos" data-toggle="dropdown" data-placement="bottom"><i class="fa fa-database fa-lg iconoMenu"></i> Catálogos <i class="caret iconoMenu"></i></a>
+                            <ul class="dropdown-menu" id="catAnimated">
+                                <li>
+                                    <a href="/Departamentos/Index/?sucursal=@(sucursal.IdSucursal)" class="ul-li-catalogos"><i class="fa fa-building"></i> Departamentos</a>
+                                </li>
+                                <li>
+                                    <a href="/FactoresDeIntegracion/" class="ul-li-catalogos"><i class="fa fa-percent"></i> Factores de Integración</a>
+                                </li>
+                                <li>
+                                    <a href="/TiposInasistencia/" class="ul-li-operaciones"><i class="fa fa-exclamation-triangle"></i> Tipos de Incidencias</a>
+                                </li>
+                                <li>
+                                    <a href="/Plantillas/" class="ul-li-operaciones"><i class="fa fa-file-pdf-o"></i> Plantillas</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <ul class="nav navbar-nav" id="breadcrumb">
+                    <ol class="breadcrumb list-inline">
+                        
+                        @if (ViewBag.Extra != null)
+                        {
+                            if (ViewBag.Title == "Inicio")
+                            {
+                                <li class="liBreadcrumbSucursal">@sucursal.Nombre @sucursal.Ciudad</li>
+                            }
+                            else
+                            {
+                                <li class="liBreadcrumbSucursal"><a href="@Url.Action("Index", "Sucursal", new { idSucursal = sucursal.IdSucursal })">@sucursal.Nombre @sucursal.Ciudad</a></li>
+                                <li class="liBreadcrumbSucursal"><a href="">@ViewBag.Title</a></li>
+                                <li class="active">@ViewBag.Extra</li>
+                            }
+
+                        }
+                        else
+                        {
+                            if (ViewBag.Title == "Inicio")
+                            {
+                                <li class="liBreadcrumbSucursal">@sucursal.Nombre @sucursal.Ciudad</li>
+                            }
+                            else
+                            {
+                                <li class="liBreadcrumbSucursal"><a href="@Url.Action("Index", "Sucursal", new { idSucursal = sucursal.IdSucursal })">@sucursal.Nombre @sucursal.Ciudad</a></li>
+                                <li class="active">@ViewBag.Title</li>
+                            }
+                        }
+
+                    </ol>
+                </ul>
+
+
+                <div id="menu-principal" class="collapse in">
+                    <ul class="nav navbar-nav navbar-right top-nav">
+
+                        <li class="dropdown liMenu">
+                            <a href="#" class="dropdown-toggle iconoMenu" data-toggle="dropdown"><i class="fa fa-user fa-lg iconoMenu"></i> @usuario.Nombres <i class="caret iconoMenu"></i></a>
+                            <ul class="dropdown-menu" id="usAnimated">
+                                <li>
+                                    <a href="~/Usuarios/Index">
+                                        <div>
+                                            <i class="fa fa-user" aria-hidden="true"></i> Perfil
+                                        </div>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="~/Acceso/LogOut">
+                                        <div>
+                                            <i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div style="padding: 40px;"></div>
+
+        <div class="clearfix"></div>
+        <div class="container body-content">
+            @RenderBody()
+        </div>
+    }
+    else
+    {
+        Response.Redirect("~/Home/Index");
+    }
+}
+</body>
+</html>
+
+
+<script>
+    
+    function initControls() {
+        window.location.hash = "red";
+        window.location.hash = "Red"; //chrome
+        window.onhashchange = function () { window.location.hash = "red"; }
+    }
+
+
+
+    $(document).ready(function () {
+      
+        initControls();
+    });
+
+    var waitingDialog = waitingDialog || (function ($) {
+        'use strict';
+
+        // Creating modal dialog's DOM
+        var $dialog = $(
+            '<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' +
+            '<div class="modal-dialog modal-m">' +
+            '<div class="modal-content">' +
+            '<div class="modal-header"><h3 style="margin:0;"></h3></div>' +
+            '<div class="modal-body">' +
+            '<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
+            '</div>' +
+            '</div></div></div>');
+
+        return {
+
+            show: function (message, options) {
+                // Assigning defaults
+                if (typeof options === 'undefined') {
+                    options = {};
+                }
+                if (typeof message === 'undefined') {
+                    message = 'Loading';
+                }
+                var settings = $.extend({
+                    dialogSize: 'm',
+                    progressType: '',
+                    onHide: null // This callback runs after the dialog was hidden
+                }, options);
+
+                // Configuring dialog
+                $dialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
+                $dialog.find('.progress-bar').attr('class', 'progress-bar');
+                if (settings.progressType) {
+                    $dialog.find('.progress-bar').addClass('progress-bar-' + settings.progressType);
+                }
+                $dialog.find('h3').text(message);
+                // Adding callbacks
+                if (typeof settings.onHide === 'function') {
+                    $dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+                        settings.onHide.call($dialog);
+                    });
+                }
+                // Opening dialog
+                $dialog.modal();
+            },
+            /**
+             * Closes dialog
+             */
+            hide: function () {
+                $dialog.modal('hide');
+            }
+        };
+
+    })(jQuery);
+
+
+    function demo() {
+
+        waitingDialog.show('Procesando...');
+        //setTimeout(function () {waitingDialog.hide();}, 3000);
+    }
+
+</script>

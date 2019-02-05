@@ -1,0 +1,416 @@
+﻿@using Nomina.BLL;
+@model List<asignacionclase>
+
+@{
+    var checkConcepto = ViewBag.checkConcepto;
+}
+
+<style>
+    .tooltip {
+    background-color:#000;
+    border:1px solid #fff;
+    padding:10px 15px;
+    width:200px;
+    display:none;
+    color:#fff;
+    text-align:left;
+    font-size:12px;
+ 
+    /* outline radius for mozilla/firefox only */
+    -moz-box-shadow:0 0 10px #000;
+    -webkit-box-shadow:0 0 10px #000;
+}
+
+    .checkDisabled{
+        visibility: hidden;
+    }
+
+</style>
+
+<div  >
+    @*<div class="table-panel">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#activos">Activos</a></li>
+            <li><a data-toggle="tab" href="#Desactivados">Inactivo</a></li>
+                                           
+        </ul>
+    </div>
+   
+    <div class="tab-content">
+        <div id="activos" class="tab-pane fade in active" >*@
+            <table id="tblEmpleados" class="display compact tblActivos" width="100%" cellspacing="0" style="margin-right:10px">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Nombre(s)</th>
+                        <th>
+                            @if (checkConcepto.conFiscal == true)
+                            {
+                                <input type="checkbox" id="select_all" class="checkbox3" /> <text> F</text>
+                            }
+                            else
+                            {
+                                @*<input type="checkbox" disabled />*@<span class="glyphicon glyphicon-ban-circle"></span> <text> F</text>
+                            }
+                        </th>
+                        <th>
+                            @if (checkConcepto.conComplemento == true)
+                            {
+                                <input type="checkbox" id="select_all2" class="checkbox3" /> <text> C</text>
+                            }
+                            else
+                            {
+                                @*<input type="checkbox" disabled />*@<span class="glyphicon glyphicon-ban-circle"></span> <text> C</text>
+                            }
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="checkedall">
+                    @foreach (var a in Model.Where(x=> x.statusEmpleado == true))
+            {
+                var selectedFiscal = "checked";
+                int valorFiscal = 1;
+                var selectedComplemento = "checked";
+                int valorComplemento = 1;
+
+                if (a.isFiscal == false)
+                {
+                    selectedFiscal = "";
+                    valorFiscal = 0;
+                }
+
+                if (a.isComplemento == false)
+                {
+                    selectedFiscal = "";
+                    valorComplemento = 0;
+                }
+
+
+
+                <tr class="idFilas all @selectedFiscal" data-id-empleado="@a.IdE">
+                    <td id="IdE">@a.IdE</td>
+                    <td id="nombres">@a.Paterno</td>
+                    <td>@a.Materno</td>
+                    <td>@a.Nombres</td>
+                    <td>
+                        @if (checkConcepto.conFiscal == true)
+                        {
+                            if (a.idFiscal != null || a.idAsimilado != null)
+                            {
+                                if (a.isFiscal == false)
+                                {
+                                    <input class="checkbox checkedFiscal" type="checkbox" name="checkedFiscal" value="0" data-id-empleado="@a.IdE" />
+                                }
+                                else
+                                {
+                                    <input class="checkbox checkedFiscal" type="checkbox" name="checkedFiscal" value="1" checked="checked" data-id-empleado="@a.IdE" />
+                                }
+                            }
+                            else
+                            {
+                                <span class="glyphicon glyphicon-ban-circle" title="No tiene Empresa Fiscal Asignada"><input class="checkedFiscal checkDisabled" type="checkbox" name="checkedFiscal"  disabled /></span>
+                                @*<span class="checkedComplemento glyphicon glyphicon-ban-circle" data-toggle="tooltip" data-placement="top" title="No tiene Empresa Fiscal Asignada"> </span>*@
+                            }
+
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-ban-circle" title="El concepto no tiene asignada una fórmula Fiscal" ><input class="checkedFiscal checkDisabled" type="checkbox" name="checkedFiscal "/></span>
+                                @*<span class="checkedComplemento glyphicon glyphicon-ban-circle"  data-toggle="tooltip" data-placement="top" title="El concepto no tiene asignada una formula Fiscal"> </span>*@
+                                }
+
+
+
+</td>
+                    <td>
+                        @if (checkConcepto.conComplemento == true)
+                        {
+                            if (a.idComplemento != null || a.idSindicato != null)
+                            {
+                                if (a.isComplemento == false)
+                                {
+                                    <input class="checkbox2 checkedComplemento" type="checkbox" name="checkedComplemento checkDisabled" value="0" data-id-empleado="@a.IdE" />
+                                }
+                                else
+                                {
+                                    <input class="checkbox2 checkedComplemento" type="checkbox" name="checkedComplemento checkDisabled" value="1" checked="checked" data-id-empleado="@a.IdE" />
+                                }
+                            }
+                            else
+                            {
+                               <span  class="glyphicon glyphicon-ban-circle" title="No tiene Empresa Complemento Asignada" > <input class="checkedComplemento checkDisabled" type="checkbox" name="checkedFiscal" /></span>
+                                @*<span class="checkedComplemento glyphicon glyphicon-ban-circle" data-toggle="tooltip" data-placement="top" title="No tiene Empresa Complemento Asignada"> </span>*@
+                            }
+
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-ban-circle" title="El concepto no tiene asignada una fórmula Complemento"><input class="checkedComplemento checkDisabled" type="checkbox" name="checkedFiscal"  /></span>
+                                @*<span class="checkedComplemento glyphicon glyphicon-ban-circle" data-toggle="tooltip" data-placement="top" title="El concepto no tiene asignada una formula Complemento"> </span>*@
+                                }
+
+
+</td>
+                </tr>
+                    }
+                </tbody>
+            </table>
+        @*</div>*@
+        @*<div id="Desactivados" class="tab-pane fade">
+            <table id="empleados2" class="display compact tblActivos2" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Nombre(s)</th>
+                        <th>
+                            @if (checkConcepto.conFiscal == true)
+                            {
+                                <input type="checkbox" id="select_all" class="checkbox3" /> <text>Fiscal</text>
+                            }
+                            else
+                            {
+                                <span class="glyphicon glyphicon-ban-circle"></span> <text> Fiscal</text>
+                            }
+                        </th>
+                        <th>
+                            @if (checkConcepto.conComplemento == true)
+                            {
+                                <input type="checkbox" id="select_all2" class="checkbox3" /> <text> Complemento</text>
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="select_all2" disabled class="glyphicon glyphicon-ban-circle" /> <text> Complemento</text>
+                            }
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="checkedall">
+                    @foreach (var a in Model.Where(x=> x.statusEmpleado == false))
+            {
+                var selectedFiscal = "checked";
+                int valorFiscal = 1;
+                var selectedComplemento = "checked";
+                int valorComplemento = 1;
+
+                if (a.isFiscal == false)
+                {
+                    selectedFiscal = "";
+                    valorFiscal = 0;
+                }
+
+                if (a.isComplemento == false)
+                {
+                    selectedFiscal = "";
+                    valorComplemento = 0;
+                }
+
+
+
+                <tr class="idFilas all @selectedFiscal" data-id-empleado="@a.IdE">
+                    <td id="IdE">@a.IdE</td>
+                    <td>@a.Paterno</td>
+                    <td>@a.Materno</td>
+                    <td id="nombres">@a.Nombres</td>
+                    <td>
+                        @if (checkConcepto.conFiscal == true)
+                        {
+                            if (a.idFiscal != null || a.idAsimilado != null)
+                            {
+                                if (a.isFiscal == false)
+                                {
+                                    <input class="checkbox checkedFiscal" type="checkbox" name="checkedFiscal" value="0" data-id-empleado="@a.IdE" />
+                                }
+                                else
+                                {
+                                    <input class="checkbox checkedFiscal" type="checkbox" name="checkedFiscal" value="1" checked="checked" data-id-empleado="@a.IdE" />
+                                }
+                            }
+                            else
+                            {
+                                <span class="glyphicon glyphicon-ban-circle"><input class="checkedFiscal checkDisabled" type="checkbox" name="checkedFiscal" disabled /></span>
+                                    
+                            }
+
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-ban-circle " title="El concepto no tiene asignada una formula Fiscal"><input class="checkedFiscal checkDisabled" type="checkbox" name="checkedFiscal" disabled  /></span>
+                                
+                                }
+
+
+
+</td>
+                    <td>
+                        @if (checkConcepto.conComplemento == true)
+                        {
+                            if (a.idComplemento != null || a.idSindicato != null)
+                            {
+                                if (a.isComplemento == false)
+                                {
+                                    <input class="checkbox2 checkedComplemento" type="checkbox" name="checkedComplemento" value="0" data-id-empleado="@a.IdE" />
+                                }
+                                else
+                                {
+                                    <input class="checkbox2 checkedComplemento" type="checkbox" name="checkedComplemento" value="1" checked="checked" data-id-empleado="@a.IdE" />
+                                }
+                            }
+                            else
+                            {
+                                <span class="glyphicon glyphicon-ban-circle" title="No tiene Empresa Complemento Asignada"><input class="checkedComplemento checkDisabled" type="checkbox" name="checkedFiscal" disabled /></span>
+                                                                }
+
+                        }
+                        else
+                        {
+                            <span class="glyphicon glyphicon-ban-circle" title="El concepto no tiene asignada una fórmula Complemento"><input class="checkedComplemento checkDisabled" type="checkbox" name="checkedFiscal" disabled /></span>
+                                
+                                }
+</td>
+                </tr>
+                    }
+                </tbody>
+            </table>
+        </div>*@
+    @*</div>*@
+   
+
+</div>
+
+
+<script>
+    empl = $('table.tblActivos').DataTable({
+        "scrollY": "400px",
+        "scrollX": "250px",
+        "scrollCollapse": true,
+        "paging": false,
+        "info": false
+        //"searching": false,
+        
+    });
+     $('table.tblActivos2').DataTable({
+        "scrollY": "330px",
+        "scrollCollapse": true,
+        "paging": false,
+        "info": false
+        //"searching": false,
+
+    });
+
+    //$(document).ready(function () {
+    //    $('[data-toggle="tooltip"]').tooltip();
+    //});
+
+    $("#select_all").change(function () {  //"select all" change
+        var status = this.checked; // "select all" checked status
+        $('.checkbox').each(function () { //iterate all listed checkbox items
+            this.checked = status; //change ".checkbox" checked status
+        });
+        if (this.checked == true) {
+
+            $(".checkbox").attr('checked', true);
+            $(".checkbox").val(1);
+        } else {
+            $(".checkbox").attr('checked', false);
+            $(".checkbox").val(0);
+        }
+    });
+
+    $('.checkbox').change(function () { //".checkbox" change
+        //uncheck "select all", if one of the listed checkbox item is unchecked
+        if (this.checked == false) { //if this item is unchecked
+            $("#select_all")[0].checked = false; //change "select all" checked status to false
+        }
+
+        //check "select all" if all checkbox items are checked
+        if ($('.checkbox:checked').length == $('.checkbox').length) {
+            $("#select_all")[0].checked = true; //change "select all" checked status to true
+        }
+    });
+
+
+
+    $('.checkbox').click(function () {
+
+        if ($(this).val() == 1) {
+            $(this).attr('checked', false);
+            $(this).val(0);
+        } else {
+            $(this).attr('checked', true);
+            $(this).val(1);
+        }
+      
+    });
+
+
+    // Cambio del checkbox de Complemento  y su seleccionador
+    $("#select_all2").change(function () {  //"select all" change
+        var status = this.checked; // "select all" checked status
+        console.log("here");
+        $('.checkbox2').each(function () { //iterate all listed checkbox items
+            this.checked = status; //change ".checkbox" checked status
+        });
+        if (this.checked == true) {
+
+            $(".checkbox2").attr('checked', true);
+            $(".checkbox2").val(1);
+        } else {
+            $(".checkbox2").attr('checked', false);
+            $(".checkbox2").val(0);
+        }
+    });
+
+    $('.checkbox2').change(function () { //".checkbox" change
+        //uncheck "select all", if one of the listed checkbox item is unchecked
+        if (this.checked == false) { //if this item is unchecked
+            $("#select_all2")[0].checked = false; //change "select all" checked status to false
+        }
+
+        //check "select all" if all checkbox items are checked
+        if ($('.checkbox2:checked').length == $('.checkbox2').length) {
+            $("#select_all2")[0].checked = true; //change "select all" checked status to true
+        }
+    });
+
+    if ($('.checkbox2:checked').length == $('.checkbox2').length) {
+        $("#select_all2")[0].checked = true; //change "select all" checked status to true
+    }
+
+    if ($('.checkbox:checked').length == $('.checkbox').length) {
+        $("#select_all")[0].checked = true; //change "select all" checked status to true
+    }
+
+    $('.checkbox2').click(function () {
+
+        if ($(this).val() == 1) {
+            $(this).attr('checked', false);
+            $(this).val(0);
+        } else {
+            $(this).attr('checked', true);
+            $(this).val(1);
+        }
+
+        console.log($(this).val());
+    });
+
+    $("#concep span").tooltip({
+
+        // place tooltip on the right edge
+        position: "center right",
+
+        // a little tweaking of the position
+        offset: [-2, 10],
+
+        // use the built-in fadeIn/fadeOut effect
+        effect: "fade",
+
+        // custom opacity setting
+        opacity: 0.7
+
+    });
+   
+</script>

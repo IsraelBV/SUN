@@ -1,0 +1,93 @@
+﻿@using RH.Entidades;
+@model List<Prestamos>
+
+@{ 
+    var empleado = ViewBag.Empleado;
+}
+<div class="panel-heading" id="titulo">
+
+    <h2>@empleado.Nombres @empleado.APaterno @empleado.AMaterno</h2>
+
+    <a href="@Url.Action("Index", "Prestamos")" class="btn btn-danger back"><i class="fa fa-undo"></i> Regresar</a>
+    <a href="@Url.Action("Nuevo", "Prestamos", new { id = empleado.IdEmpleado })" class="btn btn-primary new"><i class="fa fa-plus"></i> Nuevo</a>
+    <hr />
+</div>
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Autorizado</th>
+            <th>Fecha de Inicio</th>
+            <th>Tipo</th>
+            <th>Descuento</th>
+            <th>Monto</th>
+            <th>A Pagar</th>
+            <th>Parcialidades</th>
+            <th>Saldo</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            string TipoPrestamo = "Axedes";
+            if (item.TipoPrestamo == 2)
+            {
+                TipoPrestamo = "Alianza";
+            }
+            <tr>
+                <td>@item.IdPrestamo</td>
+                <td>@item.FechaRegistro.ToString("dd-MM-yyyy")</td>
+                <td>@item.FechaInicio.ToString("dd-MM-yyyy")</td>
+                <td>@TipoPrestamo</td>
+                <td>@item.CantidadDescuento</td>
+                <td>@item.Monto</td>
+                <td>@item.MontoInteres</td>
+                <td>@item.Parcialidades</td>
+                <td>@item.Saldo</td>
+                <td>
+                    @if (item.Status == true)
+                    { 
+                        <input type="checkbox" checked disabled /> 
+                    }
+                    else
+                    {
+                        <input type="checkbox" disabled />
+                    }
+                </td>
+                <td>
+                    <a class="btn btn-default btn-historial" title="Historial" href="~/Prestamos/Historial/@item.IdPrestamo" data-ajax-update="#contenido-historial" data-ajax-mode="replace" data-ajax="true">
+                        <span class="glyphicon glyphicon-list-alt"></span>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="historial">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><span class="glyphicon glyphicon-list-alt"></span> Historial de Pagos</h4>
+            </div>
+            <div class="modal-body">
+                <div id="contenido-historial"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".btn-historial").click(function () {
+            $("#historial").modal();
+        });
+    });
+</script>

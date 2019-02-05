@@ -1,0 +1,551 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{05C931FE-B701-4050-8439-3AEEC012290F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nomina.WEB</RootNamespace>
+    <AssemblyName>Nomina.WEB</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\animate.css" />
+    <Content Include="Content\bootstrap-fileinput\css\fileinput.css" />
+    <Content Include="Content\bootstrap-fileinput\css\fileinput.min.css" />
+    <Content Include="Content\bootstrap-fileinput\img\loading-sm.gif" />
+    <Content Include="Content\bootstrap-fileinput\img\loading.gif" />
+    <Content Include="Content\bootstrap-fileinput\themes\explorer\theme.css" />
+    <Content Include="Content\bootstrap-fileinput\themes\explorer\theme.js" />
+    <Content Include="Content\bootstrap-fileinput\themes\fa\theme.js" />
+    <Content Include="Content\bootstrap-fileinput\themes\gly\theme.js" />
+    <Content Include="Content\bootstrap-notify.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\catEmpleados.css" />
+    <Content Include="Content\CSSLocal\buttons.dataTables.min.css" />
+    <Content Include="Content\CSSLocal\dataTables.jqueryui.min.css" />
+    <Content Include="Content\CSSLocal\fixedColumns.dataTables.min.css" />
+    <Content Include="Content\CSSLocal\fontw.css" />
+    <Content Include="Content\CSSLocal\jquery-ui.css" />
+    <Content Include="Content\CSSLocal\jquery.dataTables.min.css" />
+    <Content Include="Content\CSSLocal\Material_icon.css" />
+    <Content Include="Content\CSSLocal\responsive.dataTables.min.css" />
+    <Content Include="Content\CSSLocal\ROBOTO.css" />
+    <Content Include="Content\CSSLocal\select.dataTables.min.css" />
+    <Content Include="Content\datatables.css" />
+    <Content Include="Content\datatables.min.css" />
+    <Content Include="Content\finiquito.css" />
+    <Content Include="Content\finiquitoFiscal.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\images\sort_asc.png" />
+    <Content Include="Content\images\sort_both.png" />
+    <Content Include="Content\images\sort_desc.png" />
+    <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\layout.css" />
+    <Content Include="Content\LayoutBancario\LayoutBancario.css" />
+    <Content Include="Content\login.css" />
+    <Content Include="Content\material.blue_grey-red.min.css" />
+    <Content Include="Content\materialize\css\materialize.css" />
+    <Content Include="Content\materialize\css\materialize.min.css" />
+    <Content Include="Content\materialize\font\material-design-icons\LICENSE.txt" />
+    <Content Include="Content\materialize\font\material-design-icons\Material-Design-Icons.svg" />
+    <Content Include="Content\nomina.css" />
+    <Content Include="Content\sidebar.css" />
+    <Content Include="Content\sidebar2.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\TableSelect.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Thin.woff2" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Thin.woff" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Thin.ttf" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Thin.eot" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Regular.woff2" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Regular.woff" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Regular.ttf" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Regular.eot" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Medium.woff2" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Medium.woff" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Medium.ttf" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Medium.eot" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Light.woff2" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Light.woff" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Light.ttf" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Light.eot" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Bold.woff2" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Bold.woff" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Bold.ttf" />
+    <Content Include="Content\materialize\font\roboto\Roboto-Bold.eot" />
+    <Content Include="Content\materialize\font\material-design-icons\Material-Design-Icons.woff2" />
+    <Content Include="Content\materialize\font\material-design-icons\Material-Design-Icons.woff" />
+    <Content Include="Content\materialize\font\material-design-icons\Material-Design-Icons.ttf" />
+    <Content Include="Content\materialize\font\material-design-icons\Material-Design-Icons.eot" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Thin.woff2" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Thin.woff" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Thin.ttf" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Thin.eot" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Regular.woff2" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Regular.woff" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Regular.ttf" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Regular.eot" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Medium.woff2" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Medium.woff" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Medium.ttf" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Medium.eot" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Light.woff2" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Light.woff" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Light.ttf" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Light.eot" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Bold.woff2" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Bold.woff" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Bold.ttf" />
+    <Content Include="Content\materialize\fonts\roboto\Roboto-Bold.eot" />
+    <Content Include="Images\descuento.png" />
+    <Content Include="Images\detallesFiniquito.png" />
+    <Content Include="Images\error.png" />
+    <Content Include="Images\favicon.png" />
+    <Content Include="Images\profpic.jpg" />
+    <Content Include="Images\profpic.png" />
+    <Content Include="Images\seccion1.png" />
+    <Content Include="Images\seccion2.png" />
+    <Content Include="Images\sort_asc.png" />
+    <Content Include="Images\sort_both.png" />
+    <Content Include="Images\sort_desc.png" />
+    <Content Include="Images\totales.png" />
+    <Content Include="Scripts\asignarConcepto.js" />
+    <Content Include="Scripts\AutorizarNomina.js" />
+    <Content Include="Scripts\bootstrap-notify.min.js" />
+    <Content Include="Scripts\bootstrap-waitingfor.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Scripts\catalogo.js" />
+    <Content Include="Scripts\cfdi.js" />
+    <Content Include="Scripts\complemento.js" />
+    <Content Include="Scripts\datatables-spanish.json" />
+    <Content Include="Content\bootstrap-fileinput\sass\fileinput.scss" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontw.woff2" />
+    <None Include="Properties\PublishProfiles\Nomi1.pubxml" />
+    <None Include="Properties\PublishProfiles\nominas.pubxml" />
+    <None Include="Properties\PublishProfiles\TestNom1.pubxml" />
+    <None Include="Scripts\jquery-3.1.0.intellisense.js" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\logo2.png" />
+    <Content Include="Images\logo_trans.png" />
+    <Content Include="Images\side-bar-background.jpg" />
+    <Content Include="Scripts\datatables.js" />
+    <Content Include="Scripts\datatables.min.js" />
+    <Content Include="Scripts\fileinput.js" />
+    <Content Include="Scripts\fileinput.min.js" />
+    <Content Include="Scripts\jquery-3.1.0.js" />
+    <Content Include="Scripts\jquery-3.1.0.min.js" />
+    <Content Include="Scripts\jquery-3.1.0.slim.js" />
+    <Content Include="Scripts\jquery-3.1.0.slim.min.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\JSLocal\150451a2ee.js" />
+    <Content Include="Scripts\JSLocal\dataTables.buttons.min.js" />
+    <Content Include="Scripts\JSLocal\dataTables.colReorder.min.js" />
+    <Content Include="Scripts\JSLocal\dataTables.fixedColumns.min.js" />
+    <Content Include="Scripts\JSLocal\dataTables.responsive.min.js" />
+    <Content Include="Scripts\JSLocal\dataTables.select.min.js" />
+    <Content Include="Scripts\JSLocal\jquery.dataTables.min.js" />
+    <Content Include="Scripts\JSLocal\jszip.min.js" />
+    <Content Include="Scripts\layout.js" />
+    <Content Include="Scripts\LayoutBancario\LayoutBancario.js" />
+    <Content Include="Scripts\locales\ar.js" />
+    <Content Include="Scripts\locales\bg.js" />
+    <Content Include="Scripts\locales\ca.js" />
+    <Content Include="Scripts\locales\cr.js" />
+    <Content Include="Scripts\locales\cz.js" />
+    <Content Include="Scripts\locales\da.js" />
+    <Content Include="Scripts\locales\de.js" />
+    <Content Include="Scripts\locales\el.js" />
+    <Content Include="Scripts\locales\es.js" />
+    <Content Include="Scripts\locales\fa.js" />
+    <Content Include="Scripts\locales\fi.js" />
+    <Content Include="Scripts\locales\fr.js" />
+    <Content Include="Scripts\locales\hu.js" />
+    <Content Include="Scripts\locales\id.js" />
+    <Content Include="Scripts\locales\it.js" />
+    <Content Include="Scripts\locales\ja.js" />
+    <Content Include="Scripts\locales\kr.js" />
+    <Content Include="Scripts\locales\kz.js" />
+    <Content Include="Scripts\locales\LANG.js" />
+    <Content Include="Scripts\locales\nl.js" />
+    <Content Include="Scripts\locales\pl.js" />
+    <Content Include="Scripts\locales\pt-BR.js" />
+    <Content Include="Scripts\locales\pt.js" />
+    <Content Include="Scripts\locales\ro.js" />
+    <Content Include="Scripts\locales\ru.js" />
+    <Content Include="Scripts\locales\sk.js" />
+    <Content Include="Scripts\locales\sl.js" />
+    <Content Include="Scripts\locales\th.js" />
+    <Content Include="Scripts\locales\tr.js" />
+    <Content Include="Scripts\locales\uk.js" />
+    <Content Include="Scripts\locales\vi.js" />
+    <Content Include="Scripts\locales\zh-TW.js" />
+    <Content Include="Scripts\locales\zh.js" />
+    <Content Include="Scripts\login.js" />
+    <Content Include="Scripts\material.min.js" />
+    <Content Include="Scripts\materialize\materialize.js" />
+    <Content Include="Scripts\materialize\materialize.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\periodospago.js" />
+    <Content Include="Scripts\plugins\canvas-to-blob.js" />
+    <Content Include="Scripts\plugins\canvas-to-blob.min.js" />
+    <Content Include="Scripts\plugins\purify.js" />
+    <Content Include="Scripts\plugins\purify.min.js" />
+    <Content Include="Scripts\plugins\sortable.js" />
+    <Content Include="Scripts\plugins\sortable.min.js" />
+    <Content Include="Scripts\ProcesoNomina.js" />
+    <Content Include="Scripts\ReporteDispersion.js" />
+    <Content Include="Scripts\TableSelect.js" />
+    <Content Include="Scripts\Utils.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\RH\RH.WEB\Filtros\AccesoAplicacionAttribute.cs">
+      <Link>Filtros\AccesoAplicacionAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RH\RH.WEB\Filtros\AccesoModuloAttribute.cs">
+      <Link>Filtros\AccesoModuloAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RH\RH.WEB\Filtros\AccesoSucursalAttribute.cs">
+      <Link>Filtros\AccesoSucursalAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RH\RH.WEB\Filtros\AutenticadoAttribute.cs">
+      <Link>Filtros\AutenticadoAttribute.cs</Link>
+    </Compile>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccesoController.cs" />
+    <Compile Include="Controllers\AcumuladoController.cs" />
+    <Compile Include="Controllers\AjustesController.cs" />
+    <Compile Include="Controllers\AsignarConceptoController.cs" />
+    <Compile Include="Controllers\AsimiladosController.cs" />
+    <Compile Include="Controllers\AutorizarNominaController.cs" />
+    <Compile Include="Controllers\CambiosDatosBancariosController.cs" />
+    <Compile Include="Controllers\CancelarTimbresController.cs" />
+    <Compile Include="Controllers\CatalogosController.cs" />
+    <Compile Include="Controllers\CfdiController.cs" />
+    <Compile Include="Controllers\ComparaExcelvsXMLController.cs" />
+    <Compile Include="Controllers\ComplementoController.cs" />
+    <Compile Include="Controllers\ConfiguracionController.cs" />
+    <Compile Include="Controllers\ContabilidadController.cs" />
+    <Compile Include="Controllers\CuentasContablesController.cs" />
+    <Compile Include="Controllers\EmpleadoComplementoController.cs" />
+    <Compile Include="Controllers\FiniquitoController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IncidenciasController.cs" />
+    <Compile Include="Controllers\LayoutBancarioController.cs" />
+    <Compile Include="Controllers\PeriodosPagoController.cs" />
+    <Compile Include="Controllers\ProcesoNominaController.cs" />
+    <Compile Include="Controllers\ReportesGeneralController.cs" />
+    <Compile Include="Controllers\ReporteTimbradosController.cs" />
+    <Compile Include="Controllers\SindicatoController.cs" />
+    <Compile Include="Filtros\SesionSucursalAttribute.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Metodos.cs" />
+    <Compile Include="Models\LogIn.cs" />
+    <Compile Include="Models\SessionSucursal.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="packages.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Scripts\jquery-3.1.0.slim.min.map" />
+    <Content Include="Scripts\jquery-3.1.0.min.map" />
+    <Content Include="Views\Acceso\LogIn.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\GetClientes.cshtml" />
+    <Content Include="Views\Home\GetPeriodosPago.cshtml" />
+    <Content Include="Views\Configuracion\TablaSubsidio.cshtml" />
+    <Content Include="Views\PeriodosPago\GetPeriodosPago.cshtml" />
+    <Content Include="Views\PeriodosPago\NuevoPeriodo.cshtml" />
+    <Content Include="Views\PeriodosPago\SeleccionEmpleadosPeriodo.cshtml" />
+    <Content Include="Views\PeriodosPago\PeriodoDetalle.cshtml" />
+    <Content Include="Views\Home\NoSucursal.cshtml" />
+    <Content Include="Views\Home\NoPeriodo.cshtml" />
+    <Content Include="Views\Incidencias\Index.cshtml" />
+    <Content Include="Views\Configuracion\ClavesContables.cshtml" />
+    <Content Include="Views\Configuracion\EjecutaProcesoV.cshtml" />
+    <Content Include="Views\Configuracion\EmpresasSucursal.cshtml" />
+    <Content Include="Views\Configuracion\IndexISR.cshtml" />
+    <Content Include="Views\Configuracion\IndexSubsidio.cshtml" />
+    <Content Include="Views\Configuracion\TablaIMSS.cshtml" />
+    <Content Include="Views\Configuracion\TablaISR.cshtml" />
+    <Content Include="Views\Catalogos\Bancos.cshtml" />
+    <Content Include="Views\Catalogos\ConceptosIndex.cshtml" />
+    <Content Include="Views\Catalogos\DatosPersonales.cshtml" />
+    <Content Include="Views\Catalogos\Empleados.cshtml" />
+    <Content Include="Views\Catalogos\Incidencias.cshtml" />
+    <Content Include="Views\AsignarConcepto\Index.cshtml" />
+    <Content Include="Views\AsignarConcepto\BusquedaCE.cshtml" />
+    <Content Include="Views\AutorizarNomina\Index.cshtml" />
+    <Content Include="Views\ProcesoNomina\Index.cshtml" />
+    <Content Include="Views\Cfdi\Index.cshtml" />
+    <Content Include="Views\ProcesoNomina\DetalleNomina.cshtml" />
+    <Content Include="Views\ProcesoNomina\GetSeguroSocial.cshtml" />
+    <Content Include="Views\EmpleadoComplemento\Index.cshtml" />
+    <Content Include="Views\EmpleadoComplemento\GetDetails.cshtml" />
+    <Content Include="Views\EmpleadoComplemento\GetDetailsMixed.cshtml" />
+    <Content Include="Views\ProcesoNomina\GetImpuestosDetalle.cshtml" />
+    <Content Include="Views\Finiquito\DescuentoFiscal.cshtml" />
+    <Content Include="Views\Finiquito\finiquito.cshtml" />
+    <Content Include="Views\Finiquito\FiniquitoComplemento.cshtml" />
+    <Content Include="Views\Finiquito\FiniquitoFiscal.cshtml" />
+    <Content Include="Views\Finiquito\Index.cshtml" />
+    <Content Include="Views\Home\PeriodoNoProcesado.cshtml" />
+    <Content Include="Views\Home\PeriodoNoAutorizado.cshtml" />
+    <Content Include="Views\PeriodosPago\empleadoFiniquito.cshtml" />
+    <Content Include="Views\PeriodosPago\EmpleadoRFCInvalido.cshtml" />
+    <Content Include="Views\PeriodosPago\EmpleadosBaja.cshtml" />
+    <Content Include="Views\PeriodosPago\GetEmpleadoByTipoNomina.cshtml" />
+    <Content Include="Views\ProcesoNomina\detallePrincipal.cshtml" />
+    <Content Include="Views\PeriodosPago\empleadosAgregados.cshtml" />
+    <Content Include="Views\PeriodosPago\empleadosDisponibles.cshtml" />
+    <Content Include="Views\AutorizarNomina\Autorizacion_Factura.cshtml" />
+    <Content Include="Views\AutorizarNomina\Autorizar_Nomina_Fiscal.cshtml" />
+    <Content Include="Views\Cfdi\indexErrores.cshtml" />
+    <Content Include="Views\Cfdi\listadoErrores.cshtml" />
+    <Content Include="Views\Complemento\Index.cshtml" />
+    <Content Include="Views\Finiquito\autorizarFiniquito.cshtml" />
+    <Content Include="Views\CancelarTimbres\Index.cshtml" />
+    <Content Include="Views\CancelarTimbres\GetTimbrados.cshtml" />
+    <Content Include="Views\Asimilados\Index.cshtml" />
+    <Content Include="Views\PeriodosPago\empleadoFiniquitoC.cshtml" />
+    <Content Include="Views\Acumulado\Index.cshtml" />
+    <Content Include="Views\Acumulado\periodoEjercicio.cshtml" />
+    <Content Include="Views\Sindicato\Index.cshtml" />
+    <Content Include="Views\Ajustes\Index.cshtml" />
+    <Content Include="Views\CuentasContables\Index.cshtml" />
+    <Content Include="Views\CuentasContables\tablasCuentas.cshtml" />
+    <Content Include="Views\Finiquito\PercepcionesExtras.cshtml" />
+    <Content Include="Views\CambiosDatosBancarios\datosBancarios.cshtml" />
+    <Content Include="Views\CambiosDatosBancarios\Empleados.cshtml" />
+    <Content Include="Views\CambiosDatosBancarios\Index.cshtml" />
+    <Content Include="Views\ProcesoNomina\Creditos.cshtml" />
+    <Content Include="Views\Contabilidad\Index.cshtml" />
+    <Content Include="Views\Contabilidad\ReporteCuentaContable.cshtml" />
+    <Content Include="Views\Contabilidad\tablaCliente.cshtml" />
+    <Content Include="Views\Contabilidad\tablaPeriodos.cshtml" />
+    <Content Include="Views\Contabilidad\tablasCuentas.cshtml" />
+    <Content Include="Views\Contabilidad\configuracionClientes.cshtml" />
+    <Content Include="Views\Contabilidad\indexClientes.cshtml" />
+    <Content Include="Views\ReporteTimbrados\Index.cshtml" />
+    <Content Include="Views\ProcesoNomina\DetalleAguinaldo.cshtml" />
+    <Content Include="Views\ProcesoNomina\IndexAguinaldo.cshtml" />
+    <Content Include="Views\ReportesGeneral\DatosEmpleados.cshtml" />
+    <Content Include="Views\ReportesGeneral\GetDatosEmpleadosBySucursal.cshtml" />
+    <Content Include="Views\ProcesoNomina\GetCalculoAnual.cshtml" />
+    <Content Include="Views\ReportesGeneral\AjusteAnual.cshtml" />
+    <Content Include="Views\ComparaExcelvsXML\Index.cshtml" />
+    <Content Include="Views\LayoutBancario\Index.cshtml" />
+    <Content Include="Views\LayoutBancario\tablaLayout.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\animate-notify\" />
+    <Folder Include="Files\Autorizacion\" />
+    <Folder Include="Files\DispercionFiniquito\" />
+    <Folder Include="Files\Dispersion\4\" />
+    <Folder Include="Files\DownloadRecibos\3\" />
+    <Folder Include="Files\DownloadRecibos\5\" />
+    <Folder Include="Files\Incidencias\4\" />
+    <Folder Include="Files\Layout\" />
+    <Folder Include="Files\Log\2\" />
+    <Folder Include="Files\Log\4\" />
+    <Folder Include="Files\Log\7\" />
+    <Folder Include="Files\ReportesNomina\4\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Notificacion\Notificacion.BLL\Notificacion.BLL.csproj">
+      <Project>{b6cccc2c-0461-4bc7-9868-72373f27df7a}</Project>
+      <Name>Notificacion.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RH\Common\Common.csproj">
+      <Project>{20dcbdf8-2407-4a4d-9842-aa7277cd676e}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RH\RH.BLL\RH.BLL.csproj">
+      <Project>{907adfc2-db13-40d2-859f-f5a03d7506ae}</Project>
+      <Name>RH.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RH\RH.DAL\RH.DAL.csproj">
+      <Project>{90b8c565-0c9d-4229-ac43-052610ce3228}</Project>
+      <Name>RH.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RH\RH.Entidades\RH.Entidades.csproj">
+      <Project>{6d3c701f-1e8f-4a6c-a377-bbf87b8fdac1}</Project>
+      <Name>RH.Entidades</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SYA\SYA.BLL\SYA.BLL.csproj">
+      <Project>{eba96154-7f94-4421-be43-839caaa78a23}</Project>
+      <Name>SYA.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nomina.BLL\Nomina.BLL.csproj">
+      <Project>{86df57ba-6904-4b92-aff1-b3a86e2f6808}</Project>
+      <Name>Nomina.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nomina.Reportes\Nomina.Reportes.csproj">
+      <Project>{c86f9b8a-d87f-4344-a3f5-41a9a9b7bcc4}</Project>
+      <Name>Nomina.Reportes</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>36789</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:36789/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

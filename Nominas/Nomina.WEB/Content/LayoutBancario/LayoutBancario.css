@@ -1,0 +1,21 @@
+﻿@media only screen and (min-width: 992px) {
+    #btnGetList {
+        position: relative;
+        top: 1.7em;
+        
+    }
+    #GetEmpForm {
+        box-shadow: 1px 0px silver;
+    }
+@media only screen and (max-width: 992px) {
+
+    #GetEmpForm {
+        margin-bottom: 1em; 
+        box-shadow: 0px 1px silver;
+    }
+}
+
+
+.GetLayout {
+    color: black;
+}

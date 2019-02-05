@@ -1,0 +1,147 @@
+﻿.top-nav>.open>.dropdown-menu>li>a {
+    white-space: normal;
+}
+
+ul.message-dropdown {
+    padding: 0;
+    max-height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 250px;
+}
+
+/*Efecto en listas*/
+/*Catálogos*/
+#catAnimated li a{
+    cursor: pointer;
+    -webkit-transition: padding-left 250ms ease-out;
+    -moz-transition: padding-left 250ms ease-out;
+}
+
+#catAnimated li a:hover{
+    padding-left: 30px;
+    color:#FFFFFF;
+    background-color:#2c3e50;
+}
+
+/*Usuario*/
+#usAnimated li a{
+    cursor: pointer;
+    -webkit-transition: padding-left 250ms ease-out;
+    -moz-transition: padding-left 250ms ease-out;
+}
+
+#usAnimated li a:hover{
+    padding-left: 30px;
+    color:#FFFFFF;
+    background-color:#2c3e50;
+}
+/*Termina diseño al pasar el mouse en listas*/
+
+.iconoMenu {
+    color: #dbdbdb !important;
+}
+
+.liMenu:hover {
+    background: black;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+    background-color: black;
+}
+
+.top-nav li a, .modularNav li a {
+    min-height: 30px;
+    color: #3e3f3a;
+}
+
+.top-nav .dropdown-menu li {
+    display: block;
+}
+
+.top-nav .dropdown-menu li a div {
+    white-space: normal;
+}
+
+
+@media(max-width:768px) {
+    #liEmpresas {
+        display: none;
+    }
+}
+
+.navbar-default{
+    background-color:#2c3e50;
+    border-color:transparent;
+}
+
+.dropdown-alerts {
+    width: 310px;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #FFFFFF;
+}
+
+#aIndex{
+    color: #9ED8E8;
+}
+
+#aIndex:hover {
+    color: #83B2BF;
+}
+
+.list-inline a{
+    color: #9ED8E8;
+}
+
+.list-inline .active {
+    color: #9ED8E8;
+}
+
+.list-inline{
+    background: none;
+    margin: 10px 0 0 20px;
+    padding: 5px;
+    border: none;
+}
+
+@media(max-width:1002px) {
+    .list-inline {
+        display: none;
+    }
+}
+
+.menuprincipal{
+    height:50px;
+}
+
+#menuModular a:hover{
+    color:#D7D7D7;
+}
+
+#menuModular li:hover{
+    background-color:#000;
+}
+
+#imagen{
+    width:200px;
+    margin-left:18%;
+}
+.hovercancelado:hover
+        {
+        background-color: #FC0303 !important;
+        }
+.hovernuevo:hover 
+        {
+        background-color: #2196F3 !important;
+        }
+.hovercancelado
+        {
+        background-color:#AB0000 !important;
+        }
+.hoversecundario:hover
+        {
+        background-color: white !important;
+        color: cornflowerblue !important;
+        }

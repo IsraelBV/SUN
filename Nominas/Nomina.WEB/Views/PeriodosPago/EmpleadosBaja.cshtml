@@ -1,0 +1,81 @@
+﻿
+
+@using Nomina.BLL
+@using RH.Entidades
+@model List<EmpleadoNomina>
+@{
+
+}
+<style>
+    /*.nav-tabs {
+
+        background-color: #762a34;
+
+    }*/
+    /*.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+        background-color: #762a34;
+    }*/
+    .dt-buttons {
+        padding-top: 10px;
+    }
+</style>
+
+
+<table id="empleadosbaja" class="display compact" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Paterno</th>
+            <th>Materno</th>
+            <th>Nombre(s)</th>
+            <th>RFC</th>
+            <th title="Periodicidad de Pago">Per. Pago</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>ID</th>
+            <th>Paterno</th>
+            <th>Materno</th>
+            <th>Nombre(s)</th>
+            <th>RFC</th>
+            <th title="Periodicidad de Pago">Per. Pago</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var a in Model)
+            {
+            <tr data-idempleado="@a.idempleado">
+                <td>@a.idempleado</td>
+                <td>@a.Paterno</td>
+                <td>@a.Materno</td>
+                <td>@a.Nombres</td>
+                <td>@a.RFC</td>
+                <td title="@a.PeriodicidadPago"><span class="badge">@a.PeriodicidadPago.Substring(0, 1)</span></td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        if ($.fn.dataTable.isDataTable('#empleadosbaja')) {
+            var rfcInvalido = $('#empleadosbaja').DataTable();
+            rfcInvalido.destroy();
+        }
+        else {
+            var rfcInvalido = $('#empleadosbaja').DataTable({
+                "scrollY": "200px",
+                "scrollCollapse": true,
+                "paging": false,
+                });
+        }
+        });
+
+
+</script>

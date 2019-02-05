@@ -1,0 +1,1297 @@
+﻿
+@using Nomina.BLL
+@using RH.Entidades
+@using Common.Utils;
+@model NOM_Finiquito
+@{
+    var empleado = ViewBag.empleado;
+    int idFiniquito = Model == null? 0: Model.IdFiniquito;
+
+    var finComp = ViewBag.finCom;
+    var finDet = ViewBag.finDet;
+    var finDesFis =  ViewBag.finDesFis;
+    var finDesCom = ViewBag.finDesCom;
+    var esLiquidacion = ViewBag.esLiquidacion;
+    bool liquidacion = Model == null ? false : Model.EsLiquidacion;
+    var autorizado = ViewBag.Autorizado;
+
+}
+<link href="~/Content/finiquito.css" rel="stylesheet" />
+<style>
+      #titulo {
+        position: fixed;
+        top: 5px;
+        margin-top: -10px;
+    }
+
+    #botones {
+        position: fixed;
+        top: 5px;
+        margin-top: -10px;
+    }
+      #ancla2{
+         display:none;
+     }
+    .btnRecibos {
+        background-image: linear-gradient(to bottom, #fff 0%, #FF6A6A 100%) !important;
+    }
+
+    .btnprocesado {
+        background-image: linear-gradient(to bottom, #fff 0%, #337ab7 100%) !important;
+    }
+
+    .btngeneral {
+        background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+    }
+    .btnDescuento{
+        background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+    }
+</style>
+
+
+<div id="titulo">
+    <div class="main-content-title">
+        <h3 class="pull-left">Finiquito @empleado.Paterno @empleado.Materno @empleado.Nombres  @(autorizado == true ? "Autorizado": "")  </h3><div id="autorizacionTitulo"style="display:none;"> <h3 class="pull-left">&nbsp; Autorizado</h3></div>
+
+    </div>
+</div>   
+
+@using (Ajax.BeginForm("SaveCustomData", "Finiquito", new AjaxOptions { OnSuccess = "FormFinSuccess" }, new { @class = "tooltipForm", id = "finiquitoForm" }))
+{
+
+<div id="pvistaParcial" style="height: 90vh;">
+    <div class="row">
+        <div class="panel with-nav-tabs panel-default">
+            <div class="panel-heading clearfix text-center" style="background-color: #FFF !important;">
+                <div class="pull-left" style="margin-bottom:10px; margin-left:10px;">
+                    <a data-toggle="modal" data-target="#modal-detalle" class="btn btn-default btngeneral" href="#"><i class="fa fa-list-ol"></i> Detalles</a>
+                    <a class="btn btn-default btnDescuento" href="#"><i class="fa fa-money"></i> Descuentos</a>
+                    <a id="show" class="btn btn-default ocultar btngeneral" href="#"><i class="fa fa-usd"></i> Totales</a>
+                    @if (autorizado == true)
+                    {
+                        <a class="btn btn-default btnprocesado" onclick="finiquitoComplemento()" style = "pointer-events: none;cursor: default;opacity:0.5;" ><i class="fa fa-refresh"></i> Procesar</a>
+                        
+                    }
+                    else
+                    {
+                        <a class="btn btn-default btnprocesado" onclick="finiquitoComplemento()"id="btnProcesadoOcu"><i class="fa fa-refresh"></i> Procesar</a>
+                    }
+
+                    <a class="btn btn-default btnRecibos" onclick="reciboFPDF()"><i class="fa fa-download"></i> Recibo F</a>
+                    <a class="btn btn-default btnRecibos" onclick="reciboCPDF()"><i class="fa fa-download"></i> Recibo C</a>
+                    <a data-toggle="modal" data-target="#modal-autorizar" class="btn btn-default btnAutorizar btngeneral" href="#"><i class="fa fa-dot-circle-o"></i> Autorizar</a>
+                    @if (autorizado == true)
+                    {
+                        <a class="btn btn-default btnGuardarPersonalizados" style = "pointer-events: none;cursor: default;opacity:0.5;"><i class="glyphicon glyphicon-floppy-save"></i> Guardar Totales Personalizados Liq</a>
+
+                    }
+                    else
+                    {
+                        <a class="btn btn-default btnGuardarPersonalizados" id="btnGuardar"><i class="glyphicon glyphicon-floppy-save"></i> Guardar Totales Personalizados Liq</a>
+                    }
+                    
+                </div>
+                <div class="pull-right" style="margin-bottom:10px;">
+                 
+                    <div id="ancla2">
+                      
+                    </div>
+                    @if (liquidacion)
+                    {
+                        <input type="checkbox" id="checked" class="checked" checked="checked" />
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="checked" class="checked"  />
+                    }
+                    
+                    <label for="checked" >Calcular Indemnizacion</label>
+
+                </div>
+                @*<div class="pull-right">
+                    
+                    <input type="checkbox" id="checked" class="checked " />
+                    <label for="checked" style="color:white;">Calcular Indemnización</label>
+                    <a style="margin-right:10px;" class="btn btn-default" onclick="finiquitoComplemento()">Procesar Finiquito</a>
+                </div>*@
+            </div>
+            <div class="panel-body" style="height: 90vh">
+                <input type="hidden" id="idFiniquito" value="@idFiniquito" name="idFiniquito" />
+                <input type="hidden" id="idEmpleado" value="@empleado.idEmpleado" name="idEmpleado" />
+                <input type="hidden" id="esLiquidacion" value="@(liquidacion == true ?"true":"false")" name="esLiquidacion" />
+@if (Model != null)
+{
+    <div class="form-horizontal ">
+        <div class="col-md-12">
+            <div class="col-md-12">
+                @*Etiqueta de los datos generales *@
+                <div id="anclaFiscal">
+                    <div class="form-group">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#">Datos Generales</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <div class="form-group">
+                    <label class="col-md-2"> Fecha IMSS</label>
+                    <div class="col-md-2">
+                        <input type="date" id="fechaAlta" name="fechaAlta" value="@Model.FechaAlta.ToString("yyyy-MM-dd")" class="form-control input-sm" disabled />
+                    </div>
+
+
+                    <label class="col-md-2">Fecha Baja</label>
+                    <div class="col-md-2">
+                        <input type="date" id="fechaBaja" name="fechaBaja" value="@Model.FechaBaja.ToString("yyyy-MM-dd")" class="form-control input-sm" />
+
+                    </div>
+
+                    <label class="col-md-2">Fecha Real</label>
+                    <div class="col-md-2">
+                        <input type="date" id="fechaAlta" name="fechaAlta" value="@finComp.FechaAlta.ToString("yyyy-MM-dd")" class="form-control input-sm" disabled />
+                    </div>
+                </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2">Sueldo Diario</label>
+                    <div class="col-md-2">
+                        <input type="text" id="sueldoDiario" name="sueldoDiario" value="@Model.SD" class="form-control input-sm" disabled />
+                    </div>
+                    <label class="col-md-2">Salario Mínimo </label>
+                    <div class="col-md-2">
+                        <input type="text" id="sm" name="sm" value="@Model.SalarioMinimo" class="form-control input-sm" disabled />
+
+                    </div>
+                    <label class="col-md-2">Sueldo Real</label>
+                    <div class="col-md-2">
+                        <input type="text" id="sueldoDiario" name="sueldoDiario" value="@finComp.SDReal" class="form-control input-sm" disabled />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2">Días Ejercicio</label>
+                    <div class="col-md-2">
+                        <input type="text" id="diasEjercicio" name="diasEjercicio" value="@Model.DiasEjercicioFiscal" class="form-control input-sm" disabled />
+                    </div>                   
+                </div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    
+                        @*Dias Laborados y Dias Ejercicio*@
+                        <div class="form-group">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#">Datos Fiscales</a></li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Días Laborados</label>
+                            <div class="col-md-3">
+                                <input type="text" id="DiasLaborados" name="DiasLaborados" value="@Model.DiasLaborados" class="form-control input-sm" disabled />
+                            </div>
+                        </div>
+                        @*Datos de Aguinaldo*@
+                        <div class="form-group">
+                            <label class="col-md-3">Aguinaldo</label>
+                            <div class="col-md-4">
+                                <input type="date" id="fechaAguinaldoF" name="fechaAguinaldoF" value="@Model.FechaInicioAguinaldo.ToString("yyyy-MM-dd")" class="form-control input-sm" />
+
+                            </div>
+
+                            <label class="col-md-3">Días:</label>
+                            <div class="col-md-2">
+                                <input type="text" id="diasAguinaldoCalculo" name="diasAguinaldoCalculo" value="@Model.DiasAguinaldoParaCalculo" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        @*Datos de Vacaciones*@
+                        <div class="form-group">
+                            <label class="col-md-3">Vacaciones</label>
+                            <div class="col-md-4">
+                                <input type="date" id="fechaVacacionesF" name="fechaVacacionesF" value="@Model.FechaInicioVacacion.ToString("yyyy-MM-dd")" class="form-control input-sm" />
+
+                            </div>
+
+                            <label class="col-md-3">Días:</label>
+                            <div class="col-md-2">
+                                <input type="text" id="diasVacacionesCalculo" name="diasVacacionesCalculo" value="@Model.DiasVacacionesParaCalculo" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        @*Datos Aguinaldo Totales*@
+                        <div class="form-group">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#">Aguinaldo</a></li>
+
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Días</label>
+                            <div class="col-md-3">
+                                <input type="text" id="diasAguinaldo" name="diasAguinaldo" value="@Model.AguinaldoCorrespondiente" class="form-control input-sm" disabled />
+
+                            </div>
+
+                            <label class="col-md-3">Proporcional</label>
+                            <div class="col-md-3">
+                                <input type="text" id="proporcionalAguinaldo" name="proporcionalAguinaldo" value="@Model.ProporcionalAguinaldo" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Total Aguinaldo</label>
+                            <div class="col-md-3">
+                                <input type="text" id="totalAguinaldo" name="totalAguinaldo" value="@Model.AGUINDALDO" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        @*Datos Vacaciones*@
+                        <div class="form-group">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#">Vacaciones</a></li>
+
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Días</label>
+                            <div class="col-md-3">
+                                <input type="text" id="diasVacaciones" name="diasVacaciones" value="@Model.VacacionesCorrespondiente" class="form-control input-sm" disabled />
+
+                            </div>
+
+                            <label class="col-md-3">Proporcional</label>
+                            <div class="col-md-3">
+                                <input type="text" id="proporcionalVacaciones" name="proporcionalVacaciones" value="@Model.ProporcionalVacaciones" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Total:</label>
+                            <div class="col-md-3">
+                                <input type="text" id="totalVacaciones" name="totalVacaciones" value="@Model.VACACIONES" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">% Prima</label>
+                            <div class="col-md-3">
+                                <input type="text" id="porcientoPrima" name="porcientoPrima" value="@Model.PrimaVacacional" class="form-control input-sm" disabled />
+
+                            </div>
+                            <label class="col-md-3">Total Prima</label>
+                            <div class="col-md-3">
+                                <input type="text" id="totalVacaciones" name="totalVacaciones" value="@Model.PRIMA_VACACIONAL" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        @*Datos Sueldo pendiente*@
+                        <div class="form-group">
+                            @*<label class="col-md-12">Sueldo Pendiente</label>
+                <hr align="left" noshade="noshade" width="100%" style="color: black; height:2px" />*@
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#">Sueldo Pediente</a></li>
+
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Días Sueldo</label>
+                            <div class="col-md-3">
+                                <input type="text" id="diasSueldoPendienteF" name="diasSueldoPendienteF" value="@Model.DiasSueldoPendiente" class="form-control input-sm" />
+
+                            </div>
+                            <label class="col-md-3 text-right"> = $ </label>
+                            <div class="col-md-3">
+                                <input type="text" id="totalSueldoPendiente" name="totalSueldoPendiente" value="@Model.SUELDO" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Días Vacaciones</label>
+                            <div class="col-md-3">
+                                <input type="text" id="diasVacacionesPendientesF" name="diasVacacionesPendientesF" value="@Model.VacacionesPendientes   " class="form-control input-sm" />
+
+                            </div>
+                            <label class="col-md-3 text-right">= $</label>
+                            <div class="col-md-3">
+                                <input type="text" id="totalVacacionesPendientes" name="totalVacacionesPendientes" value="@Model.VACACIONES_PENDIENTE" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Prima Vacacional</label>
+                            <div class="col-md-3">
+                                <input type="text" id="primaVacacionalPendiente" name="primaVacacionalPendiente" value="@Model.PrimaVacacionPendiente" class="form-control input-sm" disabled />
+
+                            </div>
+                            <label class="col-md-3 text-right">= $</label>
+                            <div class="col-md-3">
+                                <input type="text" id="totalPrimaVacacionalPendiente" name="totalPrimaVacacionalPendiente" value="@Model.PRIMA_VACACIONES_PENDIENTE" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+
+                    
+                </div>
+                <div class="col-md-6">
+                    @if (finComp != null)
+                    {
+
+                            <div class="form-group">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#">Datos Complemento</a></li>
+
+                                </ul>
+                            </div>
+                            @*Dias Laborados y Dias Ejercicio*@
+                            <div class="form-group">
+                                <label class="col-md-3">Días Laborados</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="DiasLaborados" name="DiasLaborados" value="@finComp.DiasLaborados" class="form-control input-sm" disabled />
+                                </div>
+                            </div>
+
+                            @*Datos de Aguinaldo*@
+                            <div class="form-group">
+                                <label class="col-md-3">Aguinaldo</label>
+                                <div class="col-md-4">
+                                    <input type="date" id="fechaAguinaldo" name="fechaAguinaldo" value="@finComp.FechaInicioAguinaldo.ToString("yyyy-MM-dd")" class="form-control input-sm" />
+
+                                </div>
+
+                                <label class="col-md-3">Días:</label>
+                                <div class="col-md-2">
+                                    <input type="text" id="diasAguinaldoCalculo" name="diasAguinaldoCalculo" value="@finComp.DiasAguinaldoParaCalculo" class="form-control input-sm" disabled />
+
+                                </div>
+                            </div>
+                            @*Datos de Vacaciones*@
+                            <div class="form-group">
+                                <label class="col-md-3">Vacaciones</label>
+                                <div class="col-md-4">
+                                    <input type="date" id="fechaVacaciones" name="fechaVacaciones" value="@finComp.FechaInicioVacacion.ToString("yyyy-MM-dd")" class="form-control input-sm" />
+
+                                </div>
+
+                                <label class="col-md-3">Días:</label>
+                                <div class="col-md-2">
+                                    <input type="text" id="diasVacacionesCalculo" name="diasVacacionesCalculo" value="@finComp.DiasVacacionesParaCalculo" class="form-control input-sm" disabled />
+
+                                </div>
+                            </div>
+                            @*Datos Aguinaldo Totales*@
+                            <div class="form-group">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#">Aguinaldo</a></li>
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">Días</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="diasAguinaldo" name="diasAguinaldo" value="@finComp.AguinaldoCorrespondiente" class="form-control input-sm" disabled />
+
+                                </div>
+
+                                <label class="col-md-3">Proporcional</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="proporcionalAguinaldo" name="proporcionalAguinaldo" value="@finComp.ProporcionalAguinaldo" class="form-control input-sm" disabled />
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">Total Aguinaldo</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="totalAguinaldo" name="totalAguinaldo" value="@finComp.AGUINALDO" class="form-control input-sm" disabled />
+
+                                </div>
+
+                            </div>
+                            @*Datos Vacaciones*@
+                            <div class="form-group">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#">Vacaciones</a></li>
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">Días</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="diasVacaciones" name="diasVacaciones" value="@finComp.VacacionesCorrespondientes" class="form-control input-sm" disabled />
+
+                                </div>
+
+                                <label class="col-md-3">Proporcional</label>
+                                <div class="col-md-2">
+                                    <input type="text" id="proporcionalVacaciones" name="proporcionalVacaciones" value="@finComp.ProporcionalVacaciones" class="form-control input-sm" disabled />
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">Total:</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="totalVacaciones" name="totalVacaciones" value="@finComp.VACACIONES" class="form-control input-sm" disabled />
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">% Prima</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="porcentajePrima" name="porcentajePrima" value="@finComp.PrimaVacacional" class="form-control input-sm" disabled />
+
+                                </div>
+                                <label class="col-md-3">Total Prima</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="totalPrima" name="totalPrima" value="@finComp.PRIMA_VACACIONAL" class="form-control input-sm" disabled />
+
+                                </div>
+                            </div>
+                            @*Datos Sueldo pendiente*@
+                            <div class="form-group">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#">Sueldo Pediente</a></li>
+
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">Días Sueldo</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="diasSueldoPendiente" name="diasSueldoPendiente" value="@finComp.SueldoPendiente" class="form-control input-sm" />
+
+                                </div>
+                                <label class="col-md-2 text-right">= $</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="totalSueldoPendiente" name="totalSueldoPendiente" value="@finComp.SUELDO" class="form-control input-sm" disabled />
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">Días Vacaciones</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="diasVacacionesPendientes" name="diasVacacionesPendientes" value="@finComp.VacacionesPendientes" class="form-control input-sm" />
+
+                                </div>
+                                <label class="col-md-2 text-right">= $</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="totalVacacionesPendientes" name="totalVacacionesPendientes" value="@finComp.VACACIONES_PENDIENTE" class="form-control input-sm" disabled />
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">Prima Vacacional</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="primaVacacionalPendiente" name="primaVacacionalPendiente" value="@finComp.PrimaVacacionPendiente" class="form-control input-sm" disabled />
+
+                                </div>
+                                <label class="col-md-2 text-right">= $</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="totalPrimaVacacionalPendiente" name="totalPrimaVacacionalPendiente" value="@finComp.PRIMA_VACACIONES_PENDIENTE" class="form-control input-sm" disabled />
+
+                                </div>
+                            </div>
+
+
+                    }
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div id="SeccionIndermizacion">
+                    <div class="form-group">
+                        <ul class="nav nav-tabs" style="text-align:center;">
+                            <li class="active" id="Indemnizacion"><a href="#">DATOS INDEMMIZACIÓN </a></li>
+
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label class="col-md-3">3 Meses Salario</label>
+                            <div class="col-md-3">
+                                <input type="text" id="mesesSalarioF" name="mesesSalarioF" value="@Model.L_3Meses_SueldoParaCalculo" class="form-control input-sm" />
+
+                            </div>
+
+                            <label class="col-md-3 text-right">= $</label>
+                            <div class="col-md-3">
+                                <input type="text" id="totalTresMesesF" name="totalTresMesesF" value="@Model.L_3MESES_SUELDO" class="form-control input-sm"  />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">20 Días X año </label>
+                            <div class="col-md-3">
+                                <input type="text" id="veinteXAF" name="veinteXAF" value="@Model.Proporcional20DiasPorAño" class="form-control input-sm"  />
+                            </div>
+
+                            <label class="col-md-3 text-right"> = $ </label>
+                            <div class="col-md-3">
+                                <input type="text" id="totalVeinteF" name="totalVeinteF" value="@Model.L_20DIAS_POR_AÑO" class="form-control input-sm"  />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Total $: </label>
+                            <div class="col-md-3">
+                                <input type="text" id="fechaAlta" name="fechaAlta" value="@(Model.L_3MESES_SUELDO + Model.L_20DIAS_POR_AÑO)" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        @*---------------------------------------
+                ---------Prima Antigüedad-------------
+                --------------------------------------*@
+                        <div class="form-group">
+                            <ul class="nav nav-tabs" style="text-align:center;">
+                                <li class="active"><a href="#">Prima Antigüedad</a></li>
+
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">12 días x año</label>
+                            <div class="col-md-3">
+                                <input type="text" id="fechaAlta" name="fechaAlta" value="12" class="form-control input-sm" disabled />
+
+                            </div>
+
+                            <label class="col-md-3">Días =</label>
+                            <div class="col-md-3">
+                                <input type="text" id="fechaAlta" name="fechaAlta" value="@Model.ProporcionalPrimaAntiguedad" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Total</label>
+                            <div class="col-md-3">
+                                <input type="text" id="totalPrimaF" name="totalPrimaF" value="@Model.PRIMA_ANTIGUEDAD" class="form-control input-sm"  />
+
+                            </div>
+                        </div>
+                        @*--------------------------------------------------
+                ----------------------ISR-------------------------
+                --------------------------------------------------*@
+                        <div class="form-group">
+                            <ul class="nav nav-tabs" style="text-align:center;">
+                                <li class="active"><a href="#">ISR</a></li>
+
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Último Sueldo Mens</label>
+                            <div class="col-md-3">
+                                <input type="text" id="fechaAlta" name="fechaAlta" value="@Model.BaseGravableUltimoSueldo.ToCurrencyFormat()" class="form-control input-sm" disabled />
+
+                            </div>
+
+                            <label class="col-md-3">ISR =</label>
+                            <div class="col-md-3">
+                                <input type="text" id="fechaAlta" name="fechaAlta" value="@Model.ISR_UltimoSueldo" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">% Tasa Liq.</label>
+                            <div class="col-md-3">
+                                <input type="text" id="fechaAlta" name="fechaAlta" value="@(Model.TasaParaLiquidacion * 100)" class="form-control input-sm" disabled />
+
+                            </div>
+                            <label class="col-md-3">ISR Liq =</label>
+                            <div class="col-md-3">
+                                <input type="text" id="fechaAlta" name="fechaAlta" value="@Model.ISR_Liquidacion" class="form-control input-sm" disabled />
+
+                            </div>
+                        </div>
+                    </div>
+                   <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label class="col-md-3">3Meses Salario</label>
+                        <div class="col-md-3">
+                            <input type="text" id="mesesSalarioC" name="mesesSalarioC" value="@finComp.L_3Meses_SueldoParaCalculo" class="form-control input-sm" />
+
+                        </div>
+
+                        <label class="col-md-3 text-right">= $</label>
+                        <div class="col-md-3">
+                            <input type="text" id="totalTresMesesC" name="totalTresMesesC" value="@finComp.L_3MESES_SUELDO" class="form-control input-sm"  />
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3">20 Días X año</label>
+                        <div class="col-md-3">
+                            <input type="text" id="veinteXAC" name="veinteXAC" value="@finComp.Proporcional20DiasPorAño" class="form-control input-sm"  />
+
+                        </div>
+
+                        <label class="col-md-3 text-right"> = $</label>
+                        <div class="col-md-3">
+                            <input type="text" id="totalVeinteC" name="totalVeinteC" value="@finComp.L_20DIAS_POR_AÑO" class="form-control input-sm"  />
+
+                        </div>
+
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3">Total $: </label>
+                        <div class="col-md-3">
+                            <input type="text" id="fechaAlta" name="fechaAlta" value="@(finComp.L_3MESES_SUELDO + finComp.L_20DIAS_POR_AÑO)" class="form-control input-sm" disabled />
+
+                        </div>
+                    </div>
+                    @*---------------------------------------
+            ---------Prima Antigüedad-------------
+            --------------------------------------*@
+                    <div class="form-group">
+                        <ul class="nav nav-tabs" style="text-align:center;">
+                            <li class="active"><a href="#">Prima Antigüedad</a></li>
+
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3">12 días x año</label>
+                        <div class="col-md-3">
+                            <input type="text" id="fechaAlta" name="fechaAlta" value="12" class="form-control input-sm" disabled />
+
+                        </div>
+
+                        <label class="col-md-3">Días =</label>
+                        <div class="col-md-3">
+                            <input type="text" id="fechaAlta" name="fechaAlta" value="@finComp.ProporcionalPrimaAntiguedad" class="form-control input-sm" disabled />
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3">Total</label>
+                        <div class="col-md-3">
+                            <input type="text" id="totalPrimaC" name="totalPrimaC" value="@finComp.PRIMA_ANTIGUEDAD" class="form-control input-sm"  />
+
+                        </div>
+                    </div>
+                    
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <strong>Info!</strong> Debe Procesar el finiquito para generar sus datos...
+    </div>
+}
+    </div>
+
+
+        </div>
+        @*<div id="boton">
+            <button style="background-color: #762a34;" type="button" id="show" class="btn button ">
+                <span class="fa fa-money"></span> Totales Finiquito
+            </button>
+        </div>
+        <div id="boton2">
+            @if (Model != null)
+            {
+            @Ajax.ActionLink("Descuentos Adicionales", "DescuentoFiscal", "Finiquito", new { idFiniquito = idFiniquito }, new AjaxOptions { UpdateTargetId = "Modaldescuentos", OnBegin = "utils.showProgress()", OnComplete = "utils.hideProgress()", OnSuccess = "showModalDescuentos(this)" }, new { id = Model.IdFiniquito, @class = "btn button ", @style = "background-color:#762a34; color: white; " })
+            }
+        </div>*@
+        @*<div id="boton3">
+            <button style="background-color: #762a34;" type="button" id="show" class="btn button "   data-toggle="modal" data-target="#modal-detalle">
+                <span class="fa fa-info"></span> Detalles Finiquito
+            </button>
+        </div>*@
+@if (Model != null)
+{
+        <div id="barraStatica">
+            @if (Model != null)
+            {
+                <div class="form-horizontal">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-md-1">Subtotal:</label>
+                                <div class="col-md-2">                             
+                                    <input type="text" id="subtotal" name="subtotal" value="@Model.SubTotal_Finiquito.ToCurrencyFormat()" class="form-control input-sm" />
+                                </div>
+
+                                <label class="col-md-1">ISR</label>
+                                <div class="col-md-2">
+                                    <input type="text" id="isr" name="isr" value="@Model.ISR_Finiquito.ToCurrencyFormat()" class="form-control input-sm" />
+                                </div>
+
+                                <label class="col-md-1">Subsidio </label>
+                                <div class="col-md-2">
+                                    <input type="text" id="subsidio" name="subsidio" value="@Model.Subsidio_Finiquito.ToCurrencyFormat()" class="form-control input-sm" />
+                                </div>
+                                <label class="col-md-1">TOTAL F:</label>
+                                <div class="col-md-2">
+                                    <input type="text" id="totalFiniquito" name="totalFiniquito" value="@Model.Total_Finiquito.ToCurrencyFormat()" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div id="indermizacionTotales">
+                                <div class="form-group">
+                                    <label class="col-md-1">Subtotal  </label>
+                                    <div class="col-md-2">
+                                        <input type="text" id="netoTotal" name="netoTotal" value="@Model.SubTotal_Liquidacion.ToCurrencyFormat()" class="form-control input-sm" />
+
+                                    </div>
+
+                                    <label class="col-md-1">ISR </label>
+                                    <div class="col-md-2">
+                                        <input type="text" id="netoTotal" name="netoTotal" value="@Model.ISR_Liquidacion.ToCurrencyFormat()" class="form-control input-sm" />
+                                    </div>
+
+                                    <label class="col-md-1">Subsidio </label>
+                                    <div class="col-md-2">
+                                        <input type="text" id="subsidioliq" name="subsidioliq" value="@Model.Subsidio_Liquidacion.ToCurrencyFormat()" class="form-control input-sm" />
+                                    </div>
+
+                                    <label class="col-md-1">TOTAL L:</label>
+                                    <div class="col-md-2">
+                                        <input type="text" id="netoTotal" name="netoTotal" value="@Model.Total_Liquidacion.ToCurrencyFormat()" class="form-control input-sm" />
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-10 text-right">TOTAL GENERAL $:</label>
+                                    <div class="col-md-2">
+                                        <input type="text" id="netoTotal" name="netoTotal" value="@Model.TOTAL_total.ToCurrencyFormat()" class="form-control input-sm" />
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                   
+                          
+               
+
+                        <div id="indermizacionTotales2">
+                         
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+            }
+        </div>
+}
+    </div>
+
+</div>
+
+}
+
+   @*<div id="dock-container">
+    <div id="dock">
+        <ul>
+            <li><span>Detalles</span><a   data-toggle="modal" data-target="#modal-detalle" href="#"><img src="~/Images/detallesFiniquito.png" /></a></li>
+            <li><span>Descuentos</span><a class="btnDescuento" href="#"><img src="~/Images/descuento.png" /></a></li>
+            <li><span>Totales</span><a id="show" href="#"><img src="~/Images/totales.png" /></a></li>
+         </ul>
+        <div class="base"></div>
+    </div>
+</div>
+
+<div id="ancla-container">
+    <div id="ancla">
+        <ul>
+            <li><span>Datos Finiquitos</span><a  href="#anclaFiscal"><img src="~/Images/seccion1.png" /></a></li>
+            <li><span>Datos Indemnización</span><a href="#SeccionIndermizacion"><img src="~/Images/seccion2.png" /></a></li>
+            
+        </ul>
+        <div class="anclabase"></div>
+    </div>
+</div>*@
+
+
+
+
+<div class="modal fade" id="modal-detalle" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Detalle Finiquito</h4>
+            </div>
+            <div class="modal-body">
+                <div class="bodyDetalles">
+                    @if(finDet != null) { 
+                    <table id="detalleFiniquito" class="table table-condensed  table-striped display" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th id="click">ID Concepto</th>
+                                <th>Descripción</th>
+                                <th>Total</th>
+                                <th>Exento</th>
+                                <th>Gravado</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var d in finDet)
+                            {
+                                <tr>
+                                    <td>@d.IdConcepto</td>
+                                    <td>@d.Descripcion</td>
+                                    <td>@d.Total</td>
+                                    <td>@d.Exento</td>
+                                    <td>@d.Gravado</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    }
+                </div>
+            
+                   
+               </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-descuento" role="dialog">
+    <div class="modal-dialog descuento ">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Descuento Finiquito</h4>
+            </div>
+            <div class="modal-body">
+                <div id="Modaldescuentos"></div>
+              
+                
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-default"  onclick="Guardar();">Guardar Conceptos</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="modal-autorizar" role="dialog">
+    <div class="modal-dialog" style="width:600px !important; ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Factura Finiquito</h4>
+            </div>
+            <div class="modal-body">
+                <div id="ModalAutorizar"></div>
+
+
+            </div>
+            <div class="modal-footer">
+                @if (autorizado == false)
+                {
+                    <a href="#" class="btn btn-default" id="ImprimirFactura"><i class="fa fa-print"></i> Lista de Raya</a>
+                            <a href="#" class="btn btn-default" id="Dispersion"><i class="fa fa-print"></i> Dispersion</a>
+                            <a href="#" class="btn btn-default" id="GuardarFactura"><i class="fa fa-save"></i> Guardar Factura</a>
+                            <a href="#" class="btn btn-default brnAuorizando" id="botonAutorizar" ><i class="fa fa-save "></i> Autorizar</a>
+                            
+                }
+                else
+                {
+                    <a href="#" class="btn btn-default" id="ImprimirFactura"><i class="fa fa-print"></i> Lista de Raya</a>
+                            <a href="#" class="btn btn-default" id="Dispersion"><i class="fa fa-print"></i> Dispersion</a>
+                            <a href="#" class="btn btn-default" style="pointer-events: none;cursor: default;opacity:0.5;" id="GuardarFactura"><i class="fa fa-save"></i> Guardar Factura</a>
+                            <a href="#" class="btn btn-danger" style="pointer-events: none;cursor: default;" ><i class="fa fa-save"></i> Autorizado</a>
+                            
+                }
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script languague="javascript">
+    var detalle;
+    var table;
+    var tableC;
+    var desc;
+    
+
+    $(".brnAuorizando").click(function() {
+        
+            $.ajax({
+                type: 'POST',            
+                contentType: 'application/json',
+                url: '/Finiquito/Autorizar/',
+                success: function (result) {
+                    
+                        $('#noAutorizada').hide();
+                        $('#siAutorizada').show();
+                        $('#botonAutorizar').removeClass("btn-default");
+                        $('#botonAutorizar').removeClass("brnAuorizando");
+                        $('#botonAutorizar').addClass("btn-danger");
+                        $('#botonAutorizar').text(" Autorizado");                    
+                        document.getElementById('autorizacionTitulo').style.display = 'inline';                
+                        $("#GuardarFactura").css("opacity", 0.5);                        
+                        $("#GuardarFactura").css("pointer-events","none");
+                        $("#GuardarFactura").css("cursor", "default");
+                        $("#btnProcesadoOcu").css("opacity", 0.5);                        
+                        $("#btnProcesadoOcu").css("pointer-events","none");
+                        $("#btnProcesadoOcu").css("cursor", "default");
+                        $("#btnGuardar").css("opacity", 0.5);                        
+                        $("#btnGuardar").css("pointer-events","none");
+                        $("#btnGuardar").css("cursor", "default");
+                    
+                },
+                error: function (error) {
+                    // si hay un error lanzara el mensaje de error
+
+                }
+            })
+    });
+
+
+    $("#show").click(function () {
+        if ($('#show').hasClass('ocultar')) {
+            $("#barraStatica").show();
+            $(this).removeClass('ocultar');
+        } else {
+            $("#barraStatica").hide();
+            $(this).addClass('ocultar');
+        }
+
+    });
+
+    $("#ImprimirFactura").click(function () {
+        var request = $.ajax({
+            url: "/Finiquito/imprimirReporte/",
+            method: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                waitingDialog.show('Generando Lista de raya......');                          
+                               
+            }
+        });
+        request.done(function (data) {
+            waitingDialog.hide();
+            window.open('/Finiquito/descargarArchivo?ruta=' + data, '_blank');
+        })
+    });
+  
+    $("#Dispersion").click(function () {
+        var request = $.ajax({
+            url: "/Finiquito/crearDispersion/",
+            method: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                waitingDialog.show('Generando Dispercion......');                          
+                               
+            }
+        });
+        request.done(function (data) {
+            
+            waitingDialog.hide();
+            window.open('/Finiquito/descargarArchivo?ruta=' + data, '_blank');
+        })
+    });
+
+    $("#modal-detalle").on("shown.bs.modal", function () {
+       detalle = $('#detalleFiniquito').DataTable({
+            "scrollY": "500px",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "bInfo": false
+        });
+    });
+
+    // tablas de descuento//
+    $("#modal-descuento").on("shown.bs.modal", function () {
+
+        table = $('#tbldescuentos').DataTable({
+            "scrollY": "350px",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "bInfo": false
+        });
+
+     
+        tableC = $('#tbldescuentosC').DataTable({
+            "scrollY": "350px",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "bInfo": false
+        });
+
+    
+
+
+    });
+    $("#checked").click(function () {
+        if ($("#checked").is(':checked')) {
+            $('#SeccionIndermizacion').show();
+            $('#botonTotalIndemnizacion').show();
+            $('#indermizacionTotales').show();
+            $('#indermizacionTotales2').show();
+            $('#indemnizacion').show();
+            $('#ancla2').css("display", "inline");
+        } else {
+            $('#SeccionIndermizacion').hide();
+            $('#botonTotalIndemnizacion').hide();
+            $('#indermizacionTotales').hide();
+            $('#indermizacionTotales2').hide();
+            $('#indemnizacion').hide();
+            $('#ancla2').hide();
+        }
+    });
+
+    $("#modal-descuento").on('hidden.bs.modal', function (e) {
+        table.destroy();
+        tableC.destroy();
+       
+    });
+ 
+
+    $("#modal-detalle").on("hidden.bs.modal", function () {     
+        detalle.destroy();
+    });
+   
+    var i = 1;
+    var j = 1;
+
+    function showModalDescuentos(e) {
+
+        $("#modal-descuento").find(".modal-title").text($(e).text());
+        $("#modal-descuento").modal("show");
+        i = 0;
+        j = 0;
+    }
+
+
+    function finiquitoComplemento() {
+        var arrayFiniquito = [];
+
+        if ($("#checked").is(':checked')) {
+            var calcularLiquidacion = true;
+        } else {
+            var calcularLiquidacion = false;
+        }
+
+
+
+        var fechaAguinaldoF = $('#fechaAguinaldoF').val();
+        var fechaVacacionesF = $('#fechaVacacionesF').val();
+        var diasSueldoPendienteF = $('#diasSueldoPendienteF').val();
+        var diasVacacionesPendientesF = $('#diasVacacionesPendientesF').val();
+        var mesesSalarioF = $('#mesesSalarioF').val();
+
+        var fechaAguinaldoC = $('#fechaAguinaldo').val();
+        var fechaVacacionesC = $('#fechaVacaciones').val();
+        var diasSueldoPendienteC = $('#diasSueldoPendiente').val();
+        var diasVacacionesPendientesC = $('#diasVacacionesPendientes').val();
+        var mesesSalarioC = $('#mesesSalarioC').val();
+
+   
+        var idFiniquito = document.getElementById("idFiniquito").value;
+        var idEmpleado = document.getElementById("idEmpleado").value;
+        var fechaBajaF = $('#fechaBaja').val();
+    
+        var veinteF = $('#veinteXAF').val();
+        var veinteC = $('#veinteXAC').val();
+
+
+        //$("#pvistaParcial").load("/Finiquito/finiquito/?idEmpleado=" + idEmpleado + "&idFiniquito=" + idFiniquito);
+
+
+
+        item = {};
+           
+
+        item['FechaAguinaldoF'] = fechaAguinaldoF;
+        item['FechaVacacionesF'] = fechaVacacionesF;
+        item['DiasSueldoPendientesF'] = parseFloat(diasSueldoPendienteF);
+        item['DiasVacacionesPendientesF'] = diasVacacionesPendientesF;
+        item['FechaAguinaldoC'] = fechaAguinaldoC;
+        item['FechaVacacionesC'] = fechaVacacionesC;
+        item['DiasSueldoPendientesC'] = parseFloat(diasSueldoPendienteC);
+        item['DiasVacacionesPendientesC'] = parseFloat(diasVacacionesPendientesC);
+        item['MesesSalarioC'] = parseFloat(mesesSalarioC);
+        item['MesesSalarioF'] = parseFloat(mesesSalarioF);
+        item['FechaBajaF'] = fechaBajaF;
+
+        item['VeinteDiasPorAF'] = veinteF;
+        item['VeinteDiasPorAC'] = veinteC;
+
+ 
+
+        arrayFiniquito.push(item);
+
+
+        var request = $.ajax({
+            url: "/Finiquito/finiquito/",
+            method: "POST",
+            data: {
+                idEmpleado: idEmpleado,
+                idFiniquito: idFiniquito,
+                arrayF: item,
+                calcularLiquidacion: calcularLiquidacion
+            },
+
+        });
+        request.done(function (data) {
+            //alert("Entro");
+            utils.loadMainPage("Finiquito", "Index", "#main-content", "false", null);
+
+        })
+    }
+
+    //Modal de Descuento
+    var btnDescuento = $('.btnDescuento');
+    var modalDescuentos = $('#modal-descuento');
+
+    btnDescuento.click(function () {
+        var idfini = document.getElementById("idFiniquito").value;
+        $.get("../../Finiquito/DescuentoFiscal?idFiniquito=" + idfini, function (data) {
+            $("#Modaldescuentos").html(data);
+            modalDescuentos.modal();
+        });
+
+    });
+    ///MODAL DE AUTORIZAR
+    var btnAutorizar = $('.btnAutorizar');
+    var modalAutorizar = $('#modal-autorizar');
+    btnAutorizar.click(function () {
+        var idfini = document.getElementById("idFiniquito").value;
+        $.get("../../Finiquito/autorizarFiniquito?idFiniquito=", function (data) {
+            $("#ModalAutorizar").html(data);
+            modalAutorizar.modal();
+        });
+
+    });
+
+
+//RECIBO FISCAL PDF
+    function reciboFPDF() {
+        var idFiniquito = document.getElementById("idFiniquito").value;
+        var liqRecibo = false;
+
+        if ($("#checked").is(':checked')) {
+             liqRecibo = true;
+        } else {
+             liqRecibo = false;
+        }
+
+        var form = document.createElement("form");
+        form.setAttribute("id", "formf");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/Finiquito/GetReciboFiscal");
+        form._submit_function_ = form.submit;
+
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "idFiniquito");
+        hiddenField.setAttribute("value", idFiniquito);
+        form.appendChild(hiddenField);
+
+        var hiddenLiqField = document.createElement("input");
+        hiddenLiqField.setAttribute("type", "hidden");
+        hiddenLiqField.setAttribute("name", "liquidacion");
+        hiddenLiqField.setAttribute("value", liqRecibo);
+        form.appendChild(hiddenLiqField);
+
+        document.body.appendChild(form);
+        form._submit_function_();
+
+      }
+
+    //RECIBO COMPLEMENTO PDF
+    function reciboCPDF() {
+        var idFiniquito = document.getElementById("idFiniquito").value;
+        var liqRecibo = false;
+
+        if ($("#checked").is(':checked')) {
+            liqRecibo = true;
+        } else {
+            liqRecibo = false;
+        }
+
+
+        var form = document.createElement("form");
+        form.setAttribute("id", "formc");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/Finiquito/GetReciboComplemento");
+        form._submit_function_ = form.submit;
+
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "idFiniquito");
+        hiddenField.setAttribute("value", idFiniquito);
+        form.appendChild(hiddenField);
+
+        var hiddenLiqField = document.createElement("input");
+        hiddenLiqField.setAttribute("type", "hidden");
+        hiddenLiqField.setAttribute("name", "liquidacion");
+        hiddenLiqField.setAttribute("value", liqRecibo);
+        form.appendChild(hiddenLiqField);
+
+        document.body.appendChild(form);
+        form._submit_function_();
+
+    }
+
+
+
+    $("#GuardarFactura").click(function () {
+        var itemC = {};
+        itemC["IdFiniquito"] = @(idFiniquito);
+        itemC["C_Porcentaje_Servicio"] = $("#C_Porcentaje_Servicio").val();
+        itemC["C_Total_Servicio"] = $("#C_Total_Servicio").val();
+        itemC["C_Percepciones"] = $("#C_Percepciones").val();
+        itemC["C_Cuotas_IMSS_Infonavit"] = $("#C_Cuotas_IMSS_Infonavit").val();
+        itemC["C_Impuesto_Nomina"] = $("#C_Impuesto_Nomina").val();
+        itemC["C_Relativos"] = $("#C_Relativos").val();
+        itemC["C_Descuentos"] = $("#C_Descuentos").val();
+        itemC["C_Otros"] = $("#C_Otros").val();
+        itemC["C_Subtotal"] = $("#C_Subtotal").val();
+        itemC["C_Total_IVA"] = $("#C_Total_IVA").val();
+        itemC["C_Total_Complemento"] = $("#C_Total_Complemento").val();
+        itemC["IdEmpresa_C"] = $("#complemento-tab").data("idempresac");
+
+        console.log(itemC);
+        var request = $.ajax({
+            url: "/Finiquito/GuardarFactura/",
+            method: "POST",
+            data: {
+                factura: itemC
+
+            }, success: function (result) {
+                notification = utils.showMessage("Guardando Datos", "¡Datos guardados exitosamente!", 1000, "");
+
+            }
+
+        });
+    });
+
+
+    //Guardar totales personalizados
+    //Guardar los cambios a los totales
+    var $btnGuardar = $("#btnGuardar");
+
+    $btnGuardar.click(function () {
+        $("#finiquitoForm").submit();
+    });
+
+
+    function FormFinSuccess(response) {
+        utils.showMessage("FINIQUITO UPDATE", response.strMensaje, 10000);
+        utils.loadMainPage("Finiquito", "Index", "#main-content", "false", null);
+    }
+</script> 

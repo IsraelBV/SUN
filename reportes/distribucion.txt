@@ -1,0 +1,3 @@
+ReporteIncapacidades.cshtml => SS.WEB/Views/Reportes/
+ReportesController.cs       => SS.WEB/Controllers/
+ReportesImss.cs             => RH.BLL/

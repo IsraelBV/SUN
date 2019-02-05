@@ -1,0 +1,110 @@
+﻿@using Common.Helpers
+@using Common.Utils
+@using RH.BLL
+@using Common.Enums
+@using SYA.BLL;
+@model RH.BLL.DatosEmpleadoVacaciones
+@{
+    var mensaje = 2;
+    SucursalDatos sucursal;
+    sucursal = Session["Sucursal"] as SucursalDatos;
+    ViewBag.Title = "Vacaciones";
+    ViewBag.Extra = "Asignar Vacaciones";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    if( ViewBag.resultado != null)
+    {
+        mensaje = ViewBag.resultado;
+    }
+    string Descanso = "0";
+    if (Model.Descanso1 == null)
+    {
+         Descanso = "0";
+    }else {
+         Descanso = Convert.ToString(Model.Descanso1);
+    }
+    DiasSemana DiasSemana = (DiasSemana)Enum.Parse(typeof(DiasSemana), Descanso);
+}
+
+<style>
+    .modal-dialog {
+        width: 1100px !important;
+    }
+
+    .panel-heading {
+        background-color: #337ab7 !important;
+        color: #fff !important;
+    }
+
+    small {
+        font-size: 13.5px;
+    }
+</style>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos del empleado</div>
+    <div class="panel-body">
+        <label class="contron-label col-md-2 col-xs-4">Nombre</label>
+        <label class="contron-label col-md-10 col-xs-4">@Model.Nombres @Model.Paterno @Model.Materno</label>
+        <label class="contron-label col-md-2 col-xs-4">Fecha de alta</label>
+        <label class="contron-label col-md-4 col-xs-4">@Model.Alta.ToString("dd/MM/yyyy")</label>
+        <label class="contron-label col-md-2 col-xs-4">Fecha Real</label>
+        <label class="contron-label col-md-4 col-xs-4">@Model.Real.ToString("dd/MM/yyyy")</label>
+        <label class="contron-label col-md-2 col-xs-4" >Día de Descanso</label>
+        <label class="contron-label col-md-4 col-xs-4" id="descanso1">@DiasSemana</label>
+      
+      
+    </div>
+</div>
+
+
+<div class="panel panel-default">
+
+    <div class="panel-heading text-right">
+
+        @using (Html.BeginForm("CrearPeriodo", "PeriodoVacaciones", FormMethod.Post, new { id = "formulario" }))
+        {
+           
+            if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHVacaciones, AccionCrud.Agregar, SessionHelpers.GetIdUsuario()))
+            {
+            <input type="submit" class="btn btn-primary hovernuevo" value="Crear Periodo vacacional" />
+            }
+            <a class="btn btn-danger cancel hovercancelado" href="/Vacaciones/Index"><i class="fa fa-undo"></i> Regresar</a>
+
+            <input type="hidden" id="real" name="real" value="@Model.Real" />
+            <input type="hidden" id="id" name="id" value="@Model.IdEmpContrato" />
+            <input type="hidden" id="IdEmpleado" name="IdEmpleado" value="@Model.IdEmpleado" />
+            <input type="hidden" id="sucursal" name="sucursal" value="@sucursal.IdSucursal" />
+        }
+        
+
+ 
+    </div>
+
+    <div class="panel-body">
+        <div class="form-horizontal ">
+    
+
+            @*@Html.Partial("_PeriodoVacaciones", new ViewDataDictionary(new { id = Model.IdEmpleado }))*@
+
+                <div id="divDetails">
+@if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHVacaciones, AccionCrud.Consultar, SessionHelpers.GetIdUsuario()))
+{
+                    @Html.Action("ViewDetails", "Vacaciones", new { idContrato = Model.IdEmpContrato })
+}
+
+                </div>   
+          
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+

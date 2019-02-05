@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Inicio";
+}
+
+
+<link href="~/Content/datatables.min.css" rel="stylesheet"/>
+<link href="~/Content/index.css" rel="stylesheet" />
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">Movimientos Recientes</h4>
+    </div>
+    <div class="panel-body" id="Movimientos">
+        @{Html.RenderAction("MovimientosRecientes", "Home", new { numDays = 7 });}
+    </div>
+    <div class="panel-footer">
+        @*<div class="btn-group">
+            <button type="button" class="btn btn-primary">Action</button>
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="/Home/MovimientosRecientes/?numDays=7" data-ajax-update="#Movimientos" data-ajax-mode="replace" data-ajax="true">1 semana</a></li>
+                <li><a href="/Home/MovimientosRecientes/?numDays=14" data-ajax-update="#Movimientos" data-ajax-mode="replace" data-ajax="true">2 semanas</a></li>
+                <li><a href="/Home/MovimientosRecientes/?numDays=21" data-ajax-update="#Movimientos" data-ajax-mode="replace" data-ajax="true">3 semanas</a></li>
+                <li><a href="/Home/MovimientosRecientes/?numDays=30" data-ajax-update="#Movimientos" data-ajax-mode="replace" data-ajax="true">1 mes</a></li>
+            </ul>
+        </div>*@
+    </div>
+</div>
+
+<script type="text/javascript" src="~/scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/scripts/DataTables/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".movimiento").click(function () {
+            var idEmpleado = $(this).data("id");
+            window.location.href = "/Empleados/Details/" + idEmpleado;
+        });
+        var table = $("table").DataTable({
+            "language": {
+                "url": "../scripts/DataTables/DataTables-Spanish.json"
+            },
+            "order": [[3, 'desc']],
+            //ajax: "../Home/RecargarMovimientos/?numDays=7"
+        });
+
+        //setInterval(function () {
+        //    table.ajax.reload();
+        //}, 60000);
+    });
+</script>

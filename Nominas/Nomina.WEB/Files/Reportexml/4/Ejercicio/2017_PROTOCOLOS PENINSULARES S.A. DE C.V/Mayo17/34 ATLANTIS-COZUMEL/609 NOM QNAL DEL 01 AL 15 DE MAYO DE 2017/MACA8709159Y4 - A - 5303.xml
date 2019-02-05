@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2" serie="A" folio="5303" fecha="2017-05-13T12:02:53" sello="GVP7l1OhhI2AP4x13GgzgMd7BL0TZR2xbQFn+vf8464cLSJ4OifBhn/sAR6F58nruzmnnyPtrRZzzluYNfrNNQ+5AqIrIo/CUfUfGpLjSong0YWeTSQt1oEy2FsOkHhfa5lvwqbA99yJIa1w3/GWYYhUYd/WjBOwD9L2NpM6r5qA4k+XI/a02HROgtSD2M5ZSX951ND+XIsY4q/bXNnkDAyAWr500gnU5cmkAWXDjfKMadyuvNy4co4l+cqDWMRTr5+rrwKc5WK/lc8EKzf+I8bqkRtm/5Bs9xDUpkRWkubNcX/pS9y05MDNfhJBy28EYMx0PpxToIOWwP6nakUvqQ==" formaDePago="Pago en una sola exhibición" noCertificado="84353210400000010000" certificado="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" subTotal="1359.91" descuento="29.82" TipoCambio="1" Moneda="MXN" total="1330.09" tipoDeComprobante="egreso" metodoDePago="NA" LugarExpedicion="77539" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3">
+  <cfdi:Emisor rfc="PPE070131QD1" nombre="PROTOCOLOS PENINSULARES">
+    <cfdi:RegimenFiscal Regimen="601" />
+  </cfdi:Emisor>
+  <cfdi:Receptor rfc="MACA8709159Y4" nombre="MAY CANUL ALFREDO" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto cantidad="1" unidad="ACT" descripcion="Pago de nómina" valorUnitario="1359.91" importe="1359.91" />
+  </cfdi:Conceptos>
+  <cfdi:Impuestos />
+  <cfdi:Complemento>
+    <nomina12:Nomina Version="1.2" TipoNomina="O" FechaPago="2017-05-01" FechaInicialPago="2017-05-01" FechaFinalPago="2017-05-15" NumDiasPagados="15" TotalPercepciones="1225.00" TotalDeducciones="29.82" TotalOtrosPagos="134.91" xmlns:nomina12="http://www.sat.gob.mx/nomina12">
+      <nomina12:Emisor RegistroPatronal="L0158174107" RfcPatronOrigen="PPE070131QD1" />
+      <nomina12:Receptor Curp="MACA870915HYNYNL06" NumSeguridadSocial="82088735541" FechaInicioRelLaboral="2015-09-01" Antigüedad="P89W" TipoContrato="01" TipoJornada="03" TipoRegimen="02" NumEmpleado="466" Departamento="ALIMENTOS Y BEBIDAS" Puesto="GARROTERO" RiesgoPuesto="1" PeriodicidadPago="04" Banco="072" CuentaBancaria="0262109068" SalarioBaseCotApor="104.66" SalarioDiarioIntegrado="104.66" ClaveEntFed="ROO" />
+      <nomina12:Percepciones TotalSueldos="1225.00" TotalGravado="1200.00" TotalExento="25.00">
+        <nomina12:Percepcion TipoPercepcion="038" Clave="148" Concepto="Vacaciones" ImporteGravado="100.00" ImporteExento="0.00" />
+        <nomina12:Percepcion TipoPercepcion="021" Clave="016" Concepto="Prima vacacional" ImporteGravado="0.00" ImporteExento="25.00" />
+        <nomina12:Percepcion TipoPercepcion="001" Clave="001" Concepto="Sueldos" ImporteGravado="1100.00" ImporteExento="0.00" />
+      </nomina12:Percepciones>
+      <nomina12:Deducciones TotalOtrasDeducciones="29.82">
+        <nomina12:Deduccion TipoDeduccion="001" Clave="042" Concepto="IMSS" Importe="29.82" />
+      </nomina12:Deducciones>
+      <nomina12:OtrosPagos>
+        <nomina12:OtroPago TipoOtroPago="002" Clave="CACR" Concepto="Subsidio" Importe="134.91">
+          <nomina12:SubsidioAlEmpleo SubsidioCausado="200.70" />
+        </nomina12:OtroPago>
+      </nomina12:OtrosPagos>
+    </nomina12:Nomina>
+  <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/TimbreFiscalDigital/TimbreFiscalDigital.xsd" version="1.0" FechaTimbrado="2017-05-13T12:03:15" selloCFD="GVP7l1OhhI2AP4x13GgzgMd7BL0TZR2xbQFn+vf8464cLSJ4OifBhn/sAR6F58nruzmnnyPtrRZzzluYNfrNNQ+5AqIrIo/CUfUfGpLjSong0YWeTSQt1oEy2FsOkHhfa5lvwqbA99yJIa1w3/GWYYhUYd/WjBOwD9L2NpM6r5qA4k+XI/a02HROgtSD2M5ZSX951ND+XIsY4q/bXNnkDAyAWr500gnU5cmkAWXDjfKMadyuvNy4co4l+cqDWMRTr5+rrwKc5WK/lc8EKzf+I8bqkRtm/5Bs9xDUpkRWkubNcX/pS9y05MDNfhJBy28EYMx0PpxToIOWwP6nakUvqQ==" noCertificadoSAT="00001000000300209963" selloSAT="g0PedhWWxkK0WfZuv1vykNpkFvBIPBsNytDXGIApSz9bBP3/+6//ZvZXj7pudZsr+CTYUuY6F2VW/kRb3vmsM9kqPt9x0zrK6WVmNcGCdUqfzD+FuCCbROTsvY/om+UUuoUP471ZE77SB/xrO5RaIwD4h+weTEN8d9xF9e0rJy4=" UUID="A664B577-8CCC-44C6-A233-4681CE0F1214" />
+  </cfdi:Complemento>
+</cfdi:Comprobante>

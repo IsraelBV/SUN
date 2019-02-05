@@ -1,0 +1,33 @@
+﻿.selected {
+    background: #08C !important;
+}
+
+.panel-heading h2{
+    float: left;
+
+}
+
+hr {
+    width: 100%;
+    border: 1px solid #255480;
+}
+
+#control-panel {
+   display:none;
+}
+
+.form-horizontal {
+    padding: 0 15px;
+}
+
+.alert {
+    width: 40% !important;
+}
+
+.table-info {
+    display: none;
+}
+
+.btn-table {
+    padding: 2px 6px;
+}

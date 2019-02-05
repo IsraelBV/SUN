@@ -1,0 +1,115 @@
+﻿@model  List<RH.BLL.DatosEmpleadoVacaciones>
+
+<style>
+    .modal-dialog{
+        width: 1100px !important;
+
+    }
+   
+</style>
+
+<div class="tab-content">
+         <div class="table table-responsive">
+            <table class="table table-condensed table-hover" id="tblHistorial" width="100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Periodo Vacaciones</th>
+                        <th>Días Tomados</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Presentarse</th>
+                      
+                        <th>Observaciones</th>
+                      
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var a in Model.Where(s=> s.status == true))
+                    {
+                        <tr id="@a.idvacaciones">
+                            <td class="text-center"><input type="checkbox" name="input-vacaciones" value="@a.idvacaciones" id="input@(a.idvacaciones)" /></td>
+                            <td>@a.PerioVaca</td>
+                            <td>@a.DiasTomados</td>
+                            <td>@a.Inicio.ToString("dd/MM/yyyy")</td>
+                            <td>@a.Fin.ToString("dd/MM/yyyy")</td>
+                            <td>@a.Presentarse.ToString("dd/MM/yyyy")</td>
+                           
+                            <td>@a.observaciones</td>
+                          
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var table = $("#tblHistorial").DataTable({
+            "bLengthChange": false,
+            
+            "lengthMenu": [[5, 15, 30], [5, 15, 30]],
+            "language": {
+                "sInfoFiltered": "(filtrado de un total de _MAX_ Registros)",
+
+                "sZeroRecords": "No se encontraron resultados",
+                "sInfo": "Del _START_ al _END_ de un total de _TOTAL_ registros",
+                "infoEmpty": "No se encontraron registros",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sLoadingRecords": "Cargando...",
+                "sLengthMenu": "Mostrar _MENU_ Registros",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                select: {
+                    row: {
+                        _: "Has seleccionado %d registros",
+                        0: "Has click en los registros para seleccionarlos"
+                    }
+                }
+            },
+            "order": [[1, "asc"]],
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [0] },
+                { "bSearchable": false, "aTargets": [0] }
+            ],
+            select: {
+                style: 'multi'
+            }
+        });
+
+        table.on('select', function (e, dt, type, indexes) {
+            var rowData = table.rows(indexes).ids();
+            $("#input" + rowData[0]).prop("checked", true).change();
+        });
+        table.on('deselect', function (e, dt, type, indexes) {
+            var rowData = table.rows(indexes).ids();
+            $("#input" + rowData[0]).prop("checked", false).change();
+        });
+        $(".btn-toolbar-hidden").hide();
+        $("input[name='input-vacaciones']").change(function () {
+            var seleccionados = $("input[name='input-vacaciones']:checked").map(function () {
+                return $(this).val()
+            }).get();
+
+            if ($(".btn-toolbar-hidden").is(":visible")) {
+                if (seleccionados.length == 0)
+                    $(".btn-toolbar-hidden").hide();
+
+
+            }
+            else {
+                if (seleccionados.length > 0) {
+                    $(".btn-toolbar-hidden").show();
+                }
+            }
+        });
+
+    </script>

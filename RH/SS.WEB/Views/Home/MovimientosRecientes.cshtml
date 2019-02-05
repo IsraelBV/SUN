@@ -1,0 +1,35 @@
+﻿@using Common.Enums;
+@model List<RH.BLL.MovimientosViewModel>
+    @{ 
+        
+    }
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Tipo</th>
+            <th>Clave</th>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Empresa</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var format = item.IdTipoMovimiento == 7 ? "dd/MM/yyyy" : "dd/MM/yyyy/ hh:mm" ;
+            <tr data-id="@item.IdEmpleado" class="movimiento">
+                <td>@((TipoKardex)item.IdTipoMovimiento)</td>
+                <td>@item.IdEmpleado</td>
+                <td>@item.Nombres @item.Paterno @item.Materno</td>
+                <td>@item.Fecha.ToString(format)</td>
+                <td>@item.Cliente</td>
+                <td>@item.Empresa</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

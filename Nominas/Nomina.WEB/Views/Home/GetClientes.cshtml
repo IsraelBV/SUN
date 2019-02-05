@@ -1,0 +1,80 @@
+﻿@model List<RH.BLL.SucursalDatos>
+@{ 
+    var complementoValor = ViewBag.SesionComplemento;
+}
+
+
+<link href="~/Content/catEmpleados.css" rel="stylesheet" />
+<table id="tblClientes" class="table table-striped"  data-count="#count-clientes" width="100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Sucursal</th>
+        </tr>
+    </thead>
+    <tbody>
+    @if (Model == null)
+    {
+        <tr data-idsucursal="0" class="">
+            <td>Este usuario</td>
+            <td>No tiene</td>
+            <td>Sucursales Asignadas</td>
+        </tr>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+             <tr data-idsucursal="@item.IdSucursal" class="">
+                 <td>@item.IdSucursal</td>
+                 <td>@item.Cliente</td>
+                 <td>@item.Sucursal</td>
+             </tr>
+         }
+    }
+    </tbody>
+</table>
+
+<input type="hidden" name="complemento" value="@(complementoValor)"/>
+
+<script>
+$(document).ready(function () {
+    $("#tblClientes").DataTable({
+        "paging": false,
+        "info": false,
+        "scrollY": '65vh',
+        "searching": true,
+        "scrollX": true,
+        "scrollCollapse": true,
+        "order": [[1, "desc"]]
+    });
+
+
+    $('#tblClientes tbody').on('click', 'tr', function () {
+
+        $('#tblClientes tbody tr').each(function() {
+            $(this).removeClass('selected');
+        });
+
+        $(this).addClass('selected');
+        $("#btnSelectCliente").attr("disabled", false);
+
+        $('input[type=search]').focus();
+    });
+
+
+    $('#tblClientes tbody').on('dblclick', 'tr', function () {
+        var sucursal = $(this).data("idsucursal");
+        $(this).toggleClass('selected');
+        
+        var request = selectSucursal(sucursal);
+        request.done(function () {
+            $("#modal-clientes").modal("hide");
+            location.reload();
+        });
+
+    });
+
+});
+</script>

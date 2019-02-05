@@ -1,0 +1,144 @@
+body {
+	background: #e2e2e2;
+	height: 100%;
+}
+
+#background-tile {
+	background: #7e3541;
+	width: 100%;
+	height: 50%;
+	z-index: 0;
+}
+
+#card-container {
+	height: 100%;
+	margin: 0 auto;
+	width: 100%;
+	background: transparent;
+	z-index: 10;
+	position: absolute;
+	top: 0;
+}
+
+#login-card {
+	width: 400px;
+	overflow: hidden;
+	height: 450px;
+	background: #fff;
+	position: relative;
+	top: 50%; left: 50%;
+	transform: translate(-50%, -50%);
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+#login-card #header {
+	text-align: center;
+	background: #672d37;
+	height: 100px;
+}
+
+#header #img-container {
+	width: 120px;
+	height: 120px;
+	position: relative;
+	top: 30px;
+	margin: 0 auto;
+}
+
+#img-container img {
+	width: 100%;
+}
+
+#login-card #body {
+	height: 200px;
+	font-weight: 300;
+	font-family: "Roboto", sans-serif;
+	font-size: 56px;
+	line-height: 1.35;
+	letter-spacing: -0.02em;
+	color: #757575;
+	padding-top: 60px;
+	text-align: center;
+}
+
+#body h2, #body h3 {
+    
+	margin-bottom: 0;
+}
+
+#username-text {
+    margin-top: 30px;
+    display: none;
+}
+
+#body p {
+	margin: 0;
+}
+
+.mdl-textfield__label, .mdl-textfield__input {
+	text-align: center;
+}
+
+.mdl-textfield__input {
+	border-bottom: 1px solid #9e9e9e !important; 
+}
+
+#login-card #footer {
+	height: 70px;
+	width: 200%;
+	text-align: center;
+	position: relative;
+}
+
+#form-content {
+	width: 200%;
+	position: relative;
+}
+.step1 {
+	left: 0;
+}
+
+.step2 {
+	right: 100%;
+}
+
+.userStep {
+	width: 50%;
+	float: left;
+}
+
+.col .12 {
+	width: 100%;
+}
+
+.passwordStep {
+	width: 50%;
+	float: right;
+	text-align: center;
+}
+
+#btnBack {
+	position: absolute;
+	top: 70px;
+	left: 20px;
+	display: none;
+}
+
+.mdl-button--fab.mdl-button--colored {
+	background: #7e3541 !important;
+}
+
+.mdl-button--accent.mdl-button--accent.mdl-button--raised, .mdl-button--accent.mdl-button--accent.mdl-button--fab {
+	background: #7e3541 !important;	
+}
+
+.clearfix {
+	clear: both;
+}
+
+.progress {
+	padding-left: 10%;
+	width: 80%;
+	text-align: center;
+	display: none;
+}

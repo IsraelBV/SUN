@@ -1,0 +1,34 @@
+﻿@model List<RH.Entidades.NOM_Conceptos>
+<div class="table-panel">
+    <p>Conceptos en común</p>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Concepto</th>
+            <th class="text-right lastCol">Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            foreach(var item in Model)
+            {
+                <tr data-id-concepto="@item.IdConcepto" data-valor-anterior="0.00">
+                    <td>@item.IdConcepto</td>
+                    <td>@item.Descripcion</td>
+                    <td class="data-number lastCol">
+                        <input type="number" class="cantEmpleadoComplemento cantEmpleadoComplementoMixed" accept="4" value="0.00" />
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td class="emptyRow" colspan="3">No existen conceptos en común</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,110 @@
+﻿@using RH.BLL
+@model RH.BLL.SucursalCliente
+
+
+@{
+    ViewBag.Title = "Detalle Sucursal";
+    var empresas = ViewBag.Empresas as List<SucursalEmpresas>;
+}
+
+<style>
+    .modal-dialog {
+        width: 1100px !important;
+    }
+
+    .panel-heading {
+        color: black !important;
+    }
+
+    small {
+        font-size: 13.5px;
+    }
+
+    div.scroll {
+        width: 350px;
+        height: 120px;
+        overflow-y: scroll;
+    }
+</style>
+
+<div id="divContenido2">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><i class="fa fa-info-circle fa-lg"></i> Detalle Sucursal </h4>
+    </div>
+
+
+    <div class="panel panel-default" id="detail">
+        <div class="panel-body">
+            <div class="form-horizontal">
+                <div class="col-md-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="col-md-2">Cliente</label>
+                        <input type="text" class="col-md-4" value="@Model.NomCliente" disabled />
+                        
+                        <label class="col-md-2">Nombre de la Sucursal</label>
+                        <input type="text" class="col-md-4" value="@Model.Ciudad" disabled />
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2">Estado</label>
+                        <input type="text" class="col-md-4" value="@Model.Estado" disabled />
+
+                        <label class="col-md-2">Zona Salario</label>
+                        <input type="text" class="col-md-4" value="@Model.ZonaSalario - @Model.ValorZonaSalario" disabled />
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2">Empresas Fiscales</label>
+                        <div class="col-md-4 scroll">
+                            <ul>
+                                @foreach (var a in empresas.Where(x => x.Esquema == 1))
+                                {
+                                    <li>   <small>@a.NombreEmpresa</small></li>
+                                }
+                            </ul>
+
+                        </div>
+                        <label class="col-md-2">Empresas Complementos</label>
+                        <div class="col-md-4 scroll">
+                            <ul>
+                                @foreach (var a in empresas.Where(x => x.Esquema == 2))
+                                {
+                                    <li>   <small>@a.NombreEmpresa</small></li>
+                                }
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2">Empresas Asimilado</label>
+                        <div class="col-md-4 scroll">
+                            <ul>
+                                @foreach (var a in empresas.Where(x => x.Esquema == 4))
+                                {
+                                    <li>   <small>@a.NombreEmpresa</small></li>
+                                }
+                            </ul>
+                        </div>
+                        <label class="col-md-2">Empresas Sindicato</label>
+                        <div class="col-md-4 scroll">
+                            <ul>
+                                @foreach (var a in empresas.Where(x => x.Esquema == 3))
+                                {
+                                    <li>   <small>@a.NombreEmpresa</small></li>
+                                }
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+          
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+    </div>
+</div>

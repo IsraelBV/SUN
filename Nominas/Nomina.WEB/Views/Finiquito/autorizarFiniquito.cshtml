@@ -1,0 +1,281 @@
+﻿@using RH.Entidades;
+
+@model NOM_FacturacionF_Finiquito
+@{
+
+
+    var modeloC = ViewBag.facturaC;
+    int idEmpresaC = Model.IdEmpresa_Com;
+
+
+}
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#fiscal-tab" data-toggle="tab">Factura Fiscal <i class="fa"></i></a></li>
+    <li><a href="#complemento-tab" data-toggle="tab">Factura Complemento <i class="fa"></i></a></li>
+    
+</ul>
+@*Panle de Fiscal*@
+<div class="tab-content">
+    <div class="tab-pane active" id="fiscal-tab">
+        <div class="col-md-12">
+            <div class="form-group" style="text-align:center">
+                <div class="col-md-12">
+                    <h4> </h4>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-6">Cuota IMSS- Infonavit</label>
+
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.##}",Model.F_Cuota_IMSS_Infonavit)" disabled>
+                    <input type="hidden" class="form-control" name="F_Cuota_IMSS_Infonavit" id="F_Cuota_IMSS_Infonavit" style="text-align:right; width:100%;" value="@Model.F_Cuota_IMSS_Infonavit">
+                </div>
+
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Impuesto sobre Nómina</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.00}",Model.F_ImpuestoNomina)" disabled>
+                    <input type="hidden" class="form-control" name="F_Impuesto_Nomina" id="F_Impuesto_Nomina" style="text-align:right; width:100%;" value="@Model.F_ImpuestoNomina">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Amortización Infonavit</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.00}",Model.F_Amortizacion_Infonavit)" disabled>
+                    <input type="hidden" class="form-control" name="F_Impuesto_Nomina" id="F_Impuesto_Nomina" style="text-align:right; width:100%;" value="@Model.F_Amortizacion_Infonavit">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Fonacot</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.00}",Model.F_Fonacot)" disabled>
+                    <input type="hidden" class="form-control" style="text-align:right; width:100%;" value="@Model.F_Fonacot" name="F_Fonacot" id="F_Fonacot">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Pensión Alimenticia</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.00}",Model.F_Pension_Alimenticia)" disabled>
+                    <input type="hidden" class="form-control" style="text-align:right; width:100%;" value="@Model.F_Pension_Alimenticia" name="F_Pension_Alimenticia" id="F_Pension_Alimenticia">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Relativo</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.00}",Model.F_Relativo)" disabled>
+                    <input type="hidden" class="form-control" style="text-align:right; width:100%;" value="@Model.F_Relativo" name="F_Relativo" id="F_Relativo">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Percepciones</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.00}",Model.F_Total_Nomina)" disabled>
+                    <input type="hidden" class="form-control" style="text-align:right; width:100%;" value="@Model.F_Total_Nomina" name="F_Total_Percepciones" id="F_Total_Percepciones">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Total General</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.00}",Model.F_Total_Fiscal)" disabled>
+                    <input type="hidden" class="form-control" style="text-align:right; width:100%;" value="@Model.F_Total_Fiscal" name="F_Total_Fiscal" id="F_Total_Fiscal">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @*Panel de Complemento*@
+
+    <div class="tab-pane" id="complemento-tab" data-idempresac="@idEmpresaC">
+        <div class="col-md-12">
+            <div class="form-group" style="text-align:center">
+                <div class="col-md-12">
+                    <h4> </h4>
+                </div>
+            </div>
+
+
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-8"><label>% de Servicio</label></div>
+                        <div class="input-group col-md-12">
+                            <span class="input-group-addon">%</span>
+                            <input type="text" class="form-control" style="text-align:right;" value="@(modeloC == null? "" :modeloC.C_Porcentaje_Servicio)" onkeyup="Operacion()" name="C_Porcentaje_Servicio" id="C_Porcentaje_Servicio">
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-8"><label>Total Servicio</label></div>
+                        <div class="input-group col-md-12">
+                            <span class="input-group-addon ">$</span>
+                            <input type="text" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Total_Servicio)" id="C_Total_Servicio" disabled>
+                            <input type="hidden" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Total_Servicio)" name="C_Total_Servicio" id="C_Total_Servicio">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-6">Percepciones</label>
+
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Percepciones)" onkeyup="Operacion()" name="C_Percepciones" id="C_Percepciones">
+                </div>
+
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Cuota IMSS - Infonavit</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null ? "":modeloC.C_Cuotas_IMSS_Infonavit)" onkeyup="Operacion()" name="C_Cuotas_IMSS_Infonavit" id="C_Cuotas_IMSS_Infonavit">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Impuesto sobre Nómina</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Impuesto_Nomina)" onkeyup="Operacion()" name="C_Impuesto_Nomina" id="C_Impuesto_Nomina">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Relativos</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Relativos)" id="C_Relativos" disabled>
+                    <input type="hidden" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Relativos)" name="C_Relativos" id="C_Relativos">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Descuentos</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Descuentos)" onkeyup="Operacion()" name="C_Descuentos" id="C_Descuentos">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Otros</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" onkeyup="Operacion()" value="@(modeloC == null? "" :modeloC.C_Otros)" name="C_Otros" id="C_Otros">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Sub-Total</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Subtotal)" disabled id="C_Subtotal">
+                    <input type="hidden" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Subtotal)" name="C_Subtotal" id="C_Subtotal">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>IVA</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">%</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" onkeyup="Operacion()" value="@(Model.IVA)" name="IVA" id="IVA">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Total IVA</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Total_IVA)" name="C_Total_IVA" id="C_Total_IVA">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Total Complemento</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Total_Complemento)" id="C_Total_Complemento" disabled>
+                    <input type="hidden" class="form-control" style="text-align:right; width:100%;" value="@(modeloC == null? "" :modeloC.C_Total_Complemento)" name="C_Total_Complemento" id="C_Total_Complemento">
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+    
+</div>
+
+
+<script>
+    function Operacion() {
+        var porcentajeServicio = $(C_Porcentaje_Servicio).val();
+        var totalServicio = $(C_Total_Servicio).val();
+        var percepciones = $(C_Percepciones).val();
+        var cuottas = $(C_Cuotas_IMSS_Infonavit).val();
+        var impuesto = $(C_Impuesto_Nomina).val();
+        var rela = $(C_Relativos).val();
+        var descuentos = $(C_Descuentos).val();
+        var otros = $(C_Otros).val();
+        var subtotal = $(C_Subtotal).val()
+        var total = $(C_Total_Complemento).val();
+        var iva = $(IVA).val();
+        var totalIVA = $(C_Total_IVA).val();
+        //converciones Complemento
+        porcentajeServicio = (isNaN(parseFloat(porcentajeServicio))) ? 0 : parseFloat(porcentajeServicio);
+        totalServicio = (isNaN(parseFloat(totalServicio))) ? 0 : parseFloat(totalServicio);
+        percepciones = (isNaN(parseFloat(percepciones))) ? 0 : parseFloat(percepciones);
+        cuottas = (isNaN(parseFloat(cuottas))) ? 0 : parseFloat(cuottas);
+        impuesto = (isNaN(parseFloat(impuesto))) ? 0 : parseFloat(impuesto);
+        rela = (isNaN(parseFloat(rela))) ? 0 : parseFloat(rela);
+        descuentos = (isNaN(parseFloat(descuentos))) ? 0 : parseFloat(descuentos);
+        otros = (isNaN(parseFloat(otros))) ? 0 : parseFloat(otros);
+        subtotal = (isNaN(parseFloat(subtotal))) ? 0 : parseFloat(subtotal);
+        total = (isNaN(parseFloat(total))) ? 0 : parseFloat(total);
+        iva = (isNaN(parseFloat(iva))) ? 0 : parseFloat(iva);
+        totalIVA = (isNaN(parseFloat(totalIVA))) ? 0 : parseFloat(totalIVA);
+
+        //operaciones complemento
+        porcentajeServicio = porcentajeServicio / 100;
+        rela = cuottas + impuesto;
+        totalServicio = percepciones * porcentajeServicio;
+        subtotal = percepciones + rela + descuentos + otros + totalServicio
+        iva = iva / 100;
+        totalIVA = subtotal * iva;
+        total = subtotal + totalIVA;
+
+        //resultado complemento
+        $(C_Total_IVA).val(totalIVA);
+        $(C_Subtotal).val(subtotal);
+        $(C_Total_Servicio).val(totalServicio);
+        $(C_Relativos).val(rela);
+        $(C_Total_Complemento).val(total);
+
+    }
+
+
+    $("input[type=text]").focus(function () {
+        this.select();
+    });
+</script>

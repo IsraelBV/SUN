@@ -1,0 +1,338 @@
+﻿@model  RH.BLL.DatosEmpleadoVacaciones
+@using Common.Enums
+@using Common.Helpers;
+@{ List<RH.BLL.DatosEmpleadoVacaciones> vaca = ViewBag.vacaciones;
+    int  numero = 0;
+    foreach(var a in vaca.Where (s=> s.status == true))
+    {
+        numero = numero + a.DiasTomados;
+    }
+
+    int idEmpleado = ViewBag.IdEmpleado;
+    int idemp = ViewBag.idemp;
+    var descanso = ViewBag.descanso;
+
+    string Descanso = "0";
+    if (descanso == null)
+    {
+        Descanso = "0";
+    }
+    else
+    {
+        Descanso = Convert.ToString(descanso);
+    }
+    DiasSemana DiasSemana = (DiasSemana)Enum.Parse(typeof(DiasSemana), Descanso);
+}
+<link href="~/Content/validator/TooltipValidator.css" rel="stylesheet" />
+
+
+    <div class="form-horizontal">
+        
+        <input type="hidden" id="idperiodo" name="idperiodo" value="@(Model.IdPeriodo)" />
+        <input type="hidden" id="idEmpleado" name="idEmpleado" value="@(idEmpleado)" />
+        <input type="hidden" id="idemp" name="idemp" value="@(idemp)" />
+        <input type="hidden" id="descanso" name="descanso" value="@descanso" />
+        <div class="col-md-6 col-xs-12">
+            <div class="form-group">
+                <label class="col-md-4">Días Correspondientes</label>
+                <label class="col-md-8">@Model.Dias</label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Días Tomados</label>
+                <label class="col-md-8">@numero</label>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Día de Descanso</label>
+                <label class="col-md-8">@DiasSemana</label>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-4"><span style="color:red">*</span> Días a Tomar</label>
+                <div class="col-md-8">
+                    <input id="DiasTomados" name="DiasTomados" type="number" min="0"  class="form-control input-sm"
+                           data-rule-number="true"
+                            data-rule-required="true" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label style="display:none; color:red" id="mensajeerror2" class="col-md-4">Mensaje de error</label>
+                <label  style="display:none; color:red" id="mensajeerror" class="col-md-8">Se excedio la cantidad de días que puede tomar</label>
+                <label style="display:none; color:red" id="mensajeerror3" class="col-md-4">Mensaje</label>
+                <label style="display:none; color:red" id="mensajeerror4" class="col-md-8">El periódo ya se completo</label>
+                <label style="display:none; color:red" id="mensajeerror5" class="col-md-8">El campo Dias se encuentra vacio</label>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="form-group">
+                <label class="col-md-4">Fecha Inicial</label>
+                <div class="col-md-8">
+                    <input id="FechaInicio" type="date" name="FechaInicio" class="form-control input-sm" data-rule-required="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Fecha Final</label>
+                <div class="col-md-8">
+                    <input id="FechaFin" name="FechaFin" type="date" class="form-control input-sm" data-rule-required="true" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Fecha a Presentarse </label>
+                <div class="col-md-8">
+                    <input id="Presentarse" type="date" name="Presentarse" class="form-control input-sm" data-rule-required="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Observaciones </label>
+                <div class="col-md-8">
+                    <textarea id="Observaciones" name="Observaciones" class="form-control"data-rule-maxlength="50"
+                              
+                              ></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>
+<script> 
+    function guardar() {        
+        if($('#DiasTomados').val() == ''){
+            document.getElementById("mensajeerror5").style.display="block";
+        }else{
+            var idperiodo = $('#idperiodo').val();
+            var idemp = $('#idemp').val();           
+            var collection ={}
+            collection["FechaInicio"] = $('#FechaInicio').val();
+            collection["FechaFin"]  = $('#FechaFin').val();
+            collection["DiasTomados"] = $('#DiasTomados').val();
+            collection["Observaciones"] = $('#Observaciones').val();
+            collection["Presentarse"]= $('#Presentarse').val();
+            console.log(collection);
+            var request = $.ajax({
+                url: "/Vacaciones/CrearVacaciones/",
+                method: "POST",
+                data: {
+                    collection: collection,
+                    idperiodo: idperiodo,
+                    idemp: idemp
+                },            
+            });
+
+            request.done(function (data) {
+                $('#modalGenerar').modal('hide');
+
+                
+                $('.modal-backdrop').remove();
+                if (data.resultado == true) {
+                    var title = "<b>No pudo guardar el registro </b> <br/>"
+                    var message = "Ya se registraron unas vacaciones  o incidencias con la misma fecha";
+
+                    notiDuplicados = $.notify({
+                        title: title,
+                        message: message,
+                    }, {
+                        type: "danger",
+                        animate: {
+                            enter: 'animated fadeInDown',
+                            exit: 'animated fadeOutUp'
+                        },
+                        placement: { from: 'top', align: 'center' },
+                        offset: 55, timer: 60000
+                    });
+                } else {
+                    $("#divDetails").load("/Vacaciones/ViewDetails/?idContrato=" + idemp    );
+                    $.notify({
+                        title: "<b>Se guardaron los datos registros exitosamente</b>",
+                        message: ""
+                    }, {
+                        type: "success",
+                        animate: {
+                            enter: 'animated fadeInDown',
+                            exit: 'animated fadeOutUp'
+                        },
+                        placement: { from: 'top', align: 'center' },
+                        offset: 55, timer: 10000,
+
+            
+                    });
+        
+                }
+            });
+        }
+       
+    }
+   /* function getDiaDescanso(dia) {
+
+        switch (dia) {
+            case "Domingo":
+                return 0;
+                break;
+            case "Lunes":
+                return 1;
+                break;
+            case "Martes":
+                return 2;
+                break;
+            case "Miércoles":
+                return 3;
+                break;
+            case "Jueves":
+                return 4;
+                break;
+            case "Viernes":
+                return 5;
+                break;
+            case "Sábado":
+                return 6;
+                break;
+            case "n/a":
+                return 8;
+                break;
+            default:
+                return 0;
+                break;
+        }
+    }*/
+   
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+
+    var today = year + "-" + month + "-" + day;
+    $("#FechaInicio").attr("value", today);
+    
+
+    var $FechaInicio = $("#FechaInicio");
+    var $FechaFinal = $("#FechaFin");
+    var $Presentarse = $("#Presentarse");
+    var $dias = $("#DiasTomados");    
+    var $descanso1 = $("#descanso1");
+
+    if((@numero == @Model.Dias)){
+        $( "#FechaInicio" ).prop( "disabled", true );
+        $( "#DiasTomados" ).prop( "disabled", true );
+        $( "#guardar1" ).prop( "disabled", true );
+        $( "#datepicker" ).prop( "disabled", true );        
+        $( "#observaciones" ).prop( "disabled", true );
+        $( "#Presentarse" ).prop( "disabled", true );
+                
+        document.getElementById("mensajeerror3").style.display="block";
+        document.getElementById("mensajeerror4").style.display="block";
+    }else{
+        $( "#guardar1" ).prop( "disabled", false );
+    }
+    //captura la accion y el valor de la tecla despues de oprimirla
+      $('#DiasTomados').keyup(function () {  
+            txt = $(this);            
+            var diastotales = @Model.Dias - @numero ;
+
+            //el primer filtro que evualua que el numero no exceda y tampoco sea menos
+            if ((txt.val() <= 0) || (txt.val() > diastotales)) {            
+
+                $( "#FechaInicio" ).prop( "disabled", true );
+                $( "#DiasTomados" ).val("");
+                $( "#datepicker" ).prop( "disabled", true );                
+                $( "#observaciones" ).prop( "disabled", true );
+                $( "#Presentarse" ).prop( "disabled", true );
+                
+                document.getElementById("mensajeerror").style.display="block";
+                document.getElementById("mensajeerror2").style.display="block";
+            }else{
+                $( "#FechaInicio" ).prop( "disabled", false );                
+                $( "#observaciones" ).prop( "disabled", false );
+                $( "#Presentarse" ).prop( "disabled", false );
+                document.getElementById("mensajeerror").style.display="none";
+                document.getElementById("mensajeerror2").style.display="none";
+                document.getElementById("mensajeerror5").style.display="none";
+
+                $FechaInicio.change(function () {
+                    if ($dias.val() != "") {                        
+                        calcFechas();
+                        document.getElementsByName("Presentarse")[0].setAttribute('min', $('#FechaFin').val());
+                    }                    
+                });
+
+                if ($FechaInicio.val() != "") {                    
+                    calcFechas();
+                    document.getElementsByName("Presentarse")[0].setAttribute('min', $('#FechaFin').val());
+                }
+            
+
+            }
+             
+             });
+
+    function calcFechas()
+    {
+        if ($FechaInicio != "")
+        {
+            var fechatrim = $FechaInicio.val().split("-");
+            var date = new Date(fechatrim[1] + "-" + fechatrim[2] + "-" + fechatrim[0]);
+            var dias = $dias.val();
+            
+            var descanso1 =  document.getElementById("descanso").value;
+            i = 0;
+                    
+
+            while (i < dias) {
+                date.setDate(date.getDate() + 1);
+                if (date.getDay() == descanso1) {
+                    date.setDate(date.getDate() + 1);
+                }
+                i++;
+            }
+       
+            var dd =  date.setDate(date.getDate() - 1);
+            var MM = date.getMonth() + 1;
+            var yyyy = date.getFullYear();
+
+    
+            if (date.getDay(dd) == descanso1){   
+                var dd = date.getDate()-1;
+            }else{
+                var dd = date.getDate()
+            }
+            dd = dd < 10 ? '0' + dd : dd;
+            MM = MM < 10 ? '0' + MM : MM;
+
+            $FechaFinal.val(yyyy + "-" + MM + "-" + dd);
+
+            i = false;
+
+            while (i == false) {
+               
+                date.setDate(date.getDate() + 1);
+                if (date.getDay() == descanso1 ) {
+                    i = false;
+                } else {
+                    i = true;
+                }
+                
+            }
+
+            var dd = date.getDate();
+            var MM = date.getMonth() + 1;
+            var yyyy = date.getFullYear();
+
+            dd = dd < 10 ? '0' + dd : dd;
+            MM = MM < 10 ? '0' + MM : MM;
+
+            $Presentarse.val(yyyy + "-" + MM + "-" + dd);
+
+        }
+
+    } 
+
+
+                                </script>
+
+
+
+

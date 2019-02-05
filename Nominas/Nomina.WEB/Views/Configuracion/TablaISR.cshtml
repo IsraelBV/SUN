@@ -1,0 +1,61 @@
+﻿
+@using Nomina.BLL;
+@using RH.Entidades;
+@using Common.Enums;
+@using Common.Helpers;
+@model List<C_NOM_Tabla_ISR>
+
+@{
+    int token = ViewBag.id;
+}
+
+<table id="tblISR" class="table table-striped" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Límite Inferior</th>
+            <th>Límite Superior</th>
+            <th>Cuota Fija</th>
+            <th>Porcentaje</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var isr in Model.Where(x => x.TipoTarifa == token))
+        {
+            <tr>
+                <td>@isr.Limite_Inferior</td>
+                @if(@isr.Limite_Superior == 1000000)
+                {
+                <td>En adelante</td>
+                }else
+                {
+                <td>@isr.Limite_Superior</td>
+                }
+                <td>@isr.Cuota_Fija</td>
+                <td>@(isr.Porcentaje)%</td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    var tblisr;
+    $("#modal-configuracion").on("shown.bs.modal", function () {
+        tblisr = $("#tblISR").DataTable({
+            bFilter: false,
+            "language": {
+                "url": "../scripts/datatables-spanish.json"
+            },
+            scrollY: "410px",
+            select: 'single',
+            paging: false,
+            bInfo: false
+        });
+    });
+
+    $("#modal-configuracion").on("hidden.bs.modal", function () {
+        $("#tblISR").find(".selected").removeClass("selected");
+        tblisr.destroy();
+    });
+</script>

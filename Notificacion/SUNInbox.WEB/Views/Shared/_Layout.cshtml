@@ -1,0 +1,217 @@
+﻿@using SYA.BLL;
+@{ 
+    var usuario = ControlAcceso.GetUsuarioEnSession();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SUNRH | Notificaciones</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="icon" href="~/Images/logo2.png" />
+
+    <!-- jQuery -->
+    <script src="~/scripts/jquery-3.1.0.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="~/scripts/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="~/content/jquery-ui.min.css" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="~/content/bootstrap.min.css">
+    <script src="~/scripts/bootstrap.min.js"></script>
+
+    <!-- PUSH Notifications -->
+    <script src="~/scripts/push.min.js"></script>
+
+    <link rel="stylesheet" href="~/content/layout.css">
+    <link href="~/Content/loader.css" rel="stylesheet" />
+    <script src="~/scripts/layout.js"></script>
+    <script src="~/scripts/interval.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    
+    <!-- PDF Generator -->
+    <script src="~/scripts/jspdf.min.js"></script>
+
+</head>
+<body>
+    <div class="loading" style="visibility:hidden" id="load"></div>
+    <nav class="navbar dark-lighten" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle">
+                    <span class="glyphicon glyphicon-menu-hamburger"></span>
+                </button>
+                <a class="navbar-brand" href="">SUN Inbox</a>
+            </div>
+            
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">@usuario.Nombres <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/Acceso/LogOut">Cerrar Sesión</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-body">
+        <div class="sidebar dark">
+            <div class="navigation">
+                <div class="menu-sidebar">
+                    <ul>
+                        <li>
+                            <a class="btn-menu-sidebar-title">BUZONES</a>
+                            <ul>
+                                <li>
+                                    <a href="" class="btn-sidebar active" data-bandeja="1">Entrada</a>
+                                </li>
+                                <li>
+                                    <a href="" class="btn-sidebar" data-bandeja="2">Favoritos</a>
+                                </li>
+                                @*<li>
+                                    <a href="" class="btn-sidebar" data-bandeja="3">Nuevos</a>
+                                </li>*@
+                                <li>
+                                    <a href="" class="btn-sidebar" data-bandeja="4">Archivados</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="menu-sidebar">
+                    <ul>
+                        <li>
+                            <a href="" class="btn-menu-sidebar-title">ETIQUETAS</a>
+                            <ul class="menu-labels">
+                                <li>
+
+                                    @if (usuario.IdDepartamento == 2)
+                                    {
+                                        <span class="label label-filter label-active label-alta" data-filtro="1" data-filtro2="3"data-filtro3="0">ALTAS</span>
+                                        <span class="label label-filter label-active label-baja" data-filtro="2" data-filtro2="13" data-filtro3="0">BAJAS</span>
+                                        <span class="label label-filter label-active label-baja-imss" data-filtro="18" data-filtro2="0" data-filtro3="0">CAMBIO FECHA IMSS</span>
+                                        <span class="label label-filter label-active label-salario" data-filtro="4" data-filtro2="14" data-filtro3="15">SALARIOS</span>
+                                        <span class="label label-filter label-active label-puesto" data-filtro="5" data-filtro2="0" data-filtro3="0">PUESTO</span>
+                                        <span class="label label-filter label-active label-empresa" data-filtro="6" data-filtro2="16" data-filtro3="0">TRANSFERENCIA</span>
+                                        <span class="label label-filter label-active label-reingreso" data-filtro="7" data-filtro2="17" data-filtro3="0">REINGRESO</span>
+                                        <span class="label label-filter label-active label-cumple-imss" data-filtro="8" data-filtro2="0" data-filtro3="0">CUMPLE IMSS</span>
+                                        <span class="label label-filter label-active label-infonavit" data-filtro="9" data-filtro2="0" data-filtro3="0">INFONAVIT</span>
+                                        <span class="label label-filter label-active label-vacaciones" data-filtro="10" data-filtro2="0" data-filtro3="0">VACACIONES</span>
+                                        <span class="label label-filter label-active label-incapacidades" data-filtro="11" data-filtro2="0" data-filtro3="0">INCAPACIDADES</span>
+                                        <span class="label label-filter label-active label-permiso" data-filtro="12" data-filtro2="0" data-filtro3="0">PERMISOS</span>          
+                                    }
+                                   @if (usuario.IdDepartamento == 3)
+                                   {
+                                        <span class="label label-filter label-active label-alta" data-filtro="3" data-filtro2="0" data-filtro3="0">ALTAS</span>
+                                        <span class="label label-filter label-active label-baja" data-filtro="13"data-filtro2="0" data-filtro3="0">BAJAS</span>
+                                        <span class="label label-filter label-active label-baja-imss" data-filtro="18" data-filtro2="0" data-filtro3="0">CAMBIO FECHA IMSS</span>
+                                        <span class="label label-filter label-active label-salario" data-filtro="4" data-filtro2="0" data-filtro3="0">SALARIOS</span>                                        
+                                        <span class="label label-filter label-active label-empresa" data-filtro="6" data-filtro2="0" data-filtro3="0">TRANSFERENCIA</span>
+                                        <span   class="label label-filter label-active label-reingreso" data-filtro="7" data-filtro2="0" data-filtro3="0">REINGRESO</span>
+                                        <span class="label label-filter label-active label-cumple-imss" data-filtro="8" data-filtro2="0" data-filtro3="0">CUMPLE IMSS</span>
+                                        <span class="label label-filter label-active label-infonavit" data-filtro="9" data-filtro2="0" data-filtro3="0">INFONAVIT</span>                                        
+                                        <span class="label label-filter label-active label-incapacidades" data-filtro="11" data-filtro2="0" data-filtro3="0">INCAPACIDADES</span>
+                                        
+                                   }
+
+                                    @if (usuario.IdDepartamento == 4)
+                                    {
+                                        <span class="label label-filter label-active label-alta" data-filtro="1" data-filtro2="3" data-filtro3="0">ALTAS</span>
+                                        <span class="label label-filter label-active label-baja" data-filtro="2" data-filtro2="13" data-filtro3="0">BAJAS</span>
+                                        <span class="label label-filter label-active label-baja-imss" data-filtro="18" data-filtro2="0" data-filtro3="0">CAMBIO FECHA IMSS</span>
+                                        <span class="label label-filter label-active label-salario" data-filtro="4" data-filtro2="14" data-filtro3="15">SALARIOS</span>
+                                        <span class="label label-filter label-active label-puesto" data-filtro="5" data-filtro2="0" data-filtro3="0">PUESTO</span>
+                                        <span class="label label-filter label-active label-empresa" data-filtro="6" data-filtro2="16" data-filtro3="0">TRANSFERENCIA</span>
+                                        <span class="label label-filter label-active label-reingreso" data-filtro="7" data-filtro2="17" data-filtro3="0">REINGRESO</span>
+                                        <span class="label label-filter label-active label-cumple-imss" data-filtro="8" data-filtro2="0" data-filtro3="0">CUMPLE IMSS</span>
+                                        <span class="label label-filter label-active label-infonavit" data-filtro="9" data-filtro2="0" data-filtro3="0">INFONAVIT</span>
+                                        <span class="label label-filter label-active label-vacaciones" data-filtro="10" data-filtro2="0" data-filtro3="0">VACACIONES</span>
+                                        <span class="label label-filter label-active label-incapacidades" data-filtro="11" data-filtro2="0" data-filtro3="0">INCAPACIDADES</span>
+                                        <span class="label label-filter label-active label-permiso" data-filtro="12" data-filtro2="0" data-filtro3="0">PERMISOS</span>
+                                    }
+                                    @if (usuario.IdDepartamento == 5)
+                                    {
+                                        <span class="label label-filter label-active label-alta" data-filtro="1" data-filtro2="3" data-filtro3="0">ALTAS</span>
+                                        <span class="label label-filter label-active label-baja" data-filtro="2" data-filtro2="13" data-filtro3="0">BAJAS</span>                                                                                                                        
+                                        <span class="label label-filter label-active label-empresa" data-filtro="6" data-filtro2="16" data-filtro3="0">TRANSFERENCIA</span>
+                                        <span class="label label-filter label-active label-reingreso" data-filtro="7" data-filtro2="17" data-filtro3="0">REINGRESO</span>
+                                    }
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-page">
+            <div class="notification-master">
+                <div class="search-filter">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </span>
+                        <input type="text" class="form-control" id="keyword" placeholder="BUSCAR">
+                        <span class="input-group-addon disabled" id="clearKeyword">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="pagination-filter">
+                    <p id="buzon-title">Buzón de <span id="bznTitle">Entrada</span></p>
+                    <p><span class="primerRegistro"></span> - <span class="ultimoRegistro"></span> de <span class="totalRegistros"></span></p>
+                    <div class="btn-group" role="group">
+                        <button class="btn-transparent btn-pagination" id="btnPreviousPage">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </button>
+                        <button class="btn-transparent btn-pagination" id="btnNextPage">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="notification-list">
+                    @RenderBody()
+                </div>
+                <div class="toolbar">
+                    <button class="btn-toolbar" id="btnFavorite" data-toggle="tooltip" data-placement="right" title="Agregar a Favoritos">
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                    </button>
+                    <button class="btn-toolbar" id="btnUnfavorite" data-toggle="tooltip" data-placement="top" title="Quitar de Favoritos">
+                        <span class="glyphicon glyphicon-star"></span>
+                    </button>
+                    <button class="btn-toolbar" id="btnArchivar" data-toggle="tooltip" data-placement="top" title="Archivar">
+                        <span class="glyphicon glyphicon-folder-close"></span>
+                    </button>
+                    <button class="btn-toolbar" id="btnDesarchivar" data-toggle="tooltip" data-placement="top" title="Desarchivar">
+                        <span class="glyphicon glyphicon-folder-open"></span>
+                    </button>
+                    <button class="btn-toolbar" id="btnPrint" data-toggle="tooltip" data-placement="top" title="Imprimir">
+                        <span class="glyphicon glyphicon-print"></span>
+                    </button>
+                    <button class="btn-toolbar" id="btnSelectAll" data-toggle="tooltip" data-placement="top" title="Seleccionar Todas">
+                        <span class="glyphicon glyphicon-check"></span>
+                    </button>
+                    <button class="btn-toolbar" id="btnDeselectAll" data-toggle="tooltip" data-placement="top" title="Deseleccionar Todas">
+                        <span class="glyphicon glyphicon-unchecked"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="notification-detail">
+                <div class="detail"></div>
+                <div class="empty-cover"></div>
+            </div>
+        </div>
+
+        <div class="toast">
+            <span class="message">Lorem ipsum dolor si amet</span>
+            <span class="confirmTxt">DESHACER</span>
+        </div>
+    </div>
+    <script src="~/scripts/jquery.unobtrusive-ajax.min.js"></script>
+</body>
+</html>

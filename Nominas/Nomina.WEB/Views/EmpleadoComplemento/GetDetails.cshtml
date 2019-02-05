@@ -1,0 +1,26 @@
+﻿@model List<Nomina.BLL.EmpleadoComplemento>
+
+<div class="table-panel">
+    <p>Conceptos</p>
+</div>
+<table class="table" id="tblDetalleComplemento">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Concepto</th>
+            <th class="text-right lastCol">Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr data-id-empleado-complemento="@item.IdEmpleadoComplemento" data-valor-anterior="@item.Cantidad">
+                <td>@item.IdConcepto</td>
+                <td>@item.DescripcionComplemento</td>
+                <td class="data-number lastCol">
+                    <input type="number" class="cantEmpleadoComplemento cantEmpleadoComplementoSingle" accept="4" value="@item.Cantidad" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

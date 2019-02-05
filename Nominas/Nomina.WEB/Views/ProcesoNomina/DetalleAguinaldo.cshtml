@@ -1,0 +1,102 @@
+﻿@using RH.Entidades
+@using Common.Utils;
+@model RH.Entidades.NOM_Aguinaldo
+
+@{
+var empleado = ViewBag.Empleado as Empleado;
+
+}
+
+
+<h3>ID:@Model.IdEmpleado  @empleado.APaterno @empleado.AMaterno @empleado.Nombres </h3>
+
+<div class="container col-md-6">
+   
+    <ul class="list-group">
+        
+        <li class="list-group-item list-group-item-danger">
+            <strong>SD</strong> <span class="pull-right">@Model.SD</span>
+        </li>
+        <li class="list-group-item">
+            <strong>SDI</strong> <span class="pull-right"> @Model.SDI</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Salario Minimo</strong>  <span class="pull-right">@Model.SalarioMinimo</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Dias Aguinaldo</strong> <span class="pull-right">@Model.DiasAguinaldo</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Fecha Primer día</strong> <span class="pull-right"> @Model.FechaPrimerDia.Value.ToString("d")</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Fecha Ultimo dia</strong>  <span class="pull-right">@Model.FechaUltimoDia.Value.ToString("d")</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Dias Ejercicio Fiscal</strong> <span class="pull-right"> @Model.DiasEjercicioFiscal</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Total Faltas</strong> <span class="pull-right">@Model.TotalFaltas</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Faltas Personalizadas</strong>  <span class="pull-right">@Model.FaltasPersonalizadas</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Dias Trabajados</strong>  <span class="pull-right">@Model.DiasTrabajados</span>
+        </li>
+
+        <li class="list-group-item">
+            <strong>Sueldo Mensual</strong>    <span class="pull-right"> @Model.SueldoMensual</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Factor</strong>  <span class="pull-right">@Model.Factor</span>
+        </li>
+    </ul>
+</div>
+
+<div class="container col-md-6">
+    <ul class="list-group">
+      
+        <li class="list-group-item list-group-item-danger">
+            <strong>Proporcion</strong>    <span class="pull-right">@Model.Proporcion</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Tope Excento</strong> <span class="pull-right"> @Model.TopeExcento</span>
+        </li>
+       
+        <li class="list-group-item">
+            <strong>Exento</strong>  <span class="pull-right">@Model.Exento</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Gravado</strong>  <span class="pull-right">@Model.Gravado</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Aguinaldo</strong>  <span class="pull-right"><strong>@Model.Aguinaldo.ToCurrencyFormat()</strong></span>
+        </li>
+        <li class="list-group-item">
+            <strong>- ISR</strong>  <span class="pull-right">@Model.ISR</span>
+        </li>
+        <li class="list-group-item">
+            <strong>- Saldo Favor</strong>  <span class="pull-right">@Model.SaldoAnual</span>
+        </li>
+        <li class="list-group-item">
+            <strong>- Pension Alimenticia</strong>  <span class="pull-right">@Model.PensionAlimenticia</span>
+        </li>
+
+        <li class="list-group-item">
+            <strong>Neto</strong>   <span class="pull-right"> @Model.Neto.ToCurrencyFormat()</span>
+        </li>
+        <li class="list-group-item">
+            <strong>+ Complemento</strong>  <span class="pull-right">@Model.Complemento</span>
+        </li>
+        <li class="list-group-item list-group-item-danger">
+            <strong>Total</strong>  <span class="pull-right"><strong> = @Model.Total.ToCurrencyFormat()</strong></span>
+        </li>
+        <li class="list-group-item list-group-item-success">
+            <strong>ISN</strong>  <span class="pull-right"><strong> @Model.ISN3</strong></span>
+        </li>
+  
+    </ul>
+</div>
+
+

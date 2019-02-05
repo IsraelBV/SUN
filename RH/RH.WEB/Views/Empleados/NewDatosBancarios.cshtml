@@ -1,0 +1,132 @@
+﻿@using RH.Entidades;
+@using RH.BLL;
+@model DatosBancarios
+@{ 
+    List<C_Banco_SAT> bancos = ViewBag.Bancos;
+}
+
+@using (Ajax.BeginForm("NuevaCuentaBancaria", "Empleados", new AjaxOptions { OnSuccess = "OnSuccessDatosBancarios", OnFailure = "OnFailure" }, new { @class = "tooltipForm form-horizontal", id = "DatosBancariosForm" }))
+{
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="IdBanco" class="control-label col-md-4">Banco</label>
+            <div class="col-md-8">
+                <select name="IdBanco" class="form-control form-disabled">
+                    @foreach(var item in bancos)
+                    {
+                        <option value="@item.IdBanco">@item.Descripcion</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="NoSiga" class="control-label col-md-4">No Siga 1</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="NoSigaF"
+                       data-rule-digits="true"
+                       data-rule-minlength="1"
+                       data-rule-maxlength="20"
+                       data-rule-required="true" 
+                       value="0"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="NoSiga" class="control-label col-md-4">No Siga 2</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="NoSigaC"
+                       data-rule-digits="true"
+                       data-rule-minlength="1"
+                       data-rule-maxlength="20"
+                       data-rule-required="true" 
+                       value="0"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-4" for="CuentaBancaria">Cuenta Bancaria</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="CuentaBancaria"
+                       data-rule-maxlength="10"
+                       data-rule-minlength="10"
+                       data-rule-digits="true"
+                       data-rule-required="true"
+                       value="0000000000" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="NumeroTarjeta"># Tarjeta</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="NumeroTarjeta"
+                       data-rule-maxlength="16"
+                       data-rule-minlength="16"
+                       data-rule-digits="true"
+                       data-rule-required="true"
+                       value="0000000000000000" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="Clabe">Clabe</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="Clabe"
+                       data-rule-maxlength="18"
+                       data-rule-minlength="18"
+                       data-rule-digits="true"
+                       data-rule-required="true"
+                       value="000000000000000000" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="NombreBeneficiario">Beneficiario</label>
+            <div class="col-md-8">
+                <input type="text" name="NombreBeneficiario" class="form-control form-disabled"
+                       data-rule-maxlength="100" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="CURPBEneficiario">CURP</label>
+            <div class="col-md-8">
+                <input type="text" name="CURPBeneficiario" class="form-control form-disabled"
+                       data-rule-CURP="true" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="RFCBeneficiario">RFC</label>
+            <div class="col-md-8">
+                <input type="text" name="RFCBeneficiario" class="form-control form-disabled"
+                       data-rule-RFC="true" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="ParentezcoBeneficiario">Parentezco</label>
+            <div class="col-md-8">
+                <select name="ParentezcoBeneficiario" class="form-control form-disabled">
+                    <option value="0">Elija un parentezco</option>
+                    <option>ESPOSO/A</option>
+                    <option>HIJO/A</option>
+                    <option>PADRE/MADRE</option>
+                    <option>HERMANO/A</option>
+                    <option>TÍO/A</option>
+                    <option>PRIMO/A</option>
+                    <option>SOBRINO/A</option>
+                    <option>ABUELO/A</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-4" for="DomicilioBeneficiario">Domicilio</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control form-disabled" name="DomicilioBeneficiario" data-rule-maxlength="150" />
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="IdEmpleado" id="FK-Empleado" />
+}

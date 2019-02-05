@@ -1,0 +1,91 @@
+﻿@using Common.Helpers;
+@using Common.Utils;
+@model RH.Entidades.Incapacidades
+@* Este es editar Incapacidad *@
+@{
+    var listaTipo = ViewBag.listaTipos;
+    var listaClase = ViewBag.listaClases;
+}
+
+<script src="~/Scripts/calcFechas.js"></script>
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+@using (Ajax.BeginForm("Edit", "Incapacidades", null, new AjaxOptions { OnComplete = "CloseModal()" }, new { id = "formularioEdit", @class = "tooltipForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3 class="modal-title"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Edita la incapacidad</h3>
+    </div>
+
+    <div class="modal-body ">
+        <div class="container">
+            <div class="form-horizontal ">
+                <div class="col-md-12 col-xs-12">
+                    <div class="col-md-4 col-xs-12">
+                        <div class="form-group">
+                            <label class="col-md-5">No. Empleado</label>
+                            <input class="col-md-7"  type="text" value="@Model.IdEmpleado" disabled />
+                            <input class="col-md-7" type="hidden" value="@Model.Id" name="Id" id="Id" />
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-5"><span style="color:red;">*</span> Folio</label>
+                            <input class="col-md-7" type="text" name="Folio" id="Folio" value="@Model.Folio" />
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-5"><span style="color:red;">*</span> Tipo</label>
+                            <div class="col-md-7" style="padding:0 !important">
+                                @HtmlLocalHelper.ComboBox(listaTipo, "Tipo")
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-5"> <span style="color:red;">*</span> Clase</label>
+                            <div class="col-md-7" style="padding:0 !important">
+                                @HtmlLocalHelper.ComboBox(listaClase, "Clase")
+                            </div>
+                        </div>
+
+
+
+                 </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-5">Fecha Inicio</label>
+                            <input type="date" class="col-md-7" name="FechaInicio" id="FechaInicio" value="@Utils.GetDateNullableToString(Model.FechaInicio, "yyyy-MM-dd")" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-5"><span style="color:red;">*</span> Días Totales</label>
+                            <input type="text" class="col-md-7" name="Dias" id="Dias" value="@Model.Dias" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-5">Fecha Fin</label>
+                            <input type="date" class="col-md-7" name="FechaFin" id="FechaFin" value="@Utils.GetDateNullableToString(Model.FechaFin, "yyyy-MM-dd")" />
+                        </div>
+                       
+                        <div class="form-group">
+                            <label class="col-md-5"><span style="color:red;">*</span> Observaciones</label>
+                            <textarea rows="4" cols="27" name="Observaciones" id="Observaciones" style="resize:none;" >@Model.Observaciones</textarea>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+            <div class="modal-footer">
+                <div class="form-actions no-color">
+                    <input type="submit" class="btn btn-primary input-group-sm save" value="Guardar" /> <a class="btn btn-danger" data-dismiss="modal">Cancelar</a>
+                </div>
+            </div>
+}
+
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>

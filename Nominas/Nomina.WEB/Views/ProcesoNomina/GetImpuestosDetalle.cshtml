@@ -1,0 +1,121 @@
+﻿@using Common.Utils
+@model Nomina.BLL.ImpuestoDetalleModel
+
+<style>
+    div.container {
+        width: 100%;
+    }
+    .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
+        color: white;
+        background-color: #762a34;
+    }
+</style>
+
+@if (Model != null)
+{
+<div class="container">
+<ul class="nav nav-pills">
+        <li class="active"><a data-toggle="pill" href="#home"> Cálculo ISR/Subsidio</a></li>
+        <li><a data-toggle="pill" href="#menu1"> Tabla de Impuestos</a></li>
+        <li><a data-toggle="pill" href="#menu2"> Tabla de Subsidio</a></li>
+        
+    </ul>
+
+    <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+            <table id="tblConcepto" class="table impuesto">
+                <thead><tr class="info"><th>Concepto</th><th>Valor</th><th></th><th></th><th></th><th></th><th></th></tr></thead>
+                <tbody>
+                <tr><th>Base Gravable</th><th>@Model.BaseGravable.ToCurrencyFormat(3,false)</th><td colspan="5"></td></tr>
+                    @if (@Model.BaseGravableMensual > 0)
+                    {
+                    <tr><th>Base Gravable Mens (30.40)</th><th>@Model.BaseGravableMensual.ToCurrencyFormat(3, false)</th><td colspan="5"></td></tr>
+                    }
+                    <tr><th>Limite Inferior</th><td >@Model.LimiteInferior</td><td colspan="5"></td></tr>
+                    <tr><th>Base</th><td >@Model.Base.TruncateDecimal(2)</td><td colspan="5"></td></tr>
+                    <tr><th>Tasa %</th><td class="text-info">@Model.Tasa</td><td colspan="5"></td></tr>
+                    <tr><th>ISR</th><td class="text-danger">@Model.Isr.TruncateDecimal(2)</td><td colspan="5"></td></tr>
+                    <tr><th>Subsidio</th><td class="text-success">@Model.Subsidio.TruncateDecimal(2)</td><td colspan="5"></td></tr>
+                    <tr class="@(Model.EsISR == false  ? " success": "danger" )"><th>R = @(Model.EsISR == false ? "Subsidio " :"ISR ")</th><th>@Model.ResultadoIsrOSubsidio.TruncateDecimal(2)</th><td colspan="5"></td></tr>
+                    <tr class="warning"><td>Neto a Pagar $</td><td>@Model.NetoAPagar.ToCurrencyFormat(3,false)</td><td colspan="5"></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="menu1" class="tab-pane fade">
+            <table id="tblIsr" class="table impuesto" width="100%">
+                <thead>
+                    <tr class="info"><th>Límite Inferior</th><th>Límite Sup.</th><th>Cuota Fija</th><th>Porcentaje %</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Tablaisr)
+                    {
+                    var stiloSelecccionado = "";
+                    if (item.IdISR == Model.IdTablaIsr)
+                    {
+                    stiloSelecccionado = "danger";
+                    }
+                    <tr class="@stiloSelecccionado">
+                        <td>@item.Limite_Inferior</td>
+                        <td>@(item.Limite_Superior == 1000000 ? "En Adelante" : item.Limite_Superior.ToString())</td>
+                        <td>@item.Cuota_Fija</td>
+                        <td>@item.Porcentaje</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div id="menu2" class="tab-pane fade">
+            <table id="tblSubsidio" class="table impuesto" width="100%">
+                <thead>
+                    <tr class="info">
+                        <th>Límite Inferior</th>
+                        <th>Límite Sup.</th>
+                        <th>Subsidio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Tablasubsidio)
+                    {
+                    var stiloSelecccionado = "";
+                    if (item.IdSubsidio == Model.IdTablaSubsidio)
+                    {
+                    stiloSelecccionado = "success";
+                    }
+                    <tr class="@stiloSelecccionado">
+                        <td>@item.Limite_Inferior</td>
+                        <td>@(item.Limite_Superior == 1000000 ? "En Adelante" : item.Limite_Superior.ToString()) </td>
+                        <td>@item.Subsidio</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+}
+else
+{
+    <div class="alert alert-info">
+        <strong>Info!</strong> No se encontrarón datos de Impuestos para mostrar..
+    </div>
+}
+<script>
+
+    
+        //var table = $('table.impuesto').DataTable({
+        //    paging: false,
+        //    searching: false,
+        //    info: false,
+        //    ordering: false,
+            
+    
+            
+        //});
+
+        
+
+
+
+</script>

@@ -1,0 +1,68 @@
+﻿#pagination-header {
+    width: 100%;
+    position: relative;
+    border-bottom: 1px solid #ccc;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 2px solid #29b6f6;
+    text-align: center;
+    z-index: 1;
+}
+
+#pagination-info {
+    cursor: pointer;
+    float: left;
+}
+
+#filter-title {
+    cursor: pointer;
+    text-align:center;
+}
+
+.pagination {
+    float: right;
+    margin: 0;
+    height: inherit;
+    line-height: 40px;
+    max-width: 25%;
+}
+
+.pagination i {
+    height: 100%;
+}
+
+.pagination li {
+    height: 40px !important;
+    line-height: 40px;
+}
+
+.pagination li a {
+    display: block;
+    height: 100% !important;
+    line-height: 40px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.pagination .disabled a {
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+
+.pagination li {
+    padding: 0;
+}
+
+@media only screen and (max-width: 600px) {
+  #filter-title {
+      float: left;
+      width: 50%;
+      text-align: left;
+  }
+
+  .pagination {
+      width: 30%;
+      text-align: right;
+      line-height: 50px;
+  }
+}

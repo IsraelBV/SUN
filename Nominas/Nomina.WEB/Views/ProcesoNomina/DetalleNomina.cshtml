@@ -1,0 +1,106 @@
+﻿@using Nomina.BLL;
+@using Common.Helpers;
+@using Common.Utils;
+@model List<DetalleNomina>
+@{ 
+    ProcesoNominaViewModel nomina = ViewBag.Nomina;
+    bool ModoComplemento = ViewBag.ModoComplemento;
+
+    string strComplemento = " C";
+
+}
+
+<style>
+
+    div.container {
+        width: 100%;
+    }
+         
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table" id="table-detalle-nomina1" width="100%">
+            <thead>
+                <tr class="info">
+                    <th>Impuesto Sobre Nomina</th>
+                    <th>ISR antes de Subsidio</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tr>
+                @if (nomina != null)
+                {
+                <th class="data-number text-left">@nomina.ImpuestoSobreNomina.ToCurrencyFormat()</th>
+                <th class="data-number text-left">@nomina.IsrAntesSubsidio.ToCurrencyFormat()</th>
+                <td colspan="5"></td>
+                }
+                else
+                {
+                    <td colspan="7">
+                    <div class="alert alert-info">
+                        <strong>Info!</strong> No se encontrarón datos para mostrar..
+                    </div>
+                        </td>
+                }
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="row>">
+    <div class="col-md-12">
+        <table class="table" id="table-detalle-nomina" width="100%">
+            <thead>
+                <tr class="info">
+                    @*<th>IDNom</th>*@
+                    <th>Concepto</th>
+                    <th class="text-right">Gravable ISR</th>
+                    <th class="text-right">Excento ISR</th>
+                    <th class="text-right">Grava IMSS</th>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detalle in Model)
+            {
+                    <tr data-tipo-concepto="@detalle.TipoConcepto" class="@(detalle.Complemento ? "text-info" : "")">
+                        @*<td>@detalle.IdDetalleNomina</td>*@
+                        <th >@detalle.DescripcionConcepto @(detalle.Complemento ? strComplemento : "") </th>
+                        <td class="data-number text-right">@detalle.GravaISR.ToCurrencyFormat()</td>
+                        <td class="data-number text-right">@detalle.ExentoISR.ToCurrencyFormat()</td>
+                        <td class="data-number text-right">@detalle.GravaIMSS.ToCurrencyFormat()</td>
+                        <th class="data-number text-right">@detalle.Total.ToCurrencyFormat()</th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+          
+       
+
+ <script>
+
+            $(document).ready(function () {
+                var table = $("#table-detalle-nomina").DataTable({
+                  scrollY: '350px',
+                  searching: false,
+                    paging: false,
+                    select:true,
+                    info: false,
+                    ordering: false
+                });
+
+
+                
+
+                //-->
+            });
+              
+
+        </script>

@@ -1,0 +1,292 @@
+﻿@using Common.Enums;
+@using Common.Helpers;
+
+@model IEnumerable<RH.Entidades.Plantilla>
+
+@{
+    ViewBag.Title = "Plantillas";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+}
+@{
+    int accion = 0;
+    string mensaje = "";
+
+    if (TempData["accionPlantilla"] != null)
+    {
+        accion = (int)TempData["accionPlantilla"];
+        mensaje = (string)TempData["accionMensaje"];
+    }
+    List<RH.Entidades.Cliente> Clientes = ViewBag.Clientes;
+
+}
+
+
+<link href="~/Content/bootstrap-select.css" rel="stylesheet" type="text/css" />
+@*<link href="~/Content/tablas/tamaño.css" rel="stylesheet" />
+<link href="~/Content/modalDesign.css" rel="stylesheet" />
+<link href="~/Content/buttons.css" rel="stylesheet" />
+<link href="~/Content/tablas/diseño.css" rel="stylesheet" />*@
+<link href="~/Content/animate.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+
+<div class="panel with-nav-tabs panel-primary" id="panelEmpleados">
+    <div class="panel-heading clearfix text-center">
+        <div class="pull-left">
+            <h4 class="panel-title">Plantillas</h4>
+        </div>
+        <div class="pull-right">
+            <ul class="nav nav-tabs">
+                <li>
+                    <a class="btn btn-primary newInc hovernuevo" href="#" data-toggle="modal" data-target="#myModal" data-tooltip="tooltip" data-placement="left" title="Permite crear una nueva Plantilla">
+                        <i class="fa fa-plus"></i> Nueva Plantilla
+                    </a>
+                </li>
+            </ul>
+        </div>
+        @*<a class="btn btn-primary newInc" href="#" data-toggle="modal" data-target="#myModal">
+                <i class="fa fa-plus"></i> Nueva Plantilla
+            </a>*@
+
+    </div>
+    <div class="panel-body" id="panBody">
+        <div class="tab-content">
+            <div class="table table-responsive">
+                <table class="table table-condensed table-hover table-striped" id="listaPlantilla">
+                <thead>
+                <tr>
+                <th>
+                Id
+                </th>
+                <th>
+                Nombre del Archivo
+                </th>
+                <th>
+                @Html.DisplayNameFor(model => model.Tipo)
+                </th>
+                <th></th>
+                </tr>
+                </thead>
+            <tbody>
+                @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NombreArchivo)
+                            </td>
+                            <td>
+                                @((TipoPlantilla)item.Tipo)
+                            </td>
+                            <td class="text-right">
+                                <a href="/Plantillas/Descarga?nombreArchivo=@item.NombreArchivo" class="btn btn-default plantillaDown"><i class="glyphicon glyphicon-download"></i></a>
+                                <a href="/Plantillas/Eliminar/@item.Id" class="btn btn-danger plantillaDel" onclick="return delConfirm()"><i class="glyphicon glyphicon-trash"></i></a>
+                                <a href="/Plantillas/Details/@item.Id" class="btn btn-primary btnDetails plantillaConf" data-ajax-update="#detail-div" data-ajax-mode="replace" data-ajax="true"><i class="fa fa-cogs fa-lg" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+    </div>
+    </div>
+
+
+
+</div>
+    <!-- Modal para crear una nueva Plantilla -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><i class="fa fa-plus"></i> Nueva Plantilla </h4>
+                </div>
+                <div class="modal-body pModal">
+                    @using (Html.BeginForm("SubirArchivo", "Plantillas", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", id = "form-new" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" value="@Clientes.Count" id="NumClientes" name="NumClientes" />
+
+                        <div class="form-group file">
+                            <label for="file" class="control-label">Archivo</label>
+                            <input type="file" name="file" size="40" class="form-control" />
+                        </div>
+
+                        <div class="form-group pType">
+                            <label for="TipoPlantilla" class="control-label">Tipo Plantilla</label>
+                            @HtmlLocalHelper.ComboEnum(typeof(TipoPlantilla), "tipo", "1", false)
+                        </div>
+
+                        <div class="form-group pClient">
+                            <label for="Clientes" class="control-label">Clientes</label>
+                            <select name="Clientes" id="Clientes" class="selectpicker show-tick" multiple data-width="350px" data-actions-box="true" data-live-search="true" title="Selecciona la configuración" data-selected-text-format="count">
+                                @foreach (var cliente in Clientes)
+                                {
+                                    <option value="@cliente.IdCliente">@cliente.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" id="btnSaveNew">Guardar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal para editar la plantilla -->
+    <div class="modal fade" id="modal-edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="detail-div"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script src="~/Scripts/bootstrap-select.min.js"></script>
+    <script src="~/Scripts/i18n/defaults-es_CL.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.js"></script>
+
+
+    <script type="text/javascript" src="~/scripts/bootstrap-notify.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#listaPlantilla').DataTable({
+                "scrollY": "500px",
+                "scrollCollapse": true,
+                "paging": false,
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "zeroRecords": "Sin registros - Busca de nuevo",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "Sin registros disponibles",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "sSearch": "Buscar:",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    }
+                },
+                "aoColumnDefs": [
+                    { "bSortable": false, "aTargets": [3] },
+                    { "bSearchable": false, "aTargets": [3] }
+                ],
+            });
+
+            $("#btnSaveNew").click(function () {
+                $("#form-new").submit();
+            });
+
+            $(".btnDetails").click(function () {
+                $("#modal-edit").modal();
+            });
+
+
+
+
+
+        });
+        $('[data-tooltip="tooltip"]').tooltip();
+        //Funcion para eliminar plantilla
+        function delConfirm() {
+            if (confirm('¿Estas seguro que deseas eliminar la plantilla?'))
+                return true;
+            else
+                return false;
+        }
+        //termina función para eliminar plantilla
+
+
+        function FormSuccess(accion) {
+            var tipo = "success";
+            if (accion === 1) {
+                tipo = "success";
+            } else if (accion === 2) {
+                tipo = "info";
+            } else if (accion === 3) {
+                tipo = "danger";
+            }
+            if (accion > 0) {
+                setTimeout(function () {
+                    $.notify({
+                        message: "@mensaje"
+                    }, {
+                        type: tipo,
+                        animate: {
+                            enter: 'animated fadeInDown',
+                            exit: 'animated fadeOutUp'
+                        },
+                        placement: { from: 'top', align: 'center' },
+                        offset: 90, timer: 1000
+                    });
+                }, 1000);
+            }
+        }
+
+        //Función de éxito al actualizar una plantilla
+        function OnSuccess(ok) {
+            $("#modal-edit").modal("hide");
+            if (ok) {
+                $.notify({
+                    title: "Éxito!",
+                    message: "Los datos han sido modificados"
+                }, {
+                    type: "success",
+                    animate: {
+                        enter: 'animated fadeInDown',
+                        exit: 'animated fadeOutUp'
+                    },
+                    placement: { from: 'top', align: 'center' },
+                    offset: 90, timer: 1000
+                });
+            }
+            else {
+                $.notify({
+                    title: "Error!",
+                    message: "Ha ocurrido un error inesperado. Favor de contactar al administrador"
+                }, {
+                    type: "danger",
+                    animate: {
+                        enter: 'animated fadeInDown',
+                        exit: 'animated fadeOutUp'
+                    },
+                    placement: { from: 'top', align: 'center' },
+                    offset: 90, timer: 1000
+                });
+            }
+        }
+
+        //Función de error al actualizar una plantilla
+        function OnFailure() {
+            $("#modal-edit").modal("hide");
+            $.notify({
+                title: "Error!",
+                message: "Ha ocurrido un error inesperado. Favor de contactar al administrador"
+            }, {
+                type: "danger",
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                placement: { from: 'top', align: 'center' },
+                offset: 90, timer: 1000
+            });
+        }
+    </script>

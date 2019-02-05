@@ -1,0 +1,511 @@
+﻿@using Nomina.BLL
+@using RH.BLL
+@using RH.Entidades
+
+@{
+    var ejercicio = ViewBag.ejercicio as List<NOM_Ejercicio_Fiscal>;
+    var empresas = ViewBag.empresas as List<Empresa>;
+    var clientes = ViewBag.sucursales as List<SucursalDatos>;
+}
+
+
+
+<div class="col-md-12">
+
+    <div class="row ">
+
+
+
+        <div class="col-md-2">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>Ejercicio fiscal: </label>
+                    <select id="ejercicio" class="form-control">
+                        @foreach (var e in ejercicio)
+                        {
+                            <option value="@e.IdEjercicio">@e.Anio</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="empresa">
+                <div class="form-group">
+                    <label>Empresa: </label>
+                    <select id="empresa" class="form-control">
+                        <option value="0">Seleccione una Empresa </option>
+                        @foreach (var em in empresas)
+                        {
+                            <option value="@em.IdEmpresa">@em.IdEmpresa - @em.RazonSocial</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="empresa">
+                <div class="form-group">
+                    <label>Cliente: </label>
+                    <select id="clientes" class="form-control">
+                        <option value="0">Seleccione una empresa</option>
+                        @*@foreach (var cli in clientes)
+                            {
+                                <option  value="@cli.IdSucursal">@cli.Cliente - @cli.Sucursal</option>
+                            }*@
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row  ">
+
+
+        <div class="col-md-2">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label title="Fecha de Certificación o Timbrado">Fecha Timbrado Inicio: </label>
+                    <input type="date" class="form-control " title="Fecha de Certificación o Timbrado" id="fechaInicioEjercicio" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label title="Fecha de Certificación o Timbrado">a Fecha Fin: </label>
+                    <input type="date" class="form-control" title="Fecha de Certificación o Timbrado" id="fechaFinEjercicio" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Por periodo del cliente: <span id="bdPeriodo" class="badge badge-danger">0</span> </label>
+                <select id="selPeriodos" class="form-control">
+                    <option value="0">Seleccione un cliente</option>
+                    @*@foreach (var cli in clientes)
+                        {
+                            <option  value="@cli.IdSucursal">@cli.Cliente - @cli.Sucursal</option>
+                        }*@
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="col-md-2">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>Vigentes</label>
+                <a class="btn btn-primary form-control" id="descargarTimbrados"><i class="fa fa-file-excel-o " aria-hidden="true"></i> Reporte Timbrados</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>Cancelados</label>
+                <a class="btn btn-primary form-control" id="descargarCancelados"><i class="fa fa-file-excel-o " aria-hidden="true"></i> Reporte Cancelados</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-2">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>Vigentes</label>
+                <a class="btn btn-danger form-control" title="Obtiene solo archivos xml vigentes no cancelados" id="descargarArchivos"><i class="fa fa-download " aria-hidden="true"></i> Archivos - XML</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>Vigentes</label>
+                <a class="btn btn-danger form-control" title="Obtiene archivos xml y pdf vigentes no cancelados " id="descargarArchivosCfdi"><i class="fa fa-download " aria-hidden="true"></i> Archivos - XML y PDF</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>Vigentes</label>
+                <a class="btn btn-success form-control" title="Muestra el contenido del xml timbrados vigentes en hojas de excel " id="visorXmlExcel"><i class="fa fa-download " aria-hidden="true"></i> Xml en formato Excel</a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#descargarTimbrados").click(function () {
+
+            var ejercicio = $('#ejercicio').val();
+            var empresa = $('#empresa').val();
+            var cliente = $('#clientes').val();
+            var fechaInicioEjercicio = $("#fechaInicioEjercicio").val();
+            var fechaFinEjercicio = $("#fechaFinEjercicio").val();
+            var periodoB = $('#selPeriodos').val();
+
+            if (EmpresaSelect(empresa)) {
+                var xhr = $.ajax({
+                    url: '/ReporteTimbrados/GenReporteTimbrados/',
+                    method: "POST",
+                    data: {
+                        idEjercicio: ejercicio,
+                        dateInicial: fechaInicioEjercicio,
+                        dateFinal: fechaFinEjercicio,
+                        idEmpresa: empresa,
+                        idCliente: cliente,
+                        idPeriodoB: periodoB
+                    },
+                    beforeSend: function (xhr) {
+                        waitingDialog
+                            .show('Generando Reporte de Timbrados... <i class="fa fa-cog fa-spin fa-2x "></i>');
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#downAcumlado").attr("href", data.resultPath);
+                            window.location = data.resultPath;
+                        } else {
+                            utils.showMessage("WAR", data.error, 8000);
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.error);
+                    },
+                    complete: function (data) {
+                        waitingDialog.hide();
+
+                    }
+                }); //fin ajax
+            }
+
+        });
+
+
+        $("#descargarCancelados").click(function () {
+
+
+            var ejercicio = $('#ejercicio').val();
+            var empresa = $('#empresa').val();
+            var cliente = $('#clientes').val();
+            var fechaInicioEjercicio = $("#fechaInicioEjercicio").val();
+            var fechaFinEjercicio = $("#fechaFinEjercicio").val();
+            var periodoB = $('#selPeriodos').val();
+
+            if (EmpresaSelect(empresa)) {
+                var xhr = $.ajax({
+                    url: '/ReporteTimbrados/GenReporteCanceladoss/',
+                    method: "POST",
+                    data: {
+                        idEjercicio: ejercicio,
+                        dateInicial: fechaInicioEjercicio,
+                        dateFinal: fechaFinEjercicio,
+                        idEmpresa: empresa,
+                        idCliente: cliente,
+                        idPeriodoB: periodoB
+                    },
+                    beforeSend: function (xhr) {
+                        waitingDialog.show('Generando Reporte de Cancelados... <i class="fa fa-cog fa-spin fa-2x "></i>');
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#downAcumlado").attr("href", data.resultPath);
+                            window.location = data.resultPath;
+                        } else {
+                            utils.showMessage("WAR", data.error, 8000);
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.error);
+                    },
+                    complete: function (data) {
+                        waitingDialog.hide();
+
+                    }
+                });
+            }
+
+        });
+
+        //solo xml
+        $("#descargarArchivos").click(function () {
+            //Funcion para descargar los xml
+            //Variables
+            var ejercicio = $('#ejercicio').val();
+            var empresa = $('#empresa').val();
+            var cliente = $('#clientes').val();
+            var fechaInicioEjercicio = $("#fechaInicioEjercicio").val();
+            var fechaFinEjercicio = $("#fechaFinEjercicio").val();
+            var periodoB = $('#selPeriodos').val();
+            //-->
+            if (EmpresaSelect(empresa)) {
+                var xhr = $.ajax({
+                    url: '/ReporteTimbrados/DownloadRecibos/',
+                    method: "POST",
+                    data: {
+                        idEjercicio: ejercicio,
+                        dateInicial: fechaInicioEjercicio,
+                        dateFinal: fechaFinEjercicio,
+                        idEmpresa: empresa,
+                        idCliente: cliente,
+                        incluirPdf: false,
+                        idPeriodoB: periodoB
+                    },
+                    beforeSend: function (xhr) {
+                        waitingDialog.show('Generando Reporte de archivos XML... <i class="fa fa-cog fa-spin fa-2x "></i>');
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#downAcumlado").attr("href", data.resultPath);
+
+                            if (data.resultPath !== "") {
+                                window.location = data.resultPath;
+                            } else {
+                                utils.showMessage("WAR", "No se encontrarón registros", 8000);
+                            }
+
+                        } else {
+                            utils.showMessage("WAR", data.error, 8000);
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.error);
+                    },
+                    complete: function (data) {
+                        waitingDialog.hide();
+
+                    }
+                });
+            }
+
+
+        });
+
+        //xml y pdf
+        $("#descargarArchivosCfdi").click(function () {
+            //Funcion para descargar los xml
+            //Variables
+            var ejercicio = $('#ejercicio').val();
+            var empresa = $('#empresa').val();
+            var cliente = $('#clientes').val();
+            var fechaInicioEjercicio = $("#fechaInicioEjercicio").val();
+            var fechaFinEjercicio = $("#fechaFinEjercicio").val();
+            var periodoB = $('#selPeriodos').val();
+            //-->
+            if (EmpresaSelect(empresa)) {
+                var xhr = $.ajax({
+                    url: '/ReporteTimbrados/DownloadRecibos/',
+                    method: "POST",
+                    data: {
+                        idEjercicio: ejercicio,
+                        dateInicial: fechaInicioEjercicio,
+                        dateFinal: fechaFinEjercicio,
+                        idEmpresa: empresa,
+                        idCliente: cliente,
+                        incluirPdf: true,
+                        idPeriodoB: periodoB
+                    },
+                    beforeSend: function (xhr) {
+                        waitingDialog.show('Generando Reporte de archivos XML y PDF... <i class="fa fa-cog fa-spin fa-2x "></i>');
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#downAcumlado").attr("href", data.resultPath);
+
+                            if (data.resultPath !== "") {
+                                window.location = data.resultPath;
+                            }
+                            else {
+                                utils.showMessage("WAR", "No se encontrarón registros", 8000);
+                            }
+
+                        } else {
+                            utils.showMessage("WAR", data.error, 8000);
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.error);
+                    },
+                    complete: function (data) {
+                        // waitingDialog.hide();
+                        setTimeout(function () { waitingDialog.hide(); }, 2000);
+                    }
+                });
+            }
+
+
+        });
+
+        //Visor XML en Excel
+        $("#visorXmlExcel").click(function () {
+            //Funcion para descargar los xml
+            //Variables
+            var ejercicio = $('#ejercicio').val();
+            var empresa = $('#empresa').val();
+            var cliente = $('#clientes').val();
+            var fechaInicioEjercicio = $("#fechaInicioEjercicio").val();
+            var fechaFinEjercicio = $("#fechaFinEjercicio").val();
+
+            var periodoB = $('#selPeriodos').val();
+
+
+            //-->
+            if (EmpresaSelect(empresa)) {
+                var xhr = $.ajax({
+                    url: '/ReporteTimbrados/GetVisorXmlExcel/',
+                    method: "POST",
+                    data: {
+                        idEjercicio: ejercicio,
+                        dateInicial: fechaInicioEjercicio,
+                        dateFinal: fechaFinEjercicio,
+                        idEmpresa: empresa,
+                        idCliente: cliente,
+                        incluirPdf: true,
+                        idPeriodoB: periodoB
+                    },
+                    beforeSend: function (xhr) {
+                        waitingDialog.show('Generando Archivos XML en Excel... <i class="fa fa-cog fa-spin fa-2x "></i>');
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#downAcumlado").attr("href", data.resultPath);
+                            window.location = data.resultPath;
+                        } else {
+                            utils.showMessage("WAR", data.error, 8000);
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.error);
+                    },
+                    complete: function (data) {
+                        waitingDialog.hide();
+                        // setTimeout(function () { waitingDialog.hide(); }, 8000);
+                    }
+                });
+            }
+
+
+        });
+
+
+        $('#empresa').on('change',
+            function () {
+                GetClienteSucusal(this.value);
+                ResetPeriodos();
+            });
+
+        $('#clientes').on('change',
+           function () {
+               GetPeriodosSucursal();
+           });
+
+
+        $('#ejercicio').on('change',
+             function () {
+                 GetPeriodosSucursal();
+             });
+
+
+
+
+    });
+
+
+    function GetClienteSucusal(id) {
+
+        $.ajax({
+            url: "/ReporteTimbrados/GetClienteSucursal",
+            method: "POST",
+            data: {
+                idEmpresa: id
+            },
+            beforeSend: function () { }
+        }).done(function (data) {
+
+            $.each(data, function (index, v) {
+
+            });//fin each
+
+
+            var html = $.map(data, function (dd) {
+                return '<option value="' + dd.IdSucursal + '">' + dd.IdSucursal + ' - ' + dd.Nombre + ' - ' + dd.Ciudad + '</option>';
+            }).join('');
+
+            $('#clientes').html(html);
+
+
+        });
+
+    }
+
+    function GetPeriodosSucursal() {
+
+        var ejercicio = $('#ejercicio').val();
+        var cliente = $('#clientes').val();
+        var emisor = $('#empresa').val();
+
+        $.ajax({
+            url: "/ReporteTimbrados/GetPeriodosBySucursal",
+            method: "POST",
+            data: {
+                id: cliente,
+                idEjercicio: ejercicio,
+                idEmisor: emisor
+            },
+            beforeSend: function () { }
+        }).done(function (data) {
+
+            $.each(data, function (index, v) {
+            });//fin each
+
+
+
+            $('#bdPeriodo').text(data.length - 1);
+
+            var html = $.map(data, function (dd) {
+                return '<option value="' + dd.Item1 + '">' + dd.Item1 + ' - ' + dd.Item2 + '</option>';
+            }).join('');
+
+            $('#selPeriodos').html(html);
+
+
+        });
+    }
+
+    function ResetPeriodos() {
+
+
+        var html = '<option value="0"> Seleccione un cliente </option>';
+
+
+        $('#selPeriodos').html(html);
+
+
+    }
+
+    function EmpresaSelect(id) {
+
+        if (id > 0) {
+            return true;
+        } else {
+            utils.showMessage("WAR", "Debe seleccionar una empresa", 4000);
+            $('#empresa').focus();
+            return false;
+        }
+    }
+</script>

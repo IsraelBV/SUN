@@ -1,0 +1,56 @@
+﻿@using Common.Helpers
+@using Common.Enums
+@using RH.BLL;
+@model  RH.Entidades.Departamento
+
+@{
+
+
+    SucursalDatos sucursal;
+    sucursal = Session["Sucursal"] as SucursalDatos;
+}
+
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+
+
+@if (Model == null)
+{
+
+    Response.Redirect("~/Departamentos/index");
+}
+else
+{
+
+ 
+        @Html.HiddenFor(x => x.IdDepartamento)
+        <input type="hidden" id="sucursal" name="sucursal" value="@sucursal.IdSucursal" />
+        <div class="panel panel-default">
+            
+            <div class="panel-body">
+                <div class="form-horizontal ">
+
+                    @*Primer Row*@
+        
+                            <input type="hidden" id="id" value="@Model.IdDepartamento" name="id" />
+                
+
+                    @*Segundo Row*@
+                    <div class="row">
+                        
+                            <label class="col-md-4 col-xs-4 dep">Departamento</label>
+                        
+                        <div class="form-group col-md-8 col-xs-4" id="descripcion">
+                            <input type="text" name="Descripcion" class="form-control" value="@Model.Descripcion" id="Descripcion" data-rule-lettersonly="true" data-rule-required="true" data-rule-minlength="3" data-rule-maxlength="25" autofocus>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    
+}
+
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>
