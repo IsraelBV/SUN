@@ -1,0 +1,318 @@
+﻿@using RH.BLL;
+@using RH.Entidades;
+@using Common.Enums;
+@using Common.Helpers;
+@model Empleado_Contrato
+@{
+    string date_format = "yyyy-MM-dd";
+    List<RegistroDatos> Empresas = ViewBag.Empresas;
+    List<C_Esquema> esquemas = ViewBag.Esquemas;
+    List<DepartamentoDatos> deptos = ViewBag.Departamentos;
+    List<PuestosDatos> puestos = ViewBag.Puestos;
+    List<C_TipoContrato_SAT> contratos = ViewBag.Contratos;
+    List<C_PeriodicidadPago_SAT> ppagos = ViewBag.Periodicidades;
+    List<C_TipoJornada_SAT> tiposJornada = ViewBag.TiposJornada;
+    List<C_Metodos_Pago> metodosPago = ViewBag.MetodosPago;
+    List<SelectListItem> TipoRegimen = ViewBag.TipoRegimen;
+    var listaEstados = ViewBag.EstadoLista;
+}
+
+
+<link href="~/Content/bootstrap-select.css" rel="stylesheet" type="text/css"/>
+<style>
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        background-color: #2C3E50 !important;
+        color: white;
+    }
+
+    .nav-tabs {
+        border-bottom: 4px solid #2C3E50;
+    }
+
+</style>
+
+@using (Ajax.BeginForm("CreateContrato", "Empleados", new AjaxOptions { OnSuccess = "OnSuccessContrato", OnFailure = "OnFailure", OnBegin = "OnBegin" }, new { @class = "form-horizontal tooltipForm", id = "form-contrato" }))
+
+{
+    <div class="col-md-12">
+        <div class="form-group">
+            <h6 class="col-md-12">Los campos marcados con (<span style="color:red;">*</span>) son requeridos.</h6>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="form-group">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#">Fechas - Contrato</a></li>
+            </ul>
+        </div>
+
+    <div class="form-group">
+                <!--Fecha de Alta -->
+                <label for="FechaAlta" class="col-md-2"><span style="color: #ff0000">*</span> Fecha Alta:</label>
+                <div class="col-md-2 input-group-sm">
+                    <input type="date" name="FechaAlta" class="form-control" id="FechaAlta" value="@DateTime.Today.ToString(date_format)" data-rule-required="true" data-rule-date="true" />
+                </div>
+                <!--Fecha Alta IMSS -->
+                <label for="FechaIMSS" class="col-md-2">Fecha IMSS:</label>
+                <div class="col-md-2 input-group-sm">
+                    <input type="date" name="FechaIMSS" class="form-control" id="FechaIMSS" data-rule-date="true" />
+                </div>
+                <!--Fecha Real -->
+                <label for="FechaReal" class="col-md-2"><span style="color: #ff0000">*</span> Fecha Real:</label>
+                <div class="col-md-2 input-group-sm">
+                    <input type="date" name="FechaReal" class="form-control" id="FechaReal" value="@DateTime.Today.ToString(date_format)" data-rule-date="true" data-rule-required="true" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="TipoContrato" class="col-md-2"><span style="color: #ff0000">*</span> Tipo Contrato:</label>
+                <div class="col-md-2 input-group-sm">
+                    <select class="form-control" name="TipoContrato" id="TipoContrato" data-rule-required="true">
+                        @if (contratos.Count > 0)
+                {
+                    foreach (var row in contratos)
+                    {
+                <option value="@row.IdTipoContrato">@row.Clave - @row.Descripcion</option>
+                    }
+                }
+                else
+                {
+                <option value="">Por favor agregar contratos al catalogo</option>
+                }
+                    </select>
+                </div>
+                <label for="DiasContrato" class="col-md-2">Días del Contrato:</label>
+                <div class="col-md-2 input-group-sm">
+                    <input type="number" name="DiasContrato" id="DiasContrato" class="form-control" />
+                </div>
+
+                <label for="Vigencia" class="col-md-2">Vigencia Contrato:</label>
+                <div class="col-md-2 input-group-sm">
+                    <input type="date" name="Vigencia" class="form-control" id="Vigencia"/>
+                    @*data-rule-date="true"*@
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="IdPuesto" class="col-md-2"><span style="color: #ff0000">*</span> Puesto:</label>
+                <div class="col-md-2 input-group-sm">
+                    <select class="form-control" name="IdPuesto" id="IdPuesto" data-rule-required="true">
+                        @if (deptos.Count > 0)
+                {
+                    foreach (var row in deptos)
+                    {
+                        var puesto = puestos.Where(s => s.Departamento == row.Descripcion).ToList();
+                <optgroup label="@row.Descripcion">
+                    @foreach (var item in puesto)
+                            {
+                            <option value="@item.IdPuesto">@item.Descripcion</option>
+                            }
+                </optgroup>
+                    }
+                }
+                else
+                {
+                <option value="">Por favor agrega departamentos en la configuración de la empresa</option>
+                }
+                    </select>
+                </div>
+
+                <label for="Turno" class="col-md-2"><span style="color: #ff0000">*</span> Turno:</label>
+                <div class="col-md-2 input-group-sm">
+                    @HtmlLocalHelper.ComboBoxForEnum(typeof (Turnos), "Turno", "", "")
+                </div>
+
+
+                <label class="col-md-2"><span style="color: #ff0000">*</span> Entidad de Servicio:</label>
+                <div class="col-md-2 input-group-sm">
+                    @HtmlLocalHelper.ComboBox(listaEstados, "EntidadDeServicio", htmlAttributes: new Dictionary<string, object> {})
+                </div>
+            </div>
+
+        <div class="form-group">
+            <label for="UMF" class="col-md-2">U.M.F.</label>
+            <div class="col-md-2 input-group-sm">
+                <input type="text" name="UMF" class="form-control" data-rule-digit="true" data-rule-maxlength="3" data-rule-minlength="3"/>
+            </div>
+
+            <label for="PeriodicidadPago" class="col-md-2"><span style="color: #ff0000">*</span> Periodicidad Pago:</label>
+            <div class="col-md-2 input-group-sm">
+                <select name="IdPeriodicidadPago" id="IdPeriodicidadPago" class="form-control" data-rule-required="true">
+                    @foreach (var ppago in ppagos)
+                    {
+                        <option value="@ppago.IdPeriodicidadPago">@ppago.Descripcion</option>
+                    }
+                </select>
+            </div>
+
+            <label for="FormaPago" class="col-md-2"><span style="color: #ff0000">*</span> Forma de Pago:</label>
+            <div class="col-md-2 input-group-sm">
+                <select name="FormaPago" id="FormaPago" class="form-control input-sm" data-rule-required="true">
+                    @foreach (var item in metodosPago)
+                    {
+                        <option value="@item.IdMetodo">@item.Descripcion</option>
+                    }
+                </select>
+            </div>            
+        </div>
+        <div class="form-group">
+            <label for="DiaDescanso" class="col-md-2"><span style="color: #ff0000">*</span> Día de Descanso:</label>
+            <div class="col-md-2 input-group-sm">
+                @HtmlLocalHelper.ComboBoxForEnum(typeof(DiasSemana), "DiaDescanso", "", "")
+            </div>
+        </div>
+
+            <div class="form-group">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#">Sueldos y Salarios</a></li>
+                </ul>
+            </div>
+            <div class="form-group">
+                <label for="SD" class="col-md-1"><span style="color: #ff0000">*</span> SD:</label>
+                <div class="col-md-2 input-group-sm">
+                    <input type="number" class="form-control" name="SD" id="SD" step="any" data-rule-required="true" />
+                </div>
+                <label for="SDI" class="col-md-1"><span style="color: #ff0000">*</span> SDI:</label>
+                <div class="col-md-2 input-group-sm">
+                    <input type="number" class="form-control" name="SDI" id="SDI" step="any" data-rule-required="true" />
+                </div>
+                <label for="SBC" class="col-md-1"><span style="color: #ff0000" title="Salario Base de Cotización">*</span> SBC:</label>
+                <div class="col-md-2 input-group-sm">
+                    <input type="number" class="form-control" name="SBC" id="SBC" step="any" data-rule-required="true" />
+                </div>
+                <label for="SalarioReal" class="col-md-1"><span style="color: #ff0000">*</span> SReal:</label>
+                <div class="col-md-2 input-group-sm">
+                    <input type="number" class="form-control" name="SalarioReal" id="SalarioReal" step="any" data-rule-required="true" />
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#">Jornada</a></li>
+                </ul>
+            </div>
+            <div class="form-group">
+                <label for="IdTipoJornada" class="col-md-2"><span style="color: #ff0000">*</span> Tipo Jornada:</label>
+                <div class="col-md-2 input-group-sm">
+                    <select class="form-control input-sm" name="IdTipoJornada" id="IdTipoJornada" data-rule-required="true">
+                        @foreach (var item in tiposJornada)
+                        {
+                            <option value="@item.IdTipoJornada">@item.Descripcion</option>
+                        }
+                    </select>
+                </div>
+
+                <label class="col-md-2"><span style="color: #ff0000">*</span> Tipo Régimen:</label>
+                <div class="col-md-2 input-group-sm">
+                    @HtmlLocalHelper.ComboBox(TipoRegimen, "IdTipoRegimen", null)
+                </div>
+
+                <label for="TipoSalario" class="col-md-2"><span style="color: #ff0000">*</span> Tipo Salario:</label>
+                <div class="col-md-2 input-group-sm">
+                    @HtmlLocalHelper.ComboBoxForEnum(typeof(TipoSalario), "TipoSalario", "", "")
+                </div>
+          
+            </div>
+
+
+
+            <div class="form-group">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#">Empresas</a></li>
+                </ul>
+            </div>
+            <div class="form-group">
+                <label for="IdEmpresaFiscal" class="col-md-2">Empresa Fiscal:</label>
+                <div class="col-md-4 input-group-sm">
+                    <select name="IdEmpresaFiscal" id="IdEmpresaFiscal" class="form-control ">
+                        <option value="">Seleccione una empresa</option>
+                        @foreach (var item in Empresas.Where(x => x.IdEsquema == 1))
+                {
+                            <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                        }
+                    </select>
+                </div>
+                <label for="IdEmpresaComplemento" class="col-md-2">Emp. Complemento:</label>
+                <div class="col-md-4 input-group-sm">
+                    <select name="IdEmpresaComplemento" id="IdEmpresaComplemento" class="form-control">
+                        <option value="">Seleccione una empresa</option>
+                        @foreach (var item in Empresas.Where(x => x.IdEsquema == 2))
+                {
+                            <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <!--Empresa Sindicato - empresa Asimilado-->
+            <div class="form-group">
+                <label for="IdEmpresaSindicato" class="col-md-2">Empresa Sindicato:</label>
+                <div class="col-md-4 input-group-sm">
+                    <select name="IdEmpresaSindicato" id="IdEmpresaSindicato" class="form-control">
+                        <option value="">Seleccione una empresa</option>
+                        @foreach (var item in Empresas.Where(x => x.IdEsquema == 3))
+                {
+                            <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                        }
+                    </select>
+                </div>
+
+                <label for="IdEmpresaAsimilado" class="col-md-2">Empresa Asimilado:</label>
+                <div class="col-md-4 input-group-sm">
+                    <select name="IdEmpresaAsimilado" id="IdEmpresaAsimilado" class="form-control">
+                        <option value="">Seleccione una empresa</option>
+                        @foreach (var item in Empresas.Where(x => x.IdEsquema == 4))
+                {
+                            <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                        }
+                    </select>
+                </div>
+
+
+
+            </div>
+
+
+            <!-- Sindicalizado -->
+            <div class="form-group">
+                <label class="col-md-2">Sindicalizado</label>
+                <div class="col-md-2">
+                    <input class="checkbox" type="checkbox" id="Sindicalizado" value="true" name="Sindicalizado">
+                </div>
+            </div>
+        </div>
+    <div class="col-md-12">
+
+        <!--Empresas -->
+              
+
+
+            </div>
+
+            <!-- Factor de Integración -->
+            <input type="hidden" value="@ViewBag.Factor" id="factor" class="factor" />
+            }
+
+            <script src="~/Scripts/bootstrap-select.min.js"></script>
+            <script src="~/Scripts/Empleados/Contrato.js"></script>
+            <script>
+                $("#form-contrato").submit(function () {
+                    var empresas = $("#empresas").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "/Empleados/ConfigurarEmpresas",
+                        data: {
+                            IdEmpleado: 0,
+                            Empresas: empresas
+                        }
+                    });
+                });
+
+                $('.panel-body').css({ height: $(window).innerHeight()-215 });
+                $(window).resize(function () { $('.panel-body').css({ height: $(window).innerHeight() -215 }); });
+            </script>

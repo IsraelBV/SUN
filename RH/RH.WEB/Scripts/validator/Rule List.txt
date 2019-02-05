@@ -1,0 +1,65 @@
+Rule List:
+
+If you want to know exactly what the validators are available and what they do look at the code for the validators in core or browse the additional validators.
+
+Here is a list of them that I compiled by looking at the source on GitHub. I marked them with what part of the framework they're from, and whether or not I tested them:
+
+(Tested, core)
+
+data-rule-required="true"
+data-rule-email="true"
+(Untested, core, but should work)
+
+data-rule-url="true"
+data-rule-date="true"
+data-rule-dateISO="true"
+data-rule-number="true"
+data-rule-digits="true"
+data-rule-creditcard="true"
+data-rule-minlength="6"
+data-rule-maxlength="24"
+data-rule-rangelength="5,10"
+data-rule-min="5"
+data-rule-max="10"
+data-rule-range="5,10"
+data-rule-equalto="#password"
+data-rule-remote="custom-validatation-endpoint.aspx"
+(Untested, additional, but should work)
+
+data-rule-accept=""
+data-rule-bankaccountNL="true"
+data-rule-bankorgiroaccountNL="true"
+data-rule-bic=""
+data-rule-cifES=""
+data-rule-creditcardtypes=""
+data-rule-currency=""
+data-rule-dateITA=""
+data-rule-dateNL=""
+data-rule-extension=""
+data-rule-giroaccountNL=""
+data-rule-iban=""
+data-rule-integer="true"
+data-rule-ipv4="true"
+data-rule-ipv6="true"
+data-rule-mobileNL=""
+data-rule-mobileUK=""
+data-rule-lettersonly="true"
+data-rule-nieES=""
+data-rule-nifES=""
+data-rule-nowhitespace="true"
+data-rule-pattern=""
+data-rule-phoneNL="true"
+data-rule-phoneUK="true"
+data-rule-phoneUS="true"
+data-rule-phonesUK="true"
+data-rule-postalcodeNL="true"
+data-rule-postcodeUK="true"
+data-rule-require_from_group=""
+data-rule-skip_or_fill_minimum=""
+data-rule-strippedminlength=""
+data-rule-time=""
+data-rule-time12h=""
+data-rule-url2=""
+data-rule-vinUS=""
+data-rule-zipcodeUS="true"
+data-rule-ziprange=""

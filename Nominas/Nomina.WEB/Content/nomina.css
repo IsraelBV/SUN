@@ -1,0 +1,43 @@
+﻿
+.form-horizontal .form-group {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.checkbox-form-group {
+    position:relative;
+    top: 25px;
+}
+
+.hide {
+    display: none;
+}
+
+.glyphicon-warning-sign {
+    color: #EF7274;
+}
+
+.panel.panel-nomina {
+    border: none;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    box-shadow:none;
+    position: absolute;
+    
+}
+
+.panel-nomina>.panel-heading {
+    background-color: #762a34;
+    color: #fff;
+    border-radius: 0;
+}
+
+table>tbody>tr>td>input {
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    text-align: right !important;
+}
+
+table>tbody>tr>td>input:focus {
+    border-color: #762a34 !important;
+}

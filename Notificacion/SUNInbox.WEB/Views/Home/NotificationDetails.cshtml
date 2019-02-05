@@ -1,0 +1,81 @@
+﻿@model Notificacion.BLL.NotificacionDatos
+@using Common.Helpers
+@using SYA.BLL
+@{ 
+    var currentUser = ControlAcceso.GetUsuarioEnSession();
+}
+<div class="header">
+    <div class="header-content">
+        <div class="remitent-info">
+            <img class="remitent-img" src="~/Images/defaultUser.png" />
+            <div class="remitent-info-text">
+                <p class="notification-date">@Model.Fecha.ToString("dddd dd/MM/yyyy hh:mm tt")</p>
+                <h4 class="remitent-name">@Model.Usuario</h4>
+                <p class="notification-title">
+                    <span class="notification-type">@Model.TipoDescripcion</span> - <span class="notification-name">@Model.Titulo</span>
+                </p>
+                <p class="hidden notification-client">@Model.Cliente</p>
+            </div>
+        </div>
+        <div class="action-panel">
+            @{ 
+                var iconStatus = Model.Status == 3 ? "glyphicon-folder-open" : "glyphicon-folder-close";
+                var title = Model.Status == 3 ? "Desarchivar Notificación" : "Archivar Notificación";
+                }
+            <button class="btn-transparent btnArchiveNotification" data-status="@Model.Status" data-id-notificacion="@Model.IdNotificacion" data-toggle="tooltip" data-placement="bottom" title="@title">
+                <span class="glyphicon @iconStatus"></span>
+            </button>
+            <button class="btn-transparent btnPrintNotification" data-toggle="tooltip" data-placement="bottom" title="Imprimir Notificación">
+                <span class="glyphicon glyphicon-print"></span>
+            </button>
+            @{ 
+                var iconFavorite = Model.Favorita ? "glyphicon-star" : "glyphicon-star-empty";
+                var fav = Model.Favorita ? 1 : 0;
+                title = Model.Favorita ? "Eliminar de Favoritas" : "Agregar a Favoritas";
+            }
+            <button class="btn-transparent btnFavoriteNotification" data-id-notificacion="@Model.IdNotificacion" data-favorita="@fav" data-toggle="tooltip" data-placement="bottom" title="@title">
+                <span class="glyphicon @iconFavorite"></span>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="body">
+    <div class="body-list">
+        @Html.Raw(Model.Contenido)
+    </div>
+    <div class="comments-section">
+        <div class="comment-list">
+            @foreach(var comentario in Model.Comentarios)
+            {
+                var userClass = comentario.IdUsuario == currentUser.IdUsuario ? "currentUser" : "otherUser";
+                <div class="comment @userClass" data-id-comentario="@comentario.IdComentario">
+                    <div class="comment-image">
+                        <img src="@comentario.ProfPic" />
+                    </div>
+                    <div class="comment-content">
+                        <div class="comment-title">
+                            <h4>@comentario.Usuario</h4>
+                            <p class="break-word">@NotificationHelpers.getFechaDeNotificacion(comentario.Fecha)</p>
+                        </div>
+                        <div class="comment-body">
+                            <p>@comentario.Comentario</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="new-comment">
+            @using (Ajax.BeginForm("AddComment", "Home", new AjaxOptions { OnSuccess = "OnSuccessCommenting", OnFailure = "OnFailureCommenting", OnBegin = "OnBeginCommenting" }, new { @class = "frmAddComment" }))
+            {
+                <input type="hidden" name="IdNotificacion" value="@Model.IdNotificacion" />
+                <div class="text-area">
+                    <textarea rows="2" class="form-control" id="comment-input" placeholder="Escribe un mensaje..." required name="Comentario"></textarea>
+                </div>
+                <div class="secondary-area">
+                    <p class="counter-area"><span class="counter">0</span>/120</p>
+                    <button type="submit" class="btn btn-transparent btn-send">ENVIAR</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+﻿#section2, #section3, #btnGuardar, #loadingImg {
+    display: none;
+}
+
+#loadingImg {
+    padding-top: 200px;
+}
+
+.active-section {
+    color: #ffffff;
+    background-color: #22405d;
+}
+
+.completed-section {
+    color: #ffffff;
+    background-color: #325d88;
+}
+
+.inactive-section {
+    color: #ffffff;
+    background-color: #696969;
+    cursor:not-allowed;
+}
+
+.section {
+    height: 480px;
+}
+
+.panel-body{
+     overflow-y: scroll !important;
+    height:500px;
+}
+
+#navButtons{
+    float:right;
+}
+
+#btnContinuar{
+    margin-left:5px;
+}
+

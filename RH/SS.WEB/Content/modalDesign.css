@@ -1,0 +1,203 @@
+﻿body {
+}
+
+.modal-dialog{
+    width:50%;
+    min-width:650px;
+}
+
+/*.modal-body{
+    padding:30px;
+}*/
+
+#folio, #tipo, #clase, #fechaInicio, #dias, #fechaFin, #observaciones{
+    width:80%;
+}
+
+.form-control:focus{
+  border-color: #3B6782;
+}
+
+.subh2{
+    font-size:27px;
+    color:#3B79AB;
+}
+
+.detail{
+    min-width:550px;
+}
+
+#Observaciones, #IdEmpleado, #Folio, #FechaInicio, #FechaFin, #Dias{
+    float:left;
+    width:85%;
+    height:30px;
+    margin-top:6px;
+}
+
+#Clase, #Tipo{
+    width:85%;
+}
+
+.detInc{
+    height:200px;
+}
+
+
+
+
+/*Estilos títulos generales: Título - Botones de encabezado - Separador*/
+#titulo{
+    width:100%;
+    padding:0;
+}
+
+#titulo h2{
+    position:absolute;
+    float:left;
+    margin-top:45px;
+    margin-bottom:10px;
+}
+
+#titulo a{
+    position:relative;
+    float:left;
+    margin-top:40px;
+}
+
+hr{
+    width:100%;
+    position:relative;
+    top:10px;
+    border:1px solid #255480;
+    margin-top:0px;
+
+}
+
+.modal-body{
+    margin-top:4%;
+    margin-bottom:4%;
+    padding:0;
+}
+
+.modal-footer{
+    margin-top:3%;
+}
+
+
+
+
+
+
+
+
+/*Incidencias rows*/
+.r1{
+    margin-left:10px;
+    margin-right:10px;
+}
+
+.r2{
+    margin-left:10px;
+    margin-right:10px;
+}
+
+.r3{
+    margin-left:10px;
+    margin-right:10px;
+}
+
+._typeP{
+    margin-top:6px;
+}
+
+
+
+
+
+
+/*Titulo Puestos*/
+.subh3{
+    font-size:31px;
+    color:#3B79AB;
+}
+
+@media all and (max-width: 1024px) {
+    .modal-dialog {
+       width:90%;
+    }
+}
+
+/*Detalles de incapacidad*/
+#_obs{
+    margin-top:15px;
+}
+
+#f_ini{
+    margin-top:33px;
+}
+
+#f_fin{
+    margin-top:20px;
+}
+
+#_dias{
+    margin-top:20px;
+}
+
+#_id{
+    margin-top:15px;
+}
+
+#_folio{
+    margin-top:15px;
+}
+
+#_tipo{
+    margin-top:15px;
+}
+
+#_clase{
+    margin-top:15px;
+}
+
+
+
+
+
+
+/*Campos Incapacidades Edit*/
+._typeI{
+    margin-top:6px;
+}
+
+._classI{
+    margin-top:6px;
+}
+
+
+
+
+
+
+
+/*Plantillas Nueva*/
+.pModal{
+    padding:25px;
+    margin-top:0px;
+}
+
+.file{
+    width:100%;
+}
+
+.pType{
+    width:125%;
+}
+
+.pClient{
+    width:100%;
+}
+/*termina plantillas*/
+
+
+

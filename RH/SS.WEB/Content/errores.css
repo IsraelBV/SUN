@@ -1,0 +1,14 @@
+﻿hr{
+    position:relative;
+    top:80px;
+}
+
+/*Acceso Denegado*/
+#foto{
+    margin-top:100px;
+}
+
+#_error{
+    font-size:18px;
+    margin-top:270px;
+}

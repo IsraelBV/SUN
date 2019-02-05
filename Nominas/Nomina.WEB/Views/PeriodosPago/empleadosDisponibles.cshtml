@@ -1,0 +1,176 @@
+﻿
+
+@using Nomina.BLL
+@using RH.Entidades
+@model List<EmpleadoNomina>
+@{
+
+
+    var idPeriodo = ViewBag.idPeriodo;
+    var idTipoNomina = ViewBag.idTipoNomina;
+}
+<table id="empleadosPeriPartial" class="display compact" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Paterno</th>
+            <th>Materno</th>
+            <th>Nombre(s)</th>
+            <th>RFC</th>
+
+
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>ID</th>
+            <th>Paterno</th>
+            <th>Materno</th>
+            <th>Nombre(s)</th>
+            <th>RFC</th>
+
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            if (a.Status == false)
+            {
+                <tr style="color:red;" data-idempleado="@a.idempleado" data-idperiodopago="@idPeriodo">
+                    <td>@a.idempleado</td>
+                    <td>@a.Paterno</td>
+                    <td>@a.Materno</td>
+                    <td>@a.Nombres</td>
+                    <td>@a.RFC</td>
+                </tr>
+            }
+            else
+            {
+                <tr data-idempleado="@a.idempleado" data-idperiodopago="@idPeriodo">
+                    <td>@a.idempleado</td>
+                    <td>@a.Paterno</td>
+                    <td>@a.Materno</td>
+                    <td>@a.Nombres</td>
+                    <td>@a.RFC</td>
+                </tr>
+            }
+
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+
+        var tableDetalle = $('#empleadosPeriPartial').DataTable({
+            dom: 'Bfrtip',
+            "language": {
+                "url": "../scripts/datatables-spanish.json",
+                "select": {
+                    "rows": {
+                        _: "%d registros seleccionados",
+                        0: "Ningun Registro Seleccionado",
+                        1: "%d registro seleccionado"
+                    }
+                }
+
+            },
+
+            "paging": false,
+            "scrollY": "200px",
+            "select": {
+                style: 'multi'
+            }, "buttons": [
+                  {
+                      className: 'seleccionarall',
+                      text: 'Seleccionar: Todos',
+                      action: function () {
+                          tableDetalle.rows().select();
+                      }, key: {
+
+                          key: 'a',
+
+                      }
+                  },
+              {
+                  className: 'seleccionarcero',
+                  text: 'Seleccionar: Ninguno',
+                  action: function () {
+                      tableDetalle.rows().deselect();
+                  },
+                  key: {
+                      key: 'd',
+
+                  }
+              },
+            {
+                className: 'agregarRegistro',
+                text: 'Agregar',
+                action: function () {
+                    arrayE = [];
+                    var selected = $("#empleadosPeriPartial").find(".selected");
+                    selected.each(function () {
+                        var id = parseInt($(this).data("idempleado"));
+                        arrayE.push(id);
+                    });
+                    var IdPeriodo = selected.data("idperiodopago");
+
+                    if(@idTipoNomina == 11) {
+
+                        if (arrayE.length > 1) {
+                            utils.showMessage("Error",
+                                "¡El periodo es Finiquito y no se puede elejir mas de un colaborador!",
+                                2000,
+                                "error");
+                        } else {
+                            0
+                            var request = $.ajax({
+                                url: "/PeriodosPago/agregarEmpleadosPeriodo/",
+                                method: "POST",
+                                data: {
+                                    arrayE: arrayE,
+                                    idPeriodo: IdPeriodo
+                                }
+                            });
+                            request.done(function(data) {
+                                $("#empleadosDetalles")
+                                    .load("/PeriodosPago/empleadosDisponibles/?idPeriodo=" +
+                                        IdPeriodo +
+                                        "&idtiponomina=11");
+                            });
+                        }
+                    } else {
+
+                        if (arrayE.length > 0) {
+
+                            var request1 = $.ajax({
+                                url: "/PeriodosPago/agregarEmpleadosPeriodo/",
+                                method: "POST",
+                                data: {
+                                    arrayE: arrayE,
+                                    idPeriodo: IdPeriodo
+                                }
+                            });
+
+                            request1.done(function(data) {
+                                $("#empleadosDetalles").load("/PeriodosPago/empleadosDisponibles/?idPeriodo=" +
+                                    IdPeriodo +
+                                    "&idtiponomina=" +
+                                    @idTipoNomina);
+                            });
+
+                        }
+
+                    }
+
+                },
+                key: {
+                    key: 'd',
+
+                }
+            }]
+        });
+    });
+
+
+</script>

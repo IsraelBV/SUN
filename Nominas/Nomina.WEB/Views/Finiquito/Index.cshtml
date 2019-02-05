@@ -1,0 +1,11 @@
+﻿
+
+@if ((int)Session["activarComplemento"] == 1)
+{
+    Html.RenderAction("FiniquitoComplemento", "Finiquito");
+}
+else
+{
+    Html.RenderAction("FiniquitoComplemento", "Finiquito");
+    //Html.RenderAction("FiniquitoFiscal", "Finiquito");
+}

@@ -1,0 +1,266 @@
+﻿@using Common.Helpers
+@using RH.Entidades
+@model RH.Entidades.Empresa
+
+@{
+    ViewBag.Title = "Nueva Empresa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var slRp = ViewBag.SelectListRP as List<Empresa>;
+    var slDepto = ViewBag.SelectListDepto as List<Departamento>;
+}
+<link href="~/Content/bootstrap-multiselect.css" rel="stylesheet" />
+<style>
+    .panel-heading {
+        background-color: #337ab7 !important;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "formulario" }))
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading text-right ">
+            <input type="submit" id="idGuardar" class="btn btn-primary input-group-sm" value="Guardar"/> <a class="btn btn-danger" href="~/Empresas/Index">Cancelar</a>
+        </div>
+        <div class="panel-body">
+            <div class="form-vertical">
+                <div class="row">
+                    <label class="control-label col-md-4 ">Nombre Empresa: </label>
+                    <div class="form-group has-feedback col-md-4 ">
+                        @Html.EditorFor(model => model.RazonSocial, new {htmlAttributes = new {@class = "form-control"}})
+                        <span class="glyphicon form-control-feedback  " id="Nombre1"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <br/>
+                </div>
+                @*segundo row*@
+                <div class="row">
+                    <label class="control-label col-md-2 col-xs-4">Registro Patronal: </label>
+                    <div class="form-group has-feedback col-md-4 col-xs-8">
+                        <select id="itemsRP" name="itemsRP" multiple="multiple">
+
+                            @if (slRp != null)
+                            {
+                                foreach (var item in slRp)
+                                {
+                                    <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                                }
+                            }
+
+                        </select>
+                        <span id="itemsRP1-e" class="elp-block" style="display: none; color:#d9534f ">*</span>
+                        <span class="glyphicon form-control-feedback  " id="itemsRP1"></span>
+                    </div>
+                </div>
+
+                @*Tercer row*@
+                <div class="row">
+                    <label class="control-label col-md-2 col-xs-4"> Departamentos: </label>
+                    <div class="form-group has-feedback col-md-4 col-xs-8">
+                        <select id="itemsDP" name="itemsDP" multiple="multiple" class="required">
+                            @if (slDepto != null)
+                            {
+                                foreach (var item in slDepto)
+                                {
+                                    @*<option value="@item.IdDepartamento" selected="selected">@item.Descripcion</option>*@
+                                    <option value="@item.IdDepartamento" >@item.Descripcion</option>
+                                }
+                            }
+                        </select>
+                        <span id="itemsDP1-e" class="elp-block" style="display: none; color:#d9534f ">*</span>
+                        <span class="glyphicon form-control-feedback  " id="itemsDP1"></span>
+                    </div>
+                </div>
+
+                @*Cuarto row*@
+                <div class="row">
+                    <div class="control-label col-md-2 col-xs-2">
+                        <label>Activo : @Html.CheckBoxFor(model => model.Status, new {@checked = "checked"}) </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .input-xs {
+        height: 22px;
+        padding: 5px 5px;
+        font-size: 12px;
+        line-height: 1.5;
+        border-radius: 3px;
+    }
+
+    .selectedItem {
+        color: #004661;
+        font-size: 16px;
+        font-weight: bolder;
+    }
+</style>
+
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/bootstrap-multiselect.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        var orderCount = 0;
+        $('#itemsRP').multiselect({
+            includeSelectAllOption: true, 
+            buttonClass: 'btn btn-primary btn-md ',
+            buttonWidth: '97%',
+            selectAllText: 'Todos los Registros Patronales',
+            nSelectedText: ' - Registros seleccionados!',
+            nonSelectedText: 'Ningún Registro seleccionado',
+            allSelectedText: 'Todos los Registros seleccionados',
+            disableIfEmpty: true,
+            numberDisplayed: 3,
+            delimiterText: ' - ',
+            selectedClass: 'multiselect-selected',
+            maxHeight: 350,
+            onChange: function (option, checked, select) {
+                
+               ValidarRegistros();
+               
+            },
+            onDropdownHidden: function (event) {
+                //  $('#idGuardar').trigger('click');
+                $("#Nombre").focus();
+                $("#Nombre").blur();
+            }
+
+        });
+
+        $('#itemsDP').multiselect({
+            includeSelectAllOption: true,
+            buttonClass: 'btn btn-primary',
+            buttonWidth: '97%',
+            selectAllText: 'Todos los Departamentos',
+            nSelectedText: ' - Departamentos seleccionados!',
+            nonSelectedText: 'Ningún departamento seleccionado',
+            allSelectedText: 'Todos los Departamentos seleccionados',
+            disableIfEmpty: true,
+            delimiterText: ' - ',
+            numberDisplayed: 4,
+            maxHeight: 300,
+            onChange: function (option, checked, select) {
+
+                ValidarDepartamentos();
+
+            },
+            onDropdownHidden: function (event) {
+                //    $('#idGuardar').trigger('click');
+                $("#Nombre").focus();
+                $("#Nombre").blur();
+            }
+        });
+
+    });
+
+
+ 
+
+
+    $("#formulario").validate({
+
+        rules: {
+            Nombre: {
+                required: true,//Con esto se espifica que el campo no puede quedar vacio
+                minlength: 3,//que la palabra tiene que ser mayor a 2 caracteres
+                maxlength: 50,
+                RegPat: true,
+                RegDep:true
+            },
+            itemsRP: {
+                required: true
+            },
+            itemsDP: {
+                required: true
+            }
+        },
+        messages: {
+            Nombre: {
+                required: "1) Escriba el nombre de la empresa"
+            }
+
+        },
+
+        highlight: function (element) {
+           
+            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            $(element).next('.glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            ValidarRegistros(element);
+            ValidarDepartamentos(element);
+        },
+        unhighlight: function (element) {
+      
+            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+            $(element).next('.glyphicon').removeClass("glyphicon-remove").addClass("glyphicon-ok");
+
+        },
+        errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function (error, element) {
+            if (element.length) {
+                error.insertAfter(element);
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+
+
+    $.validator.addMethod("RegPat", ValidarRegistros, "2) Seleccione los RP para esta empresa");
+    $.validator.addMethod("RegDep", ValidarDepartamentos, "3) Seleccione los Departamentos");
+
+    //Metodo para validar que se haya selecciona los registros patronales
+    function ValidarRegistros(e)
+    {
+
+        var rPseleccionados = $('#itemsRP').val();
+
+        if (rPseleccionados === null) {
+            $('#itemsRP').next('.btn-group').children(":button").removeClass('btn-success').addClass('btn-danger');
+           // $('#itemsRP').nextAll("#itemsRP1-e").css("display", "block");
+            $('#itemsRP').nextAll("#itemsRP1-e").show();
+            return false;
+
+        } else {
+            $('#itemsRP').next('.btn-group').children(":button").removeClass('btn-danger').addClass('btn-success');
+            //$('#itemsRP').nextAll("#itemsRP1-e").css("display", "none");
+            $('#itemsRP').nextAll("#itemsRP1-e").hide();
+            return true;
+        }
+
+    }
+
+
+    //Metodo que valida que se seleccione los departamentos
+    function ValidarDepartamentos(e) {
+
+        var dPseleccionados = $('#itemsDP').val();
+
+        if (dPseleccionados === null) {
+      
+            $('#itemsDP').next('.btn-group').children(":button").removeClass('btn-success').addClass('btn-danger');
+            //$('#itemsDP').nextAll("#itemsDP1-e").css("display", "block");
+            $('#itemsDP').nextAll("#itemsDP1-e").show();
+            return false;
+
+        } else {
+    
+            $('#itemsDP').next('.btn-group').children(":button").removeClass('btn-danger').addClass('btn-success');
+            //$('#itemsDP').nextAll("#itemsDP1-e").css("display", "none");
+            $('#itemsDP').nextAll("#itemsDP1-e").hide();
+            return true;
+        }
+
+    }
+
+</script>
+

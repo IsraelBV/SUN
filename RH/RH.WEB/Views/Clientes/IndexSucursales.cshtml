@@ -1,0 +1,232 @@
+﻿@using RH.BLL
+@using RH.Entidades
+@using Common.Helpers;
+@using Common.Enums;
+@using SYA.BLL;
+@model IEnumerable<RH.BLL.SucursalCliente>
+
+@{
+    var empresa = ViewBag.Empresa as Cliente;
+    ViewBag.Title = "Sucursales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+
+
+@* este div es el que dibuja el contenedor principal *@
+<div class="panel with-nav-tabs panel-primary" id="panelEmpleados">
+    @* este div es el que le crea el encabezado del contenedor *@
+    <div class="panel-heading clearfix text-center">
+        @* la clase pull te ayuda a alinear a los elementos dentro de el *@
+        <div class="pull-left">
+            <h4 class="panel-title">Sucursales del Cliente @empresa.Nombre</h4>
+        </div>
+        <div class="pull-right">
+            @* ul es el que hace el marcado o llamado de una lista *@
+            <ul class="nav nav-tabs">
+                @* li son los elementos de cada lista *@
+                <li>
+                    <a class="btn btn-primary newSuc hovernuevo" href="/Clientes/CrearSucursalVP?idCliente=@empresa.IdCliente" data-ajax-update="#divContenido" data-ajax-mode="replace" data-ajax="true" data-toggle="modal" data-target="#ventanaModal" data-tooltip="tooltip" data-placement="left" title="Permite crear una Sucursal">
+                    <i class="fa fa-plus"></i> Crear Sucursal
+                    </a>
+                </li>
+                <li>
+                    <a class="btn btn-danger newEmp hovercancelado" href="~/Clientes/Index" data-tooltip="tooltip" data-placement="left" title="Te regresa al Menú de Clientes">
+                        <i class="fa fa-undo"></i> Regresar
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    @* el body es el que crea el cuerpo del contenedor *@
+    <div class="panel-body" id="panBody">
+        <div class="tab-content">
+            <div class="table table-responsive">
+                <table id="sucursales" class="table table-condensed sucursales table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre de la  Sucursal</th>
+                            <th>@Html.DisplayNameFor(model => model.Estado)</th>
+                            <th>Zona Salario</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+            {
+
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.IdSucursal)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Ciudad)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ZonaSalario)  -  @item.ValorZonaSalario</td>
+                                <td class="text-center">
+                                    @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHClientes, AccionCrud.Consultar, SessionHelpers.GetIdUsuario()))
+                {
+                                        <a href="/Clientes/DetalleSucursalVP?idSucursal=@item.IdSucursal" 
+                                           class="btn btn-primary btn-sm detailSuc" 
+                                           data-ajax-update="#divContenido" 
+                                           data-ajax-mode="replace" 
+                                           data-ajax="true" 
+                                           data-toggle="modal" 
+                                           data-target="#ventanaModal"  
+                                           data-tooltip="tooltip" 
+                                           data-placement="left" 
+                                           title="Permite visualizar los detalles de la Sucursal @item.Ciudad">
+                                           <i class="fa fa-info-circle fa-lg"></i>
+                                        </a>
+                                    }
+                                    @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHClientes, AccionCrud.Editar, SessionHelpers.GetIdUsuario()))
+                {
+                                        <a href="/Clientes/EditarSucursalVP?idSucursal=@item.IdSucursal" 
+                                           class="btn btn-default btn-sm editSuc" 
+                                           data-ajax-update="#divContenido" 
+                                           data-ajax-mode="replace" 
+                                           data-ajax="true" 
+                                           data-toggle="modal" 
+                                           data-target="#ventanaModal">
+                                                <i class="glyphicon glyphicon-pencil"  
+                                                   data-tooltip="tooltip" 
+                                                   data-placement="left" 
+                                                   title="Permite editar los datos de la Sucursal @item.Ciudad">
+                                                </i>
+                                        </a>
+                }
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+ 
+</div>
+
+
+
+
+
+
+
+
+
+    <!-- Modal -->
+    <div id="ventanaModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Sucursal</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="divContenido">
+                        <p>Cargando ...</p>
+                        <img src="~/Images/loading.gif" alt="" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.js"></script>
+<script>
+    $('table.sucursales').DataTable({
+
+        "bLengthChange": false,
+        "lengthMenu": [[7], [7]],
+        "scrollY": "440px",
+        "scrollCollapse": true,
+        "paging": false,
+        "language": {
+            "sInfoFiltered": "(filtrado de un total de _MAX_ x)",
+            "sInfo": "Del _START_ al _END_ de un total de _TOTAL_ Sucursales",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sLoadingRecords": "Cargando...",
+            "sLengthMenu": "Mostrar _MENU_ Sucursales",
+            "sSearch": "Buscar:",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            }
+        }
+    });
+</script>
+<script>
+    $('table.display').DataTable({
+     
+        "bLengthChange": false,
+        "lengthMenu": [[7], [7]],
+        "scrollY": "440px",
+        "scrollCollapse": true,
+        "paging": false,
+        "language": {
+            "sInfoFiltered": "(filtrado de un total de _MAX_ Registros Patronales)",
+            "sInfo": "Del _START_ al _END_ de un total de _TOTAL_ Registros Patronales",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sLoadingRecords": "Cargando...",
+            "sLengthMenu": "Mostrar _MENU_ Registros patronales",
+            "sSearch": "Buscar:",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            }
+        }
+    });
+</script>
+
+<script>
+    $('table.display').DataTable({
+
+        "bLengthChange": false,
+        "lengthMenu": [[7], [7]],
+        "scrollY": "440px",
+        "scrollCollapse": true,
+        "paging": false,
+        "language": {
+            "sInfoFiltered": "(filtrado de un total de _MAX_ Registros Patronales)",
+            "sInfo": "Del _START_ al _END_ de un total de _TOTAL_ Registros Patronales",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sLoadingRecords": "Cargando...",
+            "sLengthMenu": "Mostrar _MENU_ Registros patronales",
+            "sSearch": "Buscar:",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            }
+        }
+    });
+    $('[data-tooltip="tooltip"]').tooltip();
+</script>
+
+    <script>
+
+        $("#ventanaModal").on('hidden.bs.modal', function (e) {
+            $('.modal-content').html("  <div id=\"divContenido\"> <img alt=\"\" src=\"/Images/loading.gif\"> <p>Cargando ...</p> </div>  ");
+        });
+
+    </script>
+
+
+

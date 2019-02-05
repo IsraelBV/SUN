@@ -1,0 +1,182 @@
+﻿ how to create sidebar dropdown with bootstrap
+
+Let’s start creating left sidebar menu with boostrap 3. Initial preparation:
+1. Make sure you have downloaded the boostrap 3 framework here
+
+Bootstrap is the most popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web.
+Bootstrap is a framework for building responsive web design. Which means that the web interface created by bootstrapping will adjust the screen size of the browser we use both in desktop, tablet or mobile device. This feature can be enabled or disabled according to our own desires. By bootstrapping we also can build dynamic or static web.
+
+2. Download the font awesome css to beautify the appearance of the icon here
+
+Font Awesome gives you scalable vector icons that can instantly be customized — size, color, drop shadow, and anything that can be done with the power of CSS “font awesome”.
+Font awesome is a font web formed several icons for web interface, commonly used for Bootstrap, there are more than 100+ icons in Font awesome and will increase each its release.
+
+3. Download Jquery-1.11.2.min.js here
+
+4. Simple sidebar menu original file from startbootstrap.com. I just change some css file from simple sidebar menu from startbootstrap.com and add new javascript
+
+Create css file as simple-sidebar.css and enter the following code
+
+
+ /* Toggle Styles */
+ 
+ #wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    overflow: hidden;
+    
+}
+ 
+#wrapper.toggled {
+    padding-left: 250px;
+    overflow: scroll;
+}
+ 
+#sidebar-wrapper {
+    z-index: 1000;
+    position: absolute; 
+    left: 250px;
+    width: 0;
+    height: 100%;
+    margin-left: -250px;
+    overflow-y: auto;
+    background-color: #762a34;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    	
+}
+#wrapper.toggled #sidebar-wrapper {
+    width: 250px;
+}
+ 
+#page-content-wrapper {
+    position: absolute;
+    padding: 15px;
+    width: 100%;  
+    overflow-x: hidden; 
+}
+.xyz{
+    min-width: 360px;
+}
+#wrapper.toggled #page-content-wrapper {
+    position: relative;
+    margin-right: 0px; 
+}
+.fixed-brand{
+    width: auto;
+}
+/* Sidebar Styles */
+ 
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-top: 2px;
+    font-size: 13px;
+    font-family: "Roboto",sans-serif;
+    
+}
+ 
+.sidebar-nav li {
+    text-indent: 15px;
+    line-height: 40px;
+    padding-right: 10px;
+    color:white;
+}
+ 
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: white;
+}
+ 
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+    border-left: white 5px solid;
+}
+ 
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+}
+ 
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+}
+ 
+.sidebar-nav > .sidebar-brand a {
+    color: #999999;
+}
+ 
+.sidebar-nav > .sidebar-brand a:hover {
+    color: #fff;
+    background: none;
+}
+.no-margin{
+    margin:0;
+}
+ 
+@media(min-width:768px) {
+    #wrapper {
+        padding-left: 250px;
+    }
+    .fixed-brand{
+        width: 250px;
+    }
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+ 
+    #sidebar-wrapper {
+        width: 250px;
+    }
+ 
+    #wrapper.toggled #sidebar-wrapper {
+        width: 250px;
+    }
+    #wrapper.toggled-2 #sidebar-wrapper {
+        width: 50px;
+    }
+    #wrapper.toggled-2 #sidebar-wrapper:hover {
+        width: 250px;
+    }
+ 
+ 
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+ 
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+        padding-left: 250px;
+    }
+    #wrapper.toggled-2 #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+        margin-left: -200px;
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+        width: auto;
+ 
+    }
+}

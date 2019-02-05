@@ -1,0 +1,116 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@model List<ClaveCliente>
+
+@{ 
+    int count = 1;
+}
+
+<table class="display clienteClave striped compact" id="clienteClave" width="100%">
+    <thead>
+        <tr>
+            <td></td>            
+            <td>Cliente</td>
+            <td>Clave</td>            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr >
+                <td id="idCliente" data-idcliente="@c.IdCliente">@count</td>
+                <td>@c.Nombre</td>
+                <td>
+                <div id="cuadroClave">
+                    @if (c.Clave == "" || c.Clave == null)
+                        {
+                            <label id="Clave" class="Clave">...</label>
+                        }
+                        else
+                        {
+                            <label id="Clave" class="Clave">@c.Clave</label>
+                        }
+               </div>
+                </td>
+            </tr>
+            count++;
+        }
+
+    </tbody>
+</table>
+
+<script>
+    var onTable = $('table.clienteClave').DataTable({
+        //dom: 'Bfrtip',
+        "scrollY": "450px",
+        "scrollCollapse": true,
+        "paging": false,
+        "searching": true,
+        "bInfo": false
+    });
+
+    $(".Clave").click(function (f) {
+
+        $("#prueba").find(':input[type=text]').each(function () {
+            $(this).next('#Clave').css("display", "block");
+            $(this).remove();
+
+        });
+        var textoactual = $(this).text();
+        if (textoactual == '...') {
+            var input = "<input type='text'id='p' maxlength='20' class='input-group-sm' value =''/>"//agregamos el el cuadro de texto
+        } else {
+            var input = "<input type='text'id='p' maxlength='20'  class='input-group-sm' value ='" + textoactual + "'/>"//agregamos el el cuadro de texto
+        }
+        //  $(this).empty();
+        $(this).css("display", "none");//oculta el label
+        $(this).parent("#cuadroClave").prepend(input);
+        document.getElementById("p").focus();
+      
+        var inp = $("#p")//obtenemos el selector
+        inp.keydown(function (e) {//evento
+            var code = e.keyCode;//obtenemos el codigo del enter
+            if (code == 13) {
+                var textonuevo = $(this).val();
+                if (textonuevo == '') {//si el texto esta vacio le inserta "..."
+                    textonuevo = '...';
+                }
+                $(this).next("#Clave").text(textonuevo)
+                $(this).next('#Clave').css("display", "block");
+                // $("#00").css("display", "block");
+
+                var empresa = $('select[id=empresa2]').val();
+                var id = parseInt($(this).parent("#cuadroClave").parent().parent().find("#idCliente").data("idcliente"));
+                
+                var request = $.ajax({
+                    url: "/Contabilidad/EditarClaveCliente/",
+                    method: "POST",
+                    data: {
+                        IdCliente: id,
+                        ClaveCliente: textonuevo,
+                        IdEmpresa: empresa
+                    },
+                    dataType: "json",
+                    beforesend: function () {
+                        waitingDialog.show("Guardando Registro...........");
+                    }
+                });
+                request.done(function (resultado) {
+                    waitingDialog.hide();
+                    if (resultado == true) {
+                        notification = utils.showMessage("Guardando Datos", "¡Datos guardados exitosamente!", 1000, "");
+                    } else {
+                        notification = utils.showMessage("Error al guardar datos", "¡Se ingreso un valor no valido o se excedio la longitud!", 1000, "danger");
+                    }
+
+                })
+
+                $(this).remove();//quitamos el cuadro
+            } else if (code == 9 || code == 27) {
+                $(this).next("#Clave").text(textoactual)
+                $(this).next('#Clave').css("display", "block");
+                $(this).remove();//quitamos el cuadro
+            }
+        });
+    });
+</script>

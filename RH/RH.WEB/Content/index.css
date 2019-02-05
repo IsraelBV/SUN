@@ -1,0 +1,308 @@
+﻿body {
+}
+
+#recientes {
+    padding-bottom: 5%;
+    margin-bottom: 2%;
+}
+
+hr {
+    margin-top: 0px;
+    border: 0.5px solid;
+}
+
+.cajaRecientes {
+    text-align: center;
+     padding: 2% 2% 2% 1%;
+    /*padding: 4% 2% 4% 1%;*/
+    /*margin-right: 3%;*/
+    transition-property: background;
+    transition-duration: .3s;
+    transition-timing-function: linear;
+}
+
+#caja1 {
+    background-color: #265581;
+    color: white;
+    border: 1px solid #FFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#caja1:hover {
+    color: white;
+    background-color: #212121;
+}
+
+#caja2 {
+    background-color: #3982C5;
+    color: white;
+    border: 1px solid #FFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#caja2:hover {
+    color: white;
+    background-color: #212121;
+}
+
+#caja3 {
+    background-color: #3982C5;
+    color: white;
+    border: 1px solid #FFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#caja3:hover {
+    color: white;
+    background-color: #212121;
+}
+
+#caja4 {
+    background-color: #3982C5;
+    color: white;
+    border: 1px solid #FFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#caja4:hover {
+    color: white;
+    background-color: #212121;
+}
+
+#caja5 {
+    background-color: #3982C5;
+    color: white;
+    border: 1px solid #FFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#caja5:hover {
+    color: white;
+    background-color: #212121;
+}
+
+.cajaRecientes h4{
+    margin-bottom: 0;
+}
+
+.cajaRecientes small {
+    font-size: 65%;
+    margin-bottom: 0;
+}
+
+#recientes{
+    /*width:1250px;*/
+    background-color:#FFF;
+    padding:0px;
+}
+
+#notificaciones {
+    background-color: white;
+    padding-bottom: 2%;
+    margin-bottom: 5%;
+    color: black;
+    border: 1px solid;
+    border-color:#425261;
+    border-radius:5px;
+    border-style:dashed;
+    position:relative;
+}
+
+.notificacionDiv {
+    position: relative;
+    top: 8px;
+}
+.notificacionIcono {
+    padding: 5% 50% 5% 50%;
+}
+
+#listaClientes {
+    margin-top: 1%;
+}
+
+.cajaLista {
+    background-color: #425261;
+}
+
+.cajaLista h1 {
+    text-align: center;
+    color: white;
+}
+
+.contenidoLista h4 {
+    max-width: 100% !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.contenidoLista p{
+    font-size: 13px;
+    color: #757575 ;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.elementoLista {
+    margin-bottom: 1%;
+    border: 1px solid;
+    border-color:#265581;
+    border-radius:5px;
+    color:black;
+    min-width:310px;
+    transition-property: background;
+    transition-duration: .5s;
+    transition-timing-function: linear;
+    margin-left:5px;
+    /*box-shadow: 2px 3px 10px black;*/
+}
+.elementoLista:hover {
+    background-color: #425261;
+    color: white;
+}
+
+.form-control,.input-group-addon{
+    border: 1px solid #425261;
+}
+
+.form-control:focus{
+    border: 2px solid #425261;
+    color: #000;
+}
+
+.input-group-sm{
+    /*33.33666667%*/
+    width:43.5%;
+    right:30%;
+
+}
+
+
+img{
+    width:250px;
+    margin-left:2%;
+}
+
+
+
+
+/*Iconos de notificacion*/
+#alta{
+    color:#2B6533;
+    font-size:35px;
+}
+
+#baja{
+    color:#A61111;
+    font-size:35px;
+}
+
+#imss{
+    color:#CB8A30;
+    font-size:35px;
+}
+
+#vac{
+    color:#696969;
+    font-size:35px;
+}
+
+#incap{
+    color:#0963C3;
+    font-size:35px;
+}
+
+#presta{
+    color:#96D275;
+    font-size:35px;
+}
+
+#inci{
+    color:#D2BD39;
+    font-size:35px;
+}
+
+#perm{
+    color:#41A4D2;
+    font-size:35px;
+}
+
+#bank{
+    color:#D0A37C;
+    font-size:35px;
+}
+
+#depa{
+    color:#411000;
+    font-size:35px;
+}
+
+/*Notificaciones*/
+.alta{
+    
+}
+
+.baja{
+   margin-top:10px;
+}
+
+.imss{
+    margin-top:10px;
+}
+
+.vac{
+    margin-top:10px;
+}
+
+.incap{
+    margin-top:10px;
+}
+
+.presta{
+    margin-top:10px;
+}
+
+.inci{
+    margin-top:10px;
+}
+
+.perm{
+    margin-top:10px;
+}
+
+.bank{
+   margin-top:10px;
+}
+
+.depa{
+    margin-top:10px;
+}
+
+/**/
+.col-md-9 hr{
+    width:78%;
+    float:left;
+}
+
+#clientes hr{
+    width:85%;
+}
+@media screen and (max-width: 768px) {
+    #notificaciones {
+        display: none;
+    }
+}

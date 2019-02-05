@@ -1,0 +1,102 @@
+﻿@using Common.Helpers
+@using Common.Enums
+@using RH.BLL;
+@model List<RH.BLL.DatosEmpleado>
+@{
+    ViewBag.Title = "Empleados";
+    var usuario = SessionHelpers.GetIdUsuario();
+    var classColorText = "";
+}
+<style>
+    .badge-danger {
+        background-color: gray;
+    }
+
+    .badge-active {
+        background-color: forestgreen;
+    }
+
+  .TextColorInactive {
+      color: gray
+  }
+
+</style>
+
+<link type="text/css" rel="stylesheet" href="~/Content/datatables.min.css" />
+
+<h2>Empleados</h2>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Clave</th>
+            <th title="Id Contrato">Contrato</th>
+            <th>Nombre</th>
+            <th>Empresa</th>
+            <th>Registro Patronal</th>
+            <th>Cliente</th>
+            <th>Infonavit</th>
+            <th title="Ver Detalle"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in Model)
+        {
+            <tr>
+                <td>@row.IdEmpleado</td>
+
+                @if (row.Status)
+                {
+                    classColorText = "";
+                    <td title="Contrato activo"><span class='badge badge-active'>@row.IdContrato</span></td>
+                }
+                else
+                {
+                    classColorText = "TextColorInactive";
+                    <td title="Contrato baja"><span class='badge badge-danger'>@row.IdContrato</span></td>
+                }
+
+                <td class="@classColorText">@row.Nombres @row.Paterno @row.Materno</td>
+                <td class="text-left @classColorText" title="@row.EmpresaFiscal">@row.Empresa</td>
+                <td class="@classColorText">@row.RegistroPatronal</td>
+                <td class="@classColorText">@row.Cliente</td>
+                @if (row.Infonavit)
+                {
+
+                    <td title="Este contrato tiene crédito infonavit" ><i class="fa fa-home fa-2x" style="color:crimson"> <span hidden>0</span></i></td>
+                }
+                else
+                {
+                    <td></td>
+                }
+                <td>
+                    @*@if(ControlAcceso.ValidarEjecutarAccion(Modulos.SSEmpleados, AccionCrud.Consultar, usuario))
+                        {*@
+                    <a title="Clic para ver informacion del empleado" href="@Url.Action("Details","Empleados", new { id = @row.IdEmpleado, idContrato =@row.IdContrato })" > <span class="fa fa-info-circle fa-2x classColorText"></span> </a>
+                    @*//}*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="~/scripts/DataTables/datatables.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+
+        var table = $("table").DataTable({
+            scrollY: '57vh',
+            "language": { "url": "../scripts/DataTables/DataTables-Spanish.json" },
+
+            keys: {
+                columns: ":not(:last-child)"
+            },
+            "aoColumnDefs": [
+                { "bSortable": false, "aTargets": [6] },
+                { "bSearchable": false, "aTargets": [6] }
+            ]
+        });
+    });
+</script>

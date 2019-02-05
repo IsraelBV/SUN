@@ -1,0 +1,364 @@
+﻿@model  RH.BLL.DatosEmpleadoPermiso
+@using RH.BLL
+@using Common.Enums
+@{ 
+    string Descanso = "0";
+    if (Model.descanso1 == null)
+    {
+        Descanso = "0";
+    } else {
+        Descanso = Convert.ToString(Model.descanso1);
+    }
+    DiasSemana DiasSemana = (DiasSemana)Enum.Parse(typeof(DiasSemana), Descanso);
+}
+
+<script src="~/Scripts/Permisos/Permisos.js"></script>
+<script src="~/Scripts/bootstrap-notify.js"></script>
+<link href="~/Content/animate.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+<div class="tooltipForm">
+    <input type="hidden" value="@Model.IdEmpleado" id="IdEmpleado" name="IdEmpleado" />
+
+    <div class="form-horizontal">
+        <div class="col-md-6 col-xs-12">
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>Permiso por Horas </label>
+                </div>
+
+                <div class="col-md-8">
+                    <input type="checkbox" autofocus onclick="check()" name="XHoras" id="XHoras" value="1" />
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>Día de Descanso</label>
+                </div>
+
+                <div class="col-md-8">
+                    <label>@DiasSemana</label>
+                    <input type="hidden" id="descanso" class="descanso1 " value="@Model.descanso1" />
+                </div>
+            </div>
+
+
+            <div id="diastomados">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label><span style="color:red">*</span> Días a Tomar</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input id="Dias" name="Dias" type="number" class="form-control input-sm" data-rule-required="true" />
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="horastomadas">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label><span style="color:red">*</span> Horas a Tomar</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input id="Horas" name="Horas" type="number" class="form-control input-sm" data-rule-required="true" data-rule-max="6" data-rule-min="1" />
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label style="display:none; color:red" id="mensajeerror2" class="col-md-4">Incorrecto</label>
+                <label style="display:none; color:red" id="mensajeerror" class="col-md-8">No se puede tomar mas de de 6hrs</label>
+
+            </div>
+
+
+        </div>
+
+        <div class="col-md-6 col-xs-12">
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>Con Goce de Sueldo </label>
+                </div>
+
+                <div class="col-md-8">
+                    <input type="checkbox" name="XGoce" id="XGoce" value="1" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>Fecha Inicial</label>
+                </div>
+
+                <div class="col-md-8">
+                    <input id="FechaInicio" type="date" name="FechaInicio" class="form-control input-sm" data-rule-required="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>Fecha Final</label>
+                </div>
+
+                <div class="col-md-8">
+                    <input id="FechaFin" type="date" name="FechaFin" class="form-control input-sm" data-rule-required="true" disabled>
+                    
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label>Fecha a Presentarse </label>
+                </div>
+
+                <div class="col-md-8">
+                    <input id="Presentarse" type="date" name="Presentarse" class="form-control input-sm" data-rule-required="true" disabled>
+                    
+                </div>
+            </div>
+            <div class="form-group">
+
+                <label class="col-md-4"><span style="color:red">*</span> Observaciones </label>
+
+
+                <div class="col-md-8">
+                    <textarea id="Observaciones" name="Observaciones" rows="3" class="form-control " data-rule-required="true"></textarea>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>      
+<div class="clearfix"></div>
+<input id="FechaFin2" type="date" name="FechaFin" style="visibility:hidden">
+<input id="Presentarse2" type="date" name="Presentarse" style="visibility:hidden">
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>
+@*<script src="~/Scripts/Permisos/Permisos.js"></script>*@
+
+
+<script>
+    var date = new Date();
+
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
+
+    var today = year + "-" + month + "-" + day;
+    $("#FechaInicio").attr("value", today);
+
+    var $FechaInicio = $("#FechaInicio");
+    var $FechaFinal = $("#FechaFin");
+    var $FechaFinal2 = $("#FechaFin2");
+    var $Presentarse = $("#Presentarse");
+    var $Presentarse2 = $("#Presentarse2");
+    var $dias = $("#Dias");
+    var $horas = $("#Horas");
+    var $descanso1 = $("#descanso1");
+    var goce  = $("#XGoce")
+    var gocheche = goce.checked;
+    $("#horastomadas").hide("fast");
+   
+   
+   
+    $FechaInicio.change(function () {
+        if ($dias.val() != "") {
+            calcFechas();
+        }
+
+        if ($horas.val() != "") {
+            calcFechasHora();
+            
+        }
+    });
+
+    $("#Dias").keyup(function () {
+        if ($FechaInicio.val() != "") {
+            calcFechas();
+        }
+    });
+    $("#Horas").keyup(function () {
+        if ($FechaInicio.val() != "") {
+            calcFechasHora();
+        }
+    });
+
+
+    function calcFechas() {
+        if ($FechaInicio != "") {
+            var fechatrim = $FechaInicio.val().split("-");
+            var date = new Date(fechatrim[1] + "-" + fechatrim[2] + "-" + fechatrim[0]);
+            var dias = $dias.val();
+
+            var descanso1 = document.getElementById("descanso").value;
+            i = 0;
+
+
+
+            while (i < dias) {
+                date.setDate(date.getDate() + 1);
+                if (date.getDay() == descanso1) {
+                    date.setDate(date.getDate() + 1);
+                }
+                i++;
+            }
+
+            var dd = date.setDate(date.getDate() - 1);
+            var MM = date.getMonth() + 1;
+            var yyyy = date.getFullYear();
+
+
+            if (date.getDay(dd) == descanso1) {
+
+
+                var dd = date.getDate() - 1;
+            } else {
+                var dd = date.getDate()
+            }
+            dd = dd < 10 ? '0' + dd : dd;
+            MM = MM < 10 ? '0' + MM : MM;
+
+            $FechaFinal.val(yyyy + "-" + MM + "-" + dd);
+            $FechaFinal2.val(yyyy + "-" + MM + "-" + dd);
+
+            i = false;
+
+            while (i == false) {
+
+                date.setDate(date.getDate() + 1);
+                if (date.getDay() == descanso1) {
+                    i = false;
+                } else {
+                    i = true;
+                }
+
+            }
+
+
+            var dd = date.getDate();
+            var MM = date.getMonth() + 1;
+            var yyyy = date.getFullYear();
+
+            dd = dd < 10 ? '0' + dd : dd;
+            MM = MM < 10 ? '0' + MM : MM;
+
+            $Presentarse.val(yyyy + "-" + MM + "-" + dd);
+            $Presentarse2.val(yyyy + "-" + MM + "-" + dd);
+
+        }
+
+    }
+
+    function calcFechasHora() {
+        var cantidad = $horas.val();
+        
+        if ((cantidad > 6)) {
+            document.getElementById("mensajeerror").style.display = "block";
+            document.getElementById("mensajeerror2").style.display = "block";
+            $("#FechaFin").val("");
+            $("#Presentarse").val("");
+        } else {
+            document.getElementById("mensajeerror").style.display = "none";
+            document.getElementById("mensajeerror2").style.display = "none";
+        }
+        if ($FechaInicio != "") {
+            var fechatrim = $FechaInicio.val().split("-");
+            var date = new Date(fechatrim[1] + "-" + fechatrim[2] + "-" + fechatrim[0]);
+            var dias = $dias.val();
+            var descanso1 = document.getElementById("descanso").value;
+
+            i = 0;
+
+           
+
+
+            var dd = date.getDate();
+            var MM = date.getMonth() + 1;
+            var yyyy = date.getFullYear();
+
+            dd = dd < 10 ? '0' + dd : dd;
+            MM = MM < 10 ? '0' + MM : MM;
+
+            $FechaFinal.val(yyyy + "-" + MM + "-" + dd);
+            $FechaFinal2.val(yyyy + "-" + MM + "-" + dd);
+
+            i = false;
+
+            while (i == false) {
+                
+                date.setDate(date.getDate() + 1);
+                if (date.getDay() == descanso1) {
+                    i = false;
+                } else {
+                    i = true;
+                }
+
+            }
+
+
+            var dd = date.getDate();
+            var MM = date.getMonth() + 1;
+            var yyyy = date.getFullYear();
+
+            dd = dd < 10 ? '0' + dd : dd;
+            MM = MM < 10 ? '0' + MM : MM;
+
+            $Presentarse.val(yyyy + "-" + MM + "-" + dd);
+            $Presentarse2.val(yyyy + "-" + MM + "-" + dd);
+        }
+    }
+
+    function check() {
+ 
+        var horas = document.getElementById("XHoras");
+        var goce = document.getElementById("XGoce");
+        if ((horas.checked == false )) {
+            var date = new Date();
+
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+
+            if (month < 10) month = "0" + month;
+            if (day < 10) day = "0" + day;
+
+            var today = year + "-" + month + "-" + day;
+            $("#FechaInicio").attr("value", today);
+
+            $("#diastomados").show("fast");
+            $("#horastomadas").hide("fast");
+            $("#Horas").val("");
+            
+            $("#FechaFin").val("");
+            $("#Presentarse").val("");
+          
+            document.getElementById("mensajeerror").style.display = "none";
+            document.getElementById("mensajeerror2").style.display = "none";
+
+        } else {
+            $("#diastomados").hide("fast");
+            $("#horastomadas").show("fast");
+            $("#Dias").val("");
+            
+            $("#FechaFin").val("");
+            $("#Presentarse").val("");
+            var date = new Date();
+
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+
+            if (month < 10) month = "0" + month;
+            if (day < 10) day = "0" + day;
+
+            var today = year + "-" + month + "-" + day;
+            $("#FechaInicio").attr("value", today);
+
+        }
+    };
+</script>

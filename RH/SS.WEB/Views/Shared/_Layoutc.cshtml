@@ -1,0 +1,149 @@
+﻿@using Common.Helpers;
+@using RH.BLL;
+@using SYA.BLL;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>@ViewBag.Title - Seguro Social</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.flatly.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+
+    <script src="~/scripts/jquery-3.1.0.min.js"></script>
+
+
+</head>
+<body>
+    @if (SessionHelpers.IsAutenticado())
+    {
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                        <i class="fa fa-sun-o fa-lg"></i> Seguro Social
+                    </a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="@Url.Action("Index", "Empleados")"><i class="fa fa-users"></i> Empleados</a></li>
+
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="False"><i class="fa fa-table" aria-hidden="true"></i> Reportes<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("Index", "Reportes")"><i class="fa fa-home" aria-hidden="true"></i> Reportes Infonavit</a></li>
+                                <li><a href="@Url.Action("Reporte3", "Reportes")"><i class="fa fa-home" aria-hidden="true"></i> Reporte 3</a></li>
+                                <li><a href="@Url.Action("AlertaGlobales", "Reportes")"><i class="fa fa-home" aria-hidden="true"></i> Alertas Globales</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="False"><i class="fa fa-cloud-download" aria-hidden="true"></i> Exportación Archivos</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("Index", "Layout")"><i class="fa fa-home" aria-hidden="true"></i> Archivos Idse</a></li>
+                                <li><a href="@Url.Action("IndexSua", "Layout")"><i class="fa fa-home" aria-hidden="true"></i> Archivos Sua</a></li>
+                            </ul>
+                        </li>
+                  
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+
+
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-user"></i> @ControlAcceso.GetUsuarioEnSession().Nombres <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@Url.Action("LogOut", "Acceso")">Cerrar Sesión</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <script src="~/scripts/jquery-2.2.3.min.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <div class="container body-content" style="padding-top: 30px;">
+            @RenderBody()
+        </div>
+    }
+
+</body>
+</html>
+<script>
+    var waitingDialog = waitingDialog || (function ($) {
+        'use strict';
+
+        // Creating modal dialog's DOM
+        var $dialog = $(
+            '<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' +
+            '<div class="modal-dialog modal-m">' +
+            '<div class="modal-content">' +
+                '<div class="modal-header"><h3 style="margin:0;"></h3><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>' +
+                '<div class="modal-body">' +
+                    '<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
+                '</div>' +
+            '</div></div></div>');
+
+        return {
+
+            show: function (message, options) {
+                // Assigning defaults
+                if (typeof options === 'undefined') {
+                    options = {};
+                }
+                if (typeof message === 'undefined') {
+                    message = 'Loading';
+                }
+                var settings = $.extend({
+                    dialogSize: 'm',
+                    progressType: '',
+                    onHide: null // This callback runs after the dialog was hidden
+                }, options);
+
+                // Configuring dialog
+                $dialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
+                $dialog.find('.progress-bar').attr('class', 'progress-bar');
+                if (settings.progressType) {
+                    $dialog.find('.progress-bar').addClass('progress-bar-' + settings.progressType);
+                }
+                $dialog.find('h3').text(message);
+                // Adding callbacks
+                if (typeof settings.onHide === 'function') {
+                    $dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+                        settings.onHide.call($dialog);
+                    });
+                }
+                // Opening dialog
+                $dialog.modal();
+            },
+            /**
+             * Closes dialog
+             */
+            hide: function () {
+                $dialog.modal('hide');
+            }
+        };
+
+    })(jQuery);
+
+
+    function demo() {
+
+        waitingDialog.show('Procesando...');
+        //setTimeout(function () {waitingDialog.hide();}, 3000);
+    }
+
+
+</script>

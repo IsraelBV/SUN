@@ -1,0 +1,256 @@
+﻿<style>
+    .bd-callout {
+        padding: 1.25rem;
+        margin-top: 1.25rem;
+        margin-bottom: 1.25rem;
+        margin-left: 0.25rem;
+        margin-right: 5.25rem;
+        border: 3px solid #eee;
+        border-left-width: .25rem;
+        border-radius: .25rem;
+        border-left-color: #d9534f;
+    }
+
+    .glyphicon {
+        font-size: 18px;
+    }
+
+    .colorPaloma { color: green;}
+    .colorTacha { color:red;    }
+</style>
+<link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+<script src="~/Scripts/fileinput.min.js"></script>
+<script src="~/Scripts/locales/es.js"></script>
+
+<div class="main-content-title">
+    <h4>Compara Excel - XML</h4>
+</div>
+<div class="main-content-body">
+    <div class="col-md-12 bd-callout ">
+
+        <div class="form-group col-md-7 col-md-offset-5">
+            <div>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#LayoutModal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span>  Subir archivo a procesar </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="LayoutModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Subir archivo a procesar</h4>
+            </div>
+            <div class="modal-body">
+                <input id="input" name="file" type="file" multiple class="file-loading" data-show-preview="true" data-autoReplace="true">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div id="resultado" class="col-md-12"></div>
+
+
+
+
+
+
+
+<script>
+    //Se usa http://plugins.krajee.com/file-input/plugin-events
+
+    $("#input").fileinput({
+        uploadUrl: "/ComparaExcelvsXML/UploadFile/", // server upload action  browseIcon: '<i class="glyphicon glyphicon-picture"></i>',   browseLabel: " Buscar archivo",
+        uploadAsync: true,
+        maxFileCount: 1,
+        language: "es",
+        browseClass: "btn btn-danger btn-block",
+        allowedFileExtensions: ["xls", "xlsx"],
+        msgInvalidFileExtension: 'El formato de "{name}" es incorrecto. Solo archivos "{extensions}" son admitidos.',
+        msgUploadEnd: 'El archivo fue cargado correctamente',
+        msgUploadBegin: 'Subiendo el archivo',
+    });
+
+
+    //este evento se dispara cuando se oculta el modal que muestra la opcion de seleccionar archivo
+    $('#LayoutModal').on('hidden.bs.modal', function (e) {       
+    });
+
+
+
+    //el evento fileuploaded se dispara despues que se pulsa el botón subir archivo del fomulario 
+    $('#input').on('fileuploaded', function (event, data, previewId, index) {
+        var form = data.form, files = data.files, extra = data.extra,
+            response = data.response, reader = data.reader;
+        reinicializarDivResultado();   //crear la etiqueta table vacía
+        var s = armarContenidoTabla(response.respuesta);  //crear el html que irá dentro de la tabla
+        document.getElementById('miTabla').innerHTML = s; //asignarle el html a la table
+        aplicarDataTables();  //aplicarle jquery tables a la tabla para que se vea bien
+    });
+
+    //Si ya conecte una tabla con jquery, debo reconstruir el elemento que lo contiene para poder borrar esa tabla, el width=100% recomendacion de jquerytable.com
+    function reinicializarDivResultado() {
+        document.getElementById('resultado').innerHTML = '<fieldset><legend>Resultado de comparar cada linea con su XML</legend></fieldset>' + '<table id= "miTabla" width="100%"></table>';
+
+    }
+
+
+
+    function armarContenidoTabla(myArr) {
+        var i; var s = "";  
+
+
+        s = s + "<thead><tr><th>UUID - Excel Version cfdi " + myArr[0].FilaExcel.VersionCFDI + "</th>"
+        s = s + "<th>UUID</th>"; s = s + "<th>Total</th> <th>RFC Receptor</th> <th>Fecha timbrado</th>";
+        s = s + "</tr></thead>";
+        s = s + "<tbody>";
+
+        for (i = 0; i < myArr.length; i++) {
+            s = s + "<tr><td>";
+            s = s + myArr[i].FilaExcel.Uuid + "</td>";
+
+            //Cuando el UUID del excel  existe en la BDD muestro todo el contenido de myArr
+            if (myArr[i].EsIgualUuid == true) {
+                if (myArr[i].EsIgualUuid == true) {
+                    s = s + '<td><span class="glyphicon glyphicon-ok colorPaloma"></span></td>';
+                }
+                else {
+                    s = s + '<td><span class="glyphicon glyphicon-remove colorTacha"></span></td>';
+                }
+
+
+                if (myArr[i].EsIgualTotal == true) {
+                    s = s + '<td><span class="glyphicon glyphicon-ok colorPaloma"></span></td>';
+                }
+
+                else {
+                    s = s + '<td><span class="glyphicon glyphicon-remove colorTacha"></span>';
+                    s = s + '<span class="text-warning">Total en excel: ' + myArr[i].FilaExcel.TotalNeto + '</span><br/>';
+
+
+                    s = s + '<span class="text-warning">Total en XML: ' + myArr[i].ResumenXML.Total + '</span>';
+                    s = s + "</td>";
+                }
+
+                if (myArr[i].EsIgualRfcReceptor == true) {
+                    s = s + '<td><span class="glyphicon glyphicon-ok colorPaloma"></span></td>';
+                }
+
+                else {
+                    s = s + '<td><span class="glyphicon glyphicon-remove colorTacha"></span>';
+                    s = s + '<span class="text-warning">RFC en excel: ' + myArr[i].FilaExcel.RfcReceptor + '</span><br/>';
+                    s = s + '<span class="text-warning">RFC en XML: ' + myArr[i].ResumenXML.RfcReceptor + '</span>';
+                    s = s + '</td>';
+                }
+
+
+                if (myArr[i].EsIgualFechaTimbrado == true) {
+                    s = s + '<td><span class="glyphicon glyphicon-ok colorPaloma"></span></td>';
+                }
+
+                else {
+
+                    s = s + '<td><span class="glyphicon glyphicon-remove colorTacha"></span>';
+                    s = s + '<span class="text-warning">Fecha en excel: ' + myArr[i].FilaExcel.Fecha + '</span><br/>';
+                    s = s + '<span class="text-warning">Fecha en XML(MDA): ' + ToJavaScriptDate(myArr[i].ResumenXML.FechaTimbrado) + '</span>';
+                    s = s + '</td>';
+                }
+            }//Cuando el UUID del excel  existe en la BDD
+
+
+            //Cuando el UUID del excel no existe en la BDD no muestro todo el contenido de myArr
+            else {
+                if (myArr[i].EsIgualUuid == true) {
+                    s = s + '<td><span class="glyphicon glyphicon-ok colorPaloma"></span></td>';
+                }
+                else {
+                    s = s + '<td><span class="glyphicon glyphicon-remove colorTacha"></span></td>';
+                }
+
+
+                if (myArr[i].EsIgualTotal == true) {
+                    s = s + '<td><span class="glyphicon glyphicon-ok colorPaloma"></span></td>';
+                }
+
+                else {
+                    s = s + '<td><span class="glyphicon glyphicon-remove colorTacha"></span>';
+                    s = s + '<span class="text-warning">Total en excel: ' + myArr[i].FilaExcel.TotalNeto + '</span><br/>';
+
+                    s = s + "</td>";
+                }
+
+                if (myArr[i].EsIgualRfcReceptor == true) {
+                    s = s + '<td><span class="glyphicon glyphicon-ok colorPaloma"></span></td>';
+                }
+
+                else {
+                    s = s + '<td><span class="glyphicon glyphicon-remove colorTacha"></span>';
+                    s = s + '<span class="text-warning">RFC en excel: ' + myArr[i].FilaExcel.RfcReceptor + '</span><br/>';
+                    s = s + '</td>';
+                }
+
+
+                if (myArr[i].EsIgualFechaTimbrado == true) {
+                    s = s + '<td><span class="glyphicon glyphicon-ok colorPaloma"></span></td>';
+                }
+
+                else {
+
+                    s = s + '<td><span class="glyphicon glyphicon-remove colorTacha"></span>';
+                    s = s + '<span class="text-warning">Fecha en excel: ' + myArr[i].FilaExcel.Fecha + '</span><br/>';                  
+                    s = s + '</td>';
+                }
+
+
+            }
+
+            s = s + "</tr>";
+        }
+
+        s = s + '</tbody>';
+
+        return (s);
+    }
+
+    // regresa en formato mes, dia , anio
+    function ToJavaScriptDate(value) {
+        var pattern = /Date\(([^)]+)\)/;
+        var results = pattern.exec(value);
+        var dt = new Date(parseFloat(results[1]));
+        return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear();
+    }
+
+
+    //aplicarle jquery tables a la tabla
+    function aplicarDataTables() {
+        $('#miTabla').dataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+            },
+            "scrollY": '400px',
+            "scrollCollapse": true,
+            "paging": true
+        })
+    };
+
+    //scrollY: '50vh',
+    //    scrollCollapse: true,      ORIGINAL, ASI ESTABA
+    //        paging: false
+
+
+
+    //"scrollY":        "200px",
+    //    "scrollCollapse": true,
+    //        "paging":         false
+</script>

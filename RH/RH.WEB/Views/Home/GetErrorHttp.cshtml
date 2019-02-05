@@ -1,0 +1,94 @@
+﻿
+@{
+    var id = ViewBag.errorCode;
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+}
+
+<link href="~/Content/modalDesign.css" rel="stylesheet" />
+<link href="~/Content/errores.css" rel="stylesheet" />
+
+<div class="panel-heading" id="titulo">
+    <h2>Algo malo ha ocurrido compañero...</h2>
+    <hr />
+</div>
+
+@if (id == 404)
+{
+    <div class="panel">
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <div class="" id="foto">
+                    <img src="~/Images/error.png" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="" id="_error" style="text-align:center;">
+                    <p><strong> Error 404: Esta página no fue encontrada</strong> - La dirección a la que intentas ingresar no existe o no está disponible, por favor comunícate con el departamento de <strong>Soporte</strong> para resolver el inconveniente. <br /><br />Gracias.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    if (id == 500)
+    {
+        <div class="panel">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="" id="foto">
+                        <img src="~/Images/error.png" />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="" id="_error" style="text-align:center;">
+                        <p><strong> Error 500: Ocurrió un error inesperado </strong> - Es un pequeño error de servidor, disculpa la molestia. Puedes comunicarte con el departamento de <strong>Soporte</strong> para más detalles.<br /><br />Gracias. </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        if (id == 503)
+        {
+            <div class="panel">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="" id="foto">
+                            <img src="~/Images/error.png" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="" id="_error" style="text-align:center;">
+                            <p><strong> Error 503: Servicio No Disponible </strong> - El servicio no está disponible en estos momentos, disculpa la molestia. Puedes comunicarte con el departamento de <strong>Soporte</strong> para más detalles.<br /><br />Gracias. </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+        <div class="panel">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="" id="foto">
+                        <img src="~/Images/error.png" />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="" id="_error" style="text-align:center;">
+                        <p><strong> Ocurrió un problema</strong> - Algo acaba de salir mal :( por favor intenta mas tarde. P.D. Contacta al departamento de <strong>Soporte</strong> en caso urgente.<br /><br />Gracias.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    }
+}
+
+

@@ -1,0 +1,166 @@
+﻿
+
+@using Nomina.BLL
+@using RH.Entidades
+@model List<EmpleadoNomina>
+@{
+
+}
+<style>
+    /*.nav-tabs {
+
+        background-color: #762a34;
+
+    }*/
+    /*.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+        background-color: #762a34;
+    }*/
+    .dt-buttons {
+        padding-top: 10px;
+    }
+
+    a.dt-button.seleccionarall {
+        background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+    }
+
+    a.dt-button.seleccionarcero {
+        background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+    }
+
+    a.dt-button.guardar {
+        background-image: linear-gradient(to bottom, #fff 0%, #337ab7 100%) !important;
+    }
+</style>
+
+
+<table id="empleadoPeriodo" class="display compact" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Paterno</th>
+            <th>Materno</th>
+            <th>Nombre(s)</th>
+            <th>RFC</th>
+
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>ID</th>
+            <th>Paterno</th>
+            <th>Materno</th>
+            <th>Nombre(s)</th>
+            <th>RFC</th>
+
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            if (a.Status == false)
+            {
+                <tr style="color:red;" data-idempleado="@a.idempleado">
+                    <td>@a.idempleado</td>
+                    <td>@a.Paterno</td>
+                    <td>@a.Materno</td>
+                    <td>@a.Nombres</td>
+                    <td>@a.RFC</td>
+                </tr>
+            }
+            else
+            {
+                <tr data-idempleado="@a.idempleado">
+                    <td>@a.idempleado</td>
+                    <td>@a.Paterno</td>
+                    <td>@a.Materno</td>
+                    <td>@a.Nombres</td>
+                    <td>@a.RFC</td>
+                </tr>
+            }
+
+
+        }
+    </tbody>
+</table>
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        if ($.fn.dataTable.isDataTable('#empleadoPeriodo')) {
+          var  table1 = $('#empleadoPeriodo').DataTable();
+          table1.destroy();
+        }
+        else {
+            var table1 = $('#empleadoPeriodo').DataTable({
+                dom: 'Bfrtip',
+                retrieve: true,
+                "scrollY": "200px",
+                "scrollCollapse": true,
+                "paging": false,
+                "select": true,
+                "buttons": [
+
+
+                  {
+                      className: 'guardar',
+                      text: 'Crear Periodo',
+                      action: function () {
+                          var item = [];
+
+                          var arrayE =[];
+                        item.push($("#tiponomina").val());
+                        item.push($("#DiasPeriodo").val());
+                        item.push($("#Descripcion").val());
+                        item.push($("#Fecha_Inicio").val());
+                        item.push($("#Fecha_Fin").val());
+                        item.push(false);
+
+                        item.push(true);
+                        item.push("2");
+                        var selected = $("#empleadoPeriodo").find(".selected");
+
+                        selected.each(function () {
+                            var id = parseInt($(this).data("idempleado"));
+                            arrayE.push(id);
+                        });
+                        console.log(item);
+
+                        var request = $.ajax({
+                            url: "/PeriodosPago/CrearPeriodo/",
+                            method: "POST",
+                            data: {
+                                arrayE: arrayE,
+                                periodoDatos: item
+                            }
+                        });
+                        request.done(function (data) {
+
+
+                            $('#modal-periodo').modal('hide');
+                            $('.modal-backdrop').remove();
+                            utils.loadMainPage("PeriodosPago", "GetPeriodosPago", "#main-content", true);
+                        })
+                      },
+                      key: {
+                          key: 'd',
+
+                      }
+                  },
+
+                ],
+
+
+            }
+        );
+        }
+
+
+
+
+        });
+
+
+</script>

@@ -1,0 +1,227 @@
+﻿@using RH.Entidades
+@{
+
+    var listaEmpresas = ViewBag.ListaEmpresas as List<SelectListItem>;
+
+}
+
+<link type="text/css" rel="stylesheet" href="~/Content/Exportacion.css" />
+<link type="text/css" rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+<h1>Archivos IDSE <span><i class="fa fa-external-link" aria-hidden="true"></i> </span></h1>
+<div class="jumbotron">
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>Tipo Movimiento: </label>
+                    <select id="tipoMovimiento" name="tipoMovimiento" class="form-control" data-rule-required="true">
+                        <option value="0">- Seleccione un opcion -</option>
+                        <option value="1">Alta-Reingreso</option>
+                        <option value="2">Baja</option>
+                        <option value="3">Modificación de Salario</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="ejercicio">
+                <div class="form-group">
+                    @*<label>GUIA: </label>
+                    <input type="text" class="form-control" disabled="disabled" value="77400">*@
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>Empresa : </label>
+                    @if (listaEmpresas != null)
+                    {
+                        <select id="selectEmpresas" name="selectEmpresas" class="form-control " data-rule-required="true">
+                            @foreach (var listItem in listaEmpresas)
+                            {
+                                <option value="@listItem.Value">@listItem.Text</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>Fecha Inicio: </label>
+                    <input type="date" class="form-control " id="fechaInicio" name="fechaInicio" data-rule-required="true" data-rule-date="true" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>Fecha Final: </label>
+                    <input type="date" class="form-control " id="fechaFin" name="fechaFin" data-rule-required="true" data-rule-date="true" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <a class="btn btn-primary " id="descargarLayoutIdse">Generar Layout Idse </a>    
+        </div>
+        <div class="col-md-3">
+            <a class="btn btn-primary " id="descargarReporteExcel">Generar Reporte excel </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#descargarLayoutIdse").click(function () {
+            var sendData = true;
+            var tipoMov = $('#tipoMovimiento').val();
+            var empresa = $('#selectEmpresas').val();
+            var fechaInicio = $("#fechaInicio").val();
+            var fechaFin = $("#fechaFin").val();
+
+          
+
+            if (fechaFin === "") {
+                sendData = false;
+                utils.showMessage("WAR ", "Establesca la fecha fin", 4000, "danger");
+                $('#fechaFin').focus();
+            }
+
+            if (fechaInicio === "") {
+                sendData = false;
+                utils.showMessage("WAR ", "Establesca la fecha inicio", 4000, "danger");
+                $('#fechaInicio').focus();
+            }
+            
+            if (empresa <= 0) {
+                sendData = false;
+                utils.showMessage("WAR ", "Seleccione una empresa", 4000, "danger");
+                $('#selectEmpresas').focus();
+            }
+
+            if (tipoMov <= 0) {
+                sendData = false;
+                utils.showMessage("WAR ", "Seleccione tipo de movimiento", 4000, "danger");
+                $('#tipoMovimiento').focus();
+            }
+
+          
+
+
+            if (sendData)
+                {
+                var xhr = $.ajax({
+                    url: '/Layout/ReporteIdse/',
+                    method: "POST",
+                    data: {
+                        idEmpresa: empresa,
+                        tipoMovimiento: tipoMov,
+                        fechaI: fechaInicio,
+                        fechaF: fechaFin
+                    },
+                    beforeSend: function (xhr) {
+                        waitingDialog.show('Generando Reporte de Idse...');
+                    },
+                    success: function (data) {
+                        if (data.success) {                            
+                            bajarTXT(data.resultPath,data.name);
+                        } else {
+                            utils.showMessage("WARn", data.error, 4000,"danger");
+                            }
+                    },
+                    error: function (data) {
+                        alert(data.error);
+                    },
+                    complete: function (data) {
+                        waitingDialog.hide();
+
+                    }
+                });            
+}
+        });
+
+        //reporte excel
+        $("#descargarReporteExcel").click(function () {
+            var sendData = true;
+            var tipoMov = $('#tipoMovimiento').val();
+            var empresa = $('#selectEmpresas').val();
+            var fechaInicio = $("#fechaInicio").val();
+            var fechaFin = $("#fechaFin").val();
+
+
+
+            if (fechaFin === "") {
+                sendData = false;
+                utils.showMessage("WAR ", "Establesca la fecha fin", 4000, "danger");
+                $('#fechaFin').focus();
+            }
+
+            if (fechaInicio === "") {
+                sendData = false;
+                utils.showMessage("WAR ", "Establesca la fecha inicio", 4000, "danger");
+                $('#fechaInicio').focus();
+            }
+
+            if (empresa <= 0) {
+                sendData = false;
+                utils.showMessage("WAR ", "Seleccione una empresa", 4000, "danger");
+                $('#selectEmpresas').focus();
+            }
+
+            if (tipoMov <= 0) {
+                sendData = false;
+                utils.showMessage("WAR ", "Seleccione tipo de movimiento", 4000, "danger");
+                $('#tipoMovimiento').focus();
+            }
+
+
+
+
+            if (sendData) {
+                var xhr = $.ajax({
+                    url: '/Layout/ReporteExcel/',
+                    method: "POST",
+                    data: {
+                        idEmpresa: empresa,
+                        tipoMovimiento: tipoMov,
+                        fechaI: fechaInicio,
+                        fechaF: fechaFin
+                    },
+                    beforeSend: function (xhr) {
+                        waitingDialog.show('Generando Reporte de Idse...');
+                    },
+                    success: function (data) {
+                        if (data.success) {                          
+                            window.location = data.resultPath;
+                        } else {
+                            utils.showMessage("WARn", data.error, 4000, "danger");
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.error);
+                    },
+                    complete: function (data) {
+                        waitingDialog.hide();
+
+                    }
+                });
+
+            }
+
+        });
+
+    });
+</script>
+<script type="text/javascript" src="~/scripts/bootstrap-notify.min.js"></script>

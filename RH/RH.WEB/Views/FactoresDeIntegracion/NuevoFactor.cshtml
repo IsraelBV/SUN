@@ -1,0 +1,119 @@
+﻿
+@using Common.Helpers
+@using Common.Enums
+
+@model  RH.Entidades.C_FactoresIntegracion
+
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+@{
+    int ultimofactor = 0;
+    //ViewBag.Title = ("Nuevo Factor de Integracion");
+    //Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    if (ViewBag.Factor == null)
+    {
+        ultimofactor = 1;
+    }
+    else
+    {
+        ultimofactor = 1 + ViewBag.Factor;
+    }
+}
+
+@*<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />*@
+
+
+
+
+
+
+    @Html.HiddenFor(x => x.IdFactor)
+    
+    
+        <div class="panel-body">
+            <div class="form-horizontal ">
+                <div class="row">
+
+                    @*Razon social primer div*@
+                    <label class="contron-label col-md-2 col-xs-4">Antiguedad</label>
+                    <div class="form-group has-feedback col-md-4 col-xs-8">
+                        @Html.TextBoxFor(x => x.Antiguedad, new { @class = "form-control input-group-sm", @Value = ultimofactor, disabled = "disabled", @onKeyUp = "Operacion()" })
+                    </div>
+                    <input type="hidden" id="Anti" value="@ultimofactor" name="Anti" />
+                    @*CP segundo div*@
+                    <div class="col-xs-2">
+                        <label>Días de Aguinaldo</label>
+                    </div>
+                    <div class="form-group has-feedback col-xs-4">
+                        <input type="text" name="DiasAguinaldo" class="form-control" id="DiasAguinaldo" onkeyup="Operacion()" data-rule-required="true" data-rule-number="true" data-rule-maxlength="5">
+                    </div>
+
+                </div>
+                @*Segundo row*@
+                <div class="row">
+                    @*RFC tercer div*@
+                    <div class="contron-label col-md-2 col-xs-4">
+                        <label>Días de Vacaciones</label>
+                    </div>
+                    <div class="form-group has-feedback col-xs-4">
+                        <input type="text" name="DiasVacaciones" class="form-control" id="DiasVacaciones" onkeyup="Operacion()" data-rule-required="true" data-rule-number="true" data-rule-maxlength="5">
+                    </div>
+
+                    @*Colonia cuarto div*@
+
+                    <div class="col-xs-2">
+                        <label>Prima Vacacional</label>
+                    </div>
+                    <div class="form-group has-feedback col-xs-4">
+                        <input type="text" step="any" name="PrimaVacacional" class="form-control" id="PrimaVacacional" onkeyup="Operacion()" data-rule-required="true" data-rule-number="true" data-rule-maxlength="5">
+                    </div>
+
+                    <div class="col-xs-2">
+                        <label>Factor de Integración</label>
+                    </div>
+                    <div class="form-group has-feedback col-xs-4">
+                        <input class="form-control" type="text" id="factor1" name="factor1" disabled="disabled" /><br>
+                        <input type="hidden" id="factor2" name="factor2" /><br>
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+    
+ 
+            
+
+            <script>
+                //Función que realiza la suma
+
+
+                function Operacion() {
+                    var DiasVacaciones = document.formulario.DiasVacaciones.value;
+                    var DiasAguinaldo = document.formulario.DiasAguinaldo.value;
+                    var PrimaVacacional = document.formulario.PrimaVacacional.value;
+                    try {
+                        //Calculamos el número escrito:
+                        DiasVacaciones = (isNaN(parseInt(DiasVacaciones))) ? 0 : parseInt(DiasVacaciones);
+                        DiasAguinaldo = (isNaN(parseInt(DiasAguinaldo))) ? 0 : parseInt(DiasAguinaldo);
+                        PrimaVacacional = (isNaN(parseInt(PrimaVacacional))) ? 0 : parseInt(PrimaVacacional);
+                        PrimaVacacional = PrimaVacacional / 100;
+                        vacionesprima = PrimaVacacional * DiasVacaciones;
+                        resultvaca = vacionesprima / 365;
+
+                        DiasAguinaldo = DiasAguinaldo / 365;
+                        document.formulario.factor1.value = 1 + resultvaca + DiasAguinaldo;
+                        document.formulario.factor2.value = 1 + resultvaca + DiasAguinaldo;
+                    }
+                    //Si se produce un error no hacemos nada
+                    catch (e) { }
+                }
+            </script>
+
+
+            <script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+            <script src="~/Scripts/validator/messages_es.js"></script>
+            <script src="~/Scripts/validator/TooltipValidator.js"></script>

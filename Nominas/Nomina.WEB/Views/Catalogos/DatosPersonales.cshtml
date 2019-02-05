@@ -1,0 +1,237 @@
+﻿@using RH.Entidades;
+@using RH.BLL;
+@using Common.Enums;
+@model Empleado
+
+@{
+
+    var contrato = ViewBag.Contrato;
+    var datosbanco = ViewBag.DatosBanco;
+    var empresa = (List<DatosEmpleado>)ViewBag.Empresa;
+
+
+    int dias;
+    TipoContrato tipocontrato = (TipoContrato)Enum.Parse(typeof(TipoContrato),Convert.ToString(contrato.TipoContrato));
+    TipoNomina tiponomina = (TipoNomina)Enum.Parse(typeof(TipoNomina), Convert.ToString(contrato.TipoNomina));
+    FormaPago formapago = (FormaPago)Enum.Parse(typeof(FormaPago), Convert.ToString(contrato.FormaPago));
+    TipoSalario tiposalario = (TipoSalario)Enum.Parse(typeof(TipoSalario), Convert.ToString(contrato.TipoSalario));
+    DiasSemana diasemana = (DiasSemana)Enum.Parse(typeof(DiasSemana), Convert.ToString(contrato.DiaDescanso));
+    if (contrato.TipoContrato == 2)
+    {
+        TimeSpan DiasContrato = contrato.Vigencia - contrato.FechaAlta;
+        dias = DiasContrato.Days;
+    }else
+    {
+        dias = 0;
+    }
+ }
+    
+
+
+
+<div class="panel with-nav-tabs panel-default" id="panelEmpleados">
+    <div class="panel-heading clearfix text-center">
+
+
+        <div class="pull-left">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#datospersonales">Datos Personales</a></li>
+                <li><a data-toggle="tab" href="#contratacion">Contratación</a></li>
+                <li><a data-toggle="tab" href="#nomina">Nómina</a></li>
+                <li><a data-toggle="tab" href="#empresas">Empresas</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body panel-height" id="panBody">
+        <div class="tab-content">
+            <div class="tab-pane active" id="datospersonales">
+                <fieldset>
+
+                    <div class='form-horizontal'>
+                        <div class="col-md-12 col-xs-12">
+                            <div class="form-group">
+                                <label class="col-md-1 ">ID : </label>
+                                <input type="text" class="col-md-2 " value="@Model.IdEmpleado" disabled />
+                                <label class="col-md-1 ">Nombres: </label>
+                                <input type="text" class="col-md-7 " value="@Model.APaterno @Model.AMaterno @Model.Nombres " disabled />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-1 ">Sexo</label>
+                                @if (string.Equals(Model.Sexo, "H"))
+                                {
+                                    <input type="text" class="col-md-2 " value="Hombre" disabled />
+                                }
+                                else
+                                {
+                                    <input type="text" class="col-md-2 " value="Mujer" disabled />
+                                }
+                                <label class="col-md-1 ">CURP: </label>
+                                <input type="text" class="col-md-3 " value="@Model.CURP" disabled />
+                                <label class="col-md-1 ">RFC: </label>
+                                <input type="text" class="col-md-3 " value="@Model.RFC" disabled />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-1 ">NSS : </label>
+                                <input type="text" class="col-md-2 " value="@Model.NSS" disabled />
+                                <label class="col-md-1 ">UMF: </label>
+                                <input type="text" class="col-md-3" value="@contrato.UMF" disabled />
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </fieldset>
+
+            </div>
+
+            <div class="tab-pane" id="contratacion">
+                <fieldset>
+                    <div class="form-horizontal">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-md-2 ">Fecha Alta: </label>
+                                @if (@contrato.FechaAlta == null)
+                                {
+                                    <input type="text" class="col-md-2 " disabled />
+                                }
+                                else
+                                {
+                                    <input type="text" class="col-md-2 " value="@contrato.FechaAlta.ToString("dd/MM/yyyy")" disabled />
+                                }
+
+                                <label class="col-md-2 ">Fecha Real: </label>
+                                @if (@contrato.FechaReal == null)
+                                {
+                                    <input type="text" class="col-md-2 " disabled />
+                                }
+                                else
+                                {
+                                    <input type="text" class="col-md-2 " value="@contrato.FechaReal.ToString("dd/MM/yyyy")" disabled />
+                                }
+
+                                <label class="col-md-2 ">Fecha IMSS: </label>
+                                @if (@contrato.FechaIMSS == null)
+                                {
+                                    <input type="text" class="col-md-2 " disabled />
+                                }
+                                else
+                                {
+                                    <input type="text" class="col-md-2 " value="@contrato.FechaIMSS.ToString("dd/MM/yyyy")" disabled />
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2">Tipo de Contrato</label>
+                                <input type="text" class="col-md-2" value="@tipocontrato" disabled />
+                                <label class="col-md-2">Días Contrato</label>
+                                <input type="text" class="col-md-2" value="@dias" disabled />
+                                <label class="col-md-2">Vence Contrato</label>
+                                @if (@contrato.TipoContrato == 2)
+                                {
+                                    <input type="text" class="col-md-2 " value="@contrato.Vigencia.ToString("dd/MM/yyyy")" disabled />
+
+                                }
+                                else
+                                {
+                                    <input type="text" class="col-md-2" value="" disabled />
+                                }
+
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2">Día de Descanso</label>
+                                <input type="text" class="col-md-2" value="@diasemana" disabled />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </div>
+            <div class="tab-pane" id="nomina">
+                <fieldset>
+                    <div class="form-horizontal">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-md-2">Tipo de Nómina</label>
+                                <input type="text" class="col-md-2" value="@tiponomina" disabled />
+                                <label class="col-md-2">Tipo de pago</label>
+                                <input type="text" class="col-md-2" value="@formapago" disabled />
+                                <label class="col-md-2">Tipo de salario</label>
+                                <input type="text" class="col-md-2" value="@tiposalario" disabled />
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2">SD</label>
+                                <input type="text" class="col-md-2" value="@contrato.SD" disabled />
+                                <label class="col-md-2">SDI</label>
+                                <input type="text" class="col-md-2" value="@contrato.SDI" disabled />
+                                <label class="col-md-2">Salario Real</label>
+                                <input type="text" class="col-md-2" value="@contrato.SalarioReal" disabled />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="tab-pane" id="empresas">
+                <fieldset>
+                    <div class="form-horizontal">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-md-2">Fiscal: </label>
+                                <div class="col-md-4 list-group">
+                                    <ul >
+                                        @foreach (var a in empresa.Where(x=>x.Esquema == 1))
+                                        {
+                                            <li class="list-group-item-text">@a.RazonSocial</li>
+                                        }
+                                    </ul>
+                                </div>
+
+                                <label class="col-md-2 ">Complemento: </label>
+                                <div class="col-md-4 list-group">
+                                    <ul >
+                                        @foreach (var a in empresa.Where(x => x.Esquema == 2))
+                                        {
+                                            <li class="list-group-item-text">@a.RazonSocial</li>
+                                        }
+                                    </ul>
+                                </div>
+
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 ">Sindicato: </label>
+                                <div class="col-md-4 list-group">
+                                    <ul >
+                                        @foreach (var a in empresa.Where(x => x.Esquema == 3))
+                                        {
+                                            <li class="list-group-item-text">@a.RazonSocial</li>
+                                        }
+                                    </ul>
+                                </div>
+                                <label class="col-md-2 ">Asimilado: </label>
+                                <div class="col-md-4 list-group">
+                                    <ul >
+                                        @foreach (var a in empresa.Where(x => x.Esquema == 4))
+                                        {
+                                            <li class="list-group-item-text">@a.RazonSocial</li>
+                                        }
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+                        </div>
+                    </div>
+
+            </div>
+
+
+

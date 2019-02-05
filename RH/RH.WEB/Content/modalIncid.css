@@ -1,0 +1,16 @@
+﻿body {
+}
+
+.modal-dialog{
+    width:50%;
+}
+
+.modal-body{
+    padding:30px;
+}
+
+@media all and (max-width: 1024px) {
+    .modal-dialog {
+       width:90%;
+    }
+}

@@ -1,0 +1,187 @@
+﻿@model List<RH.BLL.SucursalDatos>
+@{
+    string active = "";
+    int paginaActiva = ViewBag.PaginaActiva;
+}
+
+@*@if(Model != null) {
+        int contador = 1;
+
+        int idxLeft = 0;
+        int idxRight = 0;
+        int idx = 0;
+        int idxh = 0;
+
+        var divR = Model.Count() % 2;
+
+        var medio = (Model.Count() / 2) + divR;
+
+
+        foreach (var itemI in Model)
+        {
+            string clase = "col-md-5 col-sm-12 col-xs-12 elementoLista";
+            if (contador % 2 == 0)
+            {
+                clase = "col-md-5 col-md-offset-1 col-sm-12 col-xs-12 elementoLista";
+
+                if (contador > 1)
+                {
+                    idx = idxh + medio;
+                }
+
+            }
+            else
+            {
+
+            }
+
+            var item = Model[idx];
+
+            <a href="@Url.Action("Index", "Sucursal", new { id = item.IdSucursal })">
+                <div class="@clase"><div class="cajaLista col-md-3 col-sm-2 col-xs-2"><h1>@item.IdSucursal</h1></div>
+                    <div class="contenidoLista col-md-9 col-sm-10 col-xs-10">
+                        <h4>@item.Nombre</h4><p>@item.Ciudad</p></div>
+                </div>
+            </a>
+
+
+
+            if (contador % 2 == 0)
+            {
+                if (contador > 1)
+                {
+                    idxh++;
+                    idx = idxh;
+                }
+            }
+
+
+            contador++;
+        }
+
+        <div class="clearfix"></div>
+
+        <div id="paginacionLista">
+            <ul class="pagination">
+
+                @if (ViewBag.paginas != 1)
+                {
+                    for (int i = 1; i < ViewBag.paginas + 1; i++)
+                    {
+                        active = paginaActiva == i ? "active" : "";
+                        <li class="@active">
+                            @if(ViewBag.Keyword != null)
+                            {
+                                var pagina = i - 1;
+                                <a href="/Home/Search?pagina=@pagina&keyword=@ViewBag.Keyword" data-ajax-update="#listaClientes" data-ajax-mode="replace" data-ajax="true">@i</a>
+                            }
+                            else
+                            {
+                                <a href="/Home/SucursalesPaginador?pagina=@i" data-ajax-update="#listaClientes" data-ajax-mode="replace" data-ajax="true">@i</a>
+                            }
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    }*@
+<style>
+    .hide-scroll {
+        height: 50vh; 
+        overflow: hidden;
+    }
+
+    .viewportlistasucursal {
+          height: 50vh; 
+           overflow: auto;
+              /* Make sure the inner div is not larger than the container
+     * so that we have room to scroll.
+     */
+    max-height: 100%;
+
+    /* Pick an arbitrary margin/padding that should be bigger
+     * than the max width of all the scroll bars across
+     * the devices you are targeting.
+     * padding = -margin
+     */
+    margin-right: -100px;
+    padding-right: 100px;
+    }
+
+</style>
+
+@if (Model != null)
+{
+    int contador = 1;
+
+    int idxLeft = 0;
+    int idxRight = 0;
+    int idx = 0;
+    int idxh = 0;
+
+
+
+
+    <h4> <label for="inbuscador">Lista de Sucursales: </label> <input id="inbuscador" name="inbuscador" class=" " type="text" placeholder="Buscar sucursal..." title="Escribe el nombre o id de la sucursa a buscar" /></h4>
+    @*<hr />*@
+
+    <div class="hide-scroll col-md-12">
+        <div class="viewportlistasucursal">
+
+
+            <ul id="ulsucursales" class="list-unstyled">
+
+                @foreach (var itemI in Model)
+                {
+                    string clase = "col-md-5 col-sm-12 col-xs-12 elementoLista";
+                    //if (contador % 2 == 0)
+                    //{
+                    //    clase = "col-md-5 col-md-offset-1 col-sm-12 col-xs-12 elementoLista";
+
+                    //    if (contador > 1)
+                    //    {
+                    //        idx = idxh + medio;
+                    //    }
+
+                    //}
+
+
+
+                    <li data-datossucursal="@itemI.IdSucursal @itemI.Nombre @itemI.Ciudad">
+                        <a href="@Url.Action("Index", "Sucursal", new { id = itemI.IdSucursal })">
+                            <div class="@clase">
+                                <div class="cajaLista col-md-3 col-sm-2 col-xs-2"><h1>@itemI.IdSucursal</h1></div>
+                                <div class="contenidoLista col-md-9 col-sm-10 col-xs-10"><h4>@itemI.Nombre</h4><p>@itemI.Ciudad</p></div>
+                            </div>
+                        </a>
+                    </li>
+                }
+            </ul>
+
+        </div>
+    </div>
+
+        <script>
+            $(document).ready(function () {
+
+                $("#inbuscador").focus();
+            });
+
+
+            $('input[type="text"]').keyup(function () {
+
+                var that = this, $allListElements = $('#ulsucursales > li');
+
+                var $matchingListElements = $allListElements.filter(function (i, li) {
+                    var listItemText = $(li).text().toUpperCase(), searchText = that.value.toUpperCase();
+                    return ~listItemText.indexOf(searchText);
+                });
+
+                $allListElements.hide();
+                $matchingListElements.show();
+
+            });
+
+
+        </script>
+}

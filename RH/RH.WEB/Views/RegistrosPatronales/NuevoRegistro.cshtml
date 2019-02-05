@@ -1,0 +1,271 @@
+﻿@using Common.Helpers
+@using Common.Enums
+@model  RH.Entidades.Empresa
+
+@{
+    ViewBag.Title = ("Empresa");
+    ViewBag.Extra = ("Nueva Empresa");
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var regimen = ViewBag.Regimen;
+    var listaEstados = ViewBag.EstadoLista;
+}
+<style > 
+.tooltip {
+    background-color:#000;
+    border:1px solid #fff;
+    padding:10px 15px;
+    width:300px;
+    display:none;
+    color:#fff;
+    text-align:center;
+    font-size:12px;
+    
+ 
+    /* outline radius for mozilla/firefox only */
+    -moz-box-shadow:0 0 10px #000;
+    -webkit-box-shadow:0 0 10px #000;
+}
+.tooltip-inner {
+  max-width: 300px !important; 
+  padding: 3px 8px;
+  color: #fff;
+  text-align: center;
+  background-color: #000;
+  border-radius: 4px;
+}
+</style>
+
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+   @using (Html.BeginForm("NuevoRegistro", "RegistrosPatronales", FormMethod.Post, new { id = "formulario" , @class = "tooltipForm" }))
+   {
+        @Html.HiddenFor(x => x.IdEmpresa)
+        <div class="panel with-nav-tabs panel-primary">
+            <div class="panel-heading clearfix text-center">
+                <div class="pull-left">
+                    <h4 class="panel-title">Nueva Empresa</h4>
+                </div>
+                <div class="pull-right">
+
+                    <ul class="nav nav-tabs">
+                        <li>
+                            <a class="btn btn-danger hovernuevo" tabindex="15" onclick="$(this).closest('form').submit()" href="#">Guardar</a>
+                        </li>
+                        
+                        <li>
+                            <a class="btn btn-danger hovercancelado" tabindex="16" href="~/RegistrosPatronales/index">Cancelar</a>
+                        </li>
+                    </ul>
+                </div>
+                @*<input type="submit" class="btn btn-primary input-group-sm" value="Guardar" />  <a class="btn btn-danger" href="~/RegistrosPatronales/index">Cancelar</a>*@
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal ">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h6 class="col-md-12">Los campos marcados con (<span style="color:red;">*</span>) son requeridos.</h6>
+
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4">Registro Patronal</label>
+                            <div class="col-md-8">
+                                <input title="El Registro Patronal consta de una letra y 10 números" type="text" id="RegistroPatronal" name="RegistroPatronal" class="form-control input-sm"
+                                       input placeholder="Ej. A1234567890"
+                                       tabindex="1"
+                                       data-rule-maxlength="11"
+                                       data-rule-minlength="11" />
+                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4"><span style="color:red;"> * </span> Razón Social</label>
+                            <div class="col-md-8">
+                                <input title="Coloca aquí la Razón Social de la Empresa a agregar" type="text" id="RazonSocial" name="RazonSocial" class="form-control input-sm"
+                                       data-rule-required="true"
+                                       data-rule-maxlength="50"
+                                       input placeholder="Ej. Razón social S.A."
+                                       tabindex="2"
+                                       />
+                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4">Guía</label>
+                            <div class="col-md-8">
+                                <input title="La Guía consta de 5 números" type="text" id="Guia" name="Guia" class="form-control input-sm"
+                                       input placeholder="Ej. 12345"
+                                       data-rule-number="true"
+                                       data-rule-maxlength="5"
+                                       data-rule-minlength="5"
+                                       tabindex="3"
+                                       />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4">Clave </label>
+                            <div class="col-md-8">
+                                <input title="La Clave consta de 2 números" type="text" id="ClaveSeguro" name="ClaveSeguro" class="form-control input-sm"
+                                       input placeholder="Ej. 12"
+                                       data-rule-maxlength="2"
+                                       tabindex="4"
+                                       />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4"><span style="color:red;"> * </span>RFC</label>
+                            <div class="col-md-8">
+                                <input title="'ABCD123456EF7' ó 'ABC123456DE7'" type="text" id="RFC" name="RFC" class="form-control input-sm"
+                                       data-rule-required="true"
+                                       input placeholder="Ej. ABCD123456EF7"
+                                       data-rule-RFC="true"
+                                       data-msg-RFC="¡Por favor ingresa un RFC válido!"
+                                       tabindex="5"
+                                       />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4">Clase</label>
+                            <div class="col-md-8">
+                                @HtmlLocalHelper.ComboEnum(typeof(ClasesRiesgo), "Clase", "1", true, htmlAttributes :new Dictionary <string, object> { { "tabIndex", 6 } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4">Prima de Riesgo</label>
+                            <div class="col-md-8">
+                                <input title="La Prima de Riesgo consta de un número entero seguido por 6 decimales" type="text" id="PrimaRiesgo" name="PrimaRiesgo" class="form-control input-sm"
+                                      tabindex="7"
+                                       @*data-rule-number="true"*@
+                                       data-rule-priesgo="true"
+                                       />
+                            </div>
+                        </div>
+                       <div class="form-group">
+                            <label class="col-md-4">Régimen Fiscal</label>
+                            <div class="col-md-8">
+                                @if (regimen != null)
+                                {
+                                <select id="RegimenFiscal" name="RegimenFiscal" class="form-control" tabindex="8">
+                                    @foreach (var r in regimen)
+                                    {
+                                        <option  value="@r.IdRegimenFiscal">@r.Descripcion</option>
+                                    }
+                                </select>
+                                }
+                            </div>
+                       </div>
+                        
+                      
+                      
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-4">País</label>
+                            <div class="col-md-8">
+                                @HtmlLocalHelper.ComboEnum(typeof(Paises), "Pais", "1", false, htmlAttributes: new Dictionary<string, object> { { "tabIndex", 9 } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4">Estado</label>
+                            <div class="col-md-8">
+                                @HtmlLocalHelper.ComboBox(listaEstados, "IdEstado", htmlAttributes: new Dictionary<string, object> { { "tabIndex", 10 } })
+                                
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4"><span style="color:red;"> * </span> Municipio</label>
+                            <div class="col-md-8">
+                                <input title="Coloca aquí el Municipio donde se encuentra la Empresa" type="text" id="Municipio" name="Municipio" class="form-control input-sm"
+                                       data-rule-required="true"
+                                       input placeholder="Ej. Benito Juárez"
+                                       data-rule-maxlength="50"
+                                       tabindex="11"
+                                       />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4"><span style="color:red;"> * </span> Código Postal</label>
+                            <div class="col-md-8">
+
+                                <input title="El Código Postal consta de 5 números" type="number" id="CP" name="CP" class="form-control input-sm"
+                                       input placeholder="Ej. 12345"
+                                       data-rule-required="true"
+                                       data-rule-number="true"
+                                       data-rule-minlength="5"
+                                       data-rule-maxlength="5"
+                                       min="00000"
+                                       max="99999"
+                                       tabindex="12"
+                                       
+                                       />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4"><span style="color:red;"> * </span> Colonia</label>
+                            <div class="col-md-8">
+                                <input title="Coloca aquí el nombre de la Colonia donde está ubicada la Empresa" type="text" id="Colonia" name="Colonia" class="form-control input-sm"
+                                       data-rule-required="true"
+                                       input placeholder="Ej. Centro"
+                                       data-rule-maxlength="50"
+                                       tabindex="13"
+                                                                              />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4"><span style="color:red;"> * </span>No. Exterior</label>
+                            <div class="col-md-8">
+                                <input title="Coloca aquí el número exterior de la Empresa" type="text" id="NoExt" name="NoExt" class="form-control input-sm"
+                                       data-rule-required="true"
+                                       input placeholder="Ej. 10"
+                                       data-rule-maxlength="10"
+                                       tabindex="14"
+                                       />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4"><span style="color:red;"> * </span> Calle</label>
+                            <div class="col-md-8">
+                                <input title="Coloca aquí el nombre de la calle donde está ubicada la Empresa" type="text" id="Calle" name="Calle" class="form-control input-sm"
+                                       data-rule-required="true"
+                                       input placeholder="Ej. Avenida Nader"
+                                       data-rule-maxlength="50"
+                                       tabindex="15"
+                                       />
+                            </div>
+                       </div>
+                     
+
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+    }
+
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>
+<script > 
+    // select all desired input fields and attach tooltips to them
+    $("#formulario :input").tooltip({
+
+        // place tooltip on the right edge
+        position: "center right",
+
+        // a little tweaking of the position
+        offset: [-2, 10],
+
+        // use the built-in fadeIn/fadeOut effect
+        effect: "fade",
+
+        // custom opacity setting
+        opacity: 0.7
+
+    });
+
+</script>
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+<script src="~/Scripts/validator/metodos_adicionales.js"></script>

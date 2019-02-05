@@ -1,0 +1,31 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/modalDesign.css" rel="stylesheet" />
+<link href="~/Content/errores.css" rel="stylesheet" />
+
+<div class="panel-heading" id="titulo">
+    <h2>Le tenemos una mala noticia</h2>
+    <hr />
+</div>
+
+<div class="panel">
+    <div class="col-md-12">
+        @*Primer Columna*@
+        <div class="col-md-6">
+            <div class="" id="foto">
+                <img src="~/Images/locks.png" />
+            </div>
+        </div>
+
+
+        @*segunda columna*@
+        <div class="col-md-6">
+            <div class="" id="_error" style="text-align:center;">
+                <p><strong> Acceso Denegado</strong> - No tienes habilitados los permisos para acceder a esta sucursal. En caso de ser una equivocación por favor comunícate con el departamento de <strong>Soporte</strong> para arreglar el inconveniente.<br /><br />Gracias.</p>
+            </div>
+        </div>
+    </div>
+</div>

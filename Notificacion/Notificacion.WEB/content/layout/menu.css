@@ -1,0 +1,88 @@
+﻿html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #fff
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+#main-menu {
+    background-color: #334c62 !important;
+}
+
+#search-form {
+    display: none;
+}
+
+#actionNav {
+    display: none;
+}
+
+#btnCollapseSidebar.active {
+    background-color: rgba(0,0,0,0.1);
+}
+
+#liAtendida {
+    display: none;
+}
+
+#liAbierta {
+    display: none;
+}
+
+.liClearAll {
+    display: none;
+}
+
+#liLoading {
+    display: none;
+}
+
+#btnNavLoading {
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+
+#btnNavLoading:hover {
+    background-color: transparent !important;
+    cursor: default;
+}
+
+@-webkit-keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+nav .nav-wrapper form, nav .nav-wrapper form .input-field{
+    height: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+    .brand-logo i.left {
+        margin: 0;
+    }
+
+    .actionBarActive {
+        display: none !important;
+    }
+}

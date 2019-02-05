@@ -1,0 +1,89 @@
+﻿@using RH.BLL;
+@using Common.Helpers;
+@using Common.Enums;
+@using SYA.BLL;
+@model List<RH.BLL.DatosEmpleado>
+
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+@{
+    ViewBag.Title = "Incapacidades";
+    ViewBag.Modulo = Modulos.RHEmpleados;
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+}
+
+@{ var idUsuario = SessionHelpers.GetIdUsuario(); }
+
+<div class="panel with-nav-tabs panel-primary" id="panelEmpleados">
+    <div class="panel-heading clearfix text-center">
+        <div class="pull-left">
+            <h4 class="panel-title">Incapacidades</h4>
+            <br />
+        </div>    
+    </div>
+
+    <div class="panel-body" id="panBody">
+        <div class="table table-responsive">
+            <table class="table table-condensed table-hover table-striped" id="incapacidades">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Apellido Paterno</th>
+                        <th>Apellido Materno</th>
+                        <th>Puesto</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in Model)
+            {
+                        <tr>
+                            <td class="tdId">@a.IdEmpleado</td>
+                            <td>@a.Nombres</td>
+                            <td>@a.Paterno</td>
+                            <td>@a.Materno</td>
+                            <td>@a.Puesto</td>
+                            <td class="text-right">
+                                @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHIncapacidades, AccionCrud.Agregar, idUsuario))
+                                {
+                                    <a class="btn btn-primary newIncap btn-sm" href="/Incapacidades/Details/@a.IdEmpleado" title="Historial de Incapacidades">
+                                        <i class="fa fa-wheelchair fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#incapacidades').DataTable({
+                "scrollY": "500px",
+                "scrollCollapse": true,
+                "paging": false,
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "zeroRecords": "Sin registros - Busca de nuevo",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "Sin registros disponibles",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "sSearch": "Buscar:",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                }
+            });
+        });
+    </script>
+
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.js"></script>
+

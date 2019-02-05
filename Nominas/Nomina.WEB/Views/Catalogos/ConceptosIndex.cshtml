@@ -1,0 +1,192 @@
+﻿@using RH.Entidades;
+
+@model List<C_NOM_Conceptos>
+
+<div class="main-content-title">
+    <h4 class="pull-left">Conceptos</h4>
+</div>
+<div class="clearfix"></div>
+<div class="main-content-body">
+   
+        <table id="conceptos" class="display" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Descripción</th>
+                    <th>Clave Sat</th>
+                    <th>Tipo</th>
+                    <th>Obligatorio</th>
+                    <th>Cuenta Acredora</th>
+                    <th>Cuenta Deudora</th>
+
+                </tr>
+            </thead>
+            <tbody id="prueba">
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td class="IdConcepto">@item.IdConcepto </td>
+                        <td>@item.Descripcion</td>
+                        <td>@item.Clave.ToString().PadLeft(3, '0')</td>
+                        <td>
+                            @if (@item.TipoConcepto == 1)
+                            {
+                                <text>  Percepción </text>
+                            }
+                            else if (@item.TipoConcepto == 2)
+                            {
+                                <text>   Deducción  </text>
+                            }
+                        </td>
+                        <td>
+                            @if (@item.Obligatorio == true)
+                            {
+                                <text><span class="glyphicon glyphicon-ok"></span></text>
+                            }
+                        </td>
+                        <td>
+                            <div id="cuadro">
+                                @if (@item.Cuenta_Acredora == null)
+                                {
+                                    <label id="cuentas" class="Claves">...</label>
+                                }
+                                else
+                                {
+                                    <label id="cuentas" class="Claves">@item.Cuenta_Acredora</label>
+                                }
+
+                            </div>
+                        </td>
+                        <td>
+                            <div id="cuadroDeudora">
+                                @if (@item.Cuenta_Deudora == null)
+                                {
+                                    <label id="Deudora" class="Deudora">...</label>
+                                }
+                                else
+                                {
+                                    <label id="Deudora" class="Deudora">@item.Cuenta_Deudora</label>
+                                }
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            concepto = $('#conceptos').DataTable({
+                "scrollY": "450px",
+                "scrollCollapse": true,
+                "paging": false,
+                "searching": false,
+                "bInfo" :false
+            });
+        });
+        $(".Claves").click(function (f) {
+
+            $("#prueba").find(':input[type=text]').each(function () {
+                $(this).next('#cuentas').css("display", "block");
+                $(this).remove();
+
+            });
+            var textoactual = $(this).text();
+            if (textoactual == '...') {
+                var input = "<input type='text'id='p' maxlength='20' class='input-group-sm' value =''/>"//agregamos el el cuadro de texto
+            } else {
+                var input = "<input type='text'id='p' maxlength='20'  class='input-group-sm' value ='" + textoactual + "'/>"//agregamos el el cuadro de texto
+            }
+            // $(this).empty();
+            $(this).css("display", "none");//oculta el label
+            $(this).parent("#cuadro").prepend(input);
+            document.getElementById("p").focus();
+            var idconcepto = $(this).parent("#cuadro").parent().parent().find(".IdConcepto").html();
+            var inp = $("#p")//obtenemos el selector
+            inp.keydown(function (e) {//evento
+                var code = e.keyCode;//obtenemos el codigo del enter
+                if (code == 13) {
+                    var textonuevo = $(this).val();
+                    if (textonuevo == '') {//si el texto esta vacio le inserta "..."
+                        textonuevo = '...';
+                    }
+                    $(this).next("#cuentas").text(textonuevo)
+                    $(this).next('#cuentas').css("display", "block");
+                    //$("#00").css("display", "block");
+
+
+                    var request = $.ajax({
+                        url: "/Catalogos/EditarCuentaAcredora/",
+                        method: "POST",
+                        data: {
+                            Id: idconcepto,
+                            ClaveContable: textonuevo
+                        }
+                    });
+                    $(this).remove();//quitamos el cuadro
+                } else if (code == 9 || code == 27) {
+                    $(this).next("#cuentas").text(textoactual)
+                    $(this).next('#cuentas').css("display", "block");
+                    $(this).remove();//quitamos el cuadro
+                }
+            });
+        });
+
+
+
+        $(".Deudora").click(function (f) {
+
+            $("#prueba").find(':input[type=text]').each(function () {
+                $(this).next('#Deudora').css("display", "block");
+                $(this).remove();
+
+            });
+
+            var textoactual = $(this).text();
+            if (textoactual == '...') {
+                var input = "<input type='text'id='p' maxlength='20' class='input-group-sm' value =''/>"//agregamos el el cuadro de texto
+            } else {
+                var input = "<input type='text'id='p' maxlength='20'  class='input-group-sm' value ='" + textoactual + "'/>"//agregamos el el cuadro de texto
+            }
+
+            // $(this).empty();
+            $(this).css("display", "none");//oculta el label
+            $(this).parent("#cuadroDeudora").prepend(input);
+
+            document.getElementById("p").focus();
+            var idconcepto = $(this).parent("#cuadroDeudora").parent().parent().find(".IdConcepto").html();
+            var inp = $("#p")//obtenemos el selector
+            inp.keydown(function (e) {//evento
+                var code = e.keyCode;//obtenemos el codigo del enter
+                if (code == 13) {
+                    var textonuevo = $(this).val();
+                    if (textonuevo == '') {//si el texto esta vacio le inserta "..."
+                        textonuevo = '...';
+                    }
+                    $(this).next("#Deudora").text(textonuevo)
+                    $(this).next('#Deudora').css("display", "block");
+                    //$("#00").css("display", "block");
+
+
+                    var request = $.ajax({
+                        url: "/Catalogos/EditarCuentaDeudora/",
+                        method: "POST",
+                        data: {
+                            Id: idconcepto,
+                            ClaveContable: textonuevo
+                        }
+                    });
+                    $(this).remove();//quitamos el cuadro
+                } else if (code == 9 || code == 27) {
+                    $(this).next("#Deudora").text(textoactual)
+                    $(this).next('#Deudora').css("display", "block");
+                    $(this).remove();//quitamos el cuadro
+                }
+            });
+        });
+
+    </script>

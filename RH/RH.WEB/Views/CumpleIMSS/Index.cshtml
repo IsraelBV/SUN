@@ -1,0 +1,347 @@
+﻿@using RH.BLL
+@model List<cumpleañosIMSS>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    var empresas = ViewBag.empresas;
+    var clientes = ViewBag.clientes;
+    var sucursales = ViewBag.sucursales;
+}
+<link href="~/Content/animate.css" rel="stylesheet" />
+<h2>Cumpleaños IMSS</h2>
+
+@*<div class="jumbotron" style="background-color: #2c3e50 !important">*@
+    <div class="col-md-12"style="background-color: #2c3e50 !important">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label style="color:#fff">Metodo de Busqueda</label>
+                <select id="metodoBusquerda" class="form-control">
+                    <option></option>
+                    <option value="empresa">Por empresa</option>
+                    <option value="cliente">Por Cliente</option>
+                    <option value="sucursal"selected>Por Sucursal</option>
+                </select>
+            </div>
+           
+        </div>
+        <div class="col-md-6">
+
+            <div class="form-group" id="porEmpresa" style="display:none">
+                <label style="color:#fff">Busqueda por Empresa</label>
+                <select id="empresa" class="form-control">
+                    <option value=""></option>
+                    @foreach (var e in empresas)
+                    {
+                        <option value="@e.IdEmpresa">@e.RazonSocial</option>
+                    }
+
+                </select>
+            </div>
+
+            <div class="form-group" id="porCliente" style="display:none">
+                <label style="color:#fff">busqueda por cliente</label>
+                <select id="cliente" class="form-control">
+                    <option value=""></option>
+                    @foreach (var c in clientes)
+                    {
+                        <option value="@c.IdCliente">@c.Nombre</option>
+                    }
+
+                </select>
+            </div>
+            <div class="form-group" id="porSucursal" >
+                <label style="color:#fff">busqueda por Sucursal</label>
+                <select id="sucursal" class="form-control">
+                    <option value=""></option>
+                    @foreach (var s in sucursales)
+                    {
+                        <option value="@s.IdSucursal">@s.NombreCliente - @s.NombreSucursal</option>
+                    }
+
+                </select>
+            </div>
+        </div>
+    </div>
+ <div class="col-md-12" style="background-color: #2c3e50 !important">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label style="color:#fff">Fecha Inicio</label>
+            <input name="fechaInicio" id="fechaInicio" type="date" class="form-control" />
+        </div>
+
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label style="color:#fff">Fecha Fin</label>
+            <input name="fechaFin" id="fechaFin" type="date" class="form-control" />
+        </div>
+
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label>.</label>
+            <input class="form-control" type="button" id="buscar" value="Buscar" />
+
+        </div>
+
+    </div>
+
+</div>
+
+    
+   
+
+@*</div>*@
+<div id="busquedaCumple"class="col-md-12" style="margin-top:10px;">
+@if (Model.Count > 0)
+{
+    <table id="tablaIMSS" class="table table-condensed table-hover table-striped compact" width="100%">
+        <thead>
+            <tr>
+                <th>Empleado</th>
+                <th>Empresa</th>
+                <th>Fecha IMSS</th>
+                <th>Años</th>
+                <th>FactorI</th>
+                <th>SDI Viejo</th>
+                <th>SDI Nuevo</th>
+                <th>Estatus</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model.Where(x => x.AniosCumplidos > 0))
+            {
+                <tr data-idContrato="@e.IdContrato" data-idempresa="@e.IdEmpresaFiscal" data-fechaimss="@e.fechaImss" data-anio="@e.AniosCumplidos" data-factor="@e.FactorInt" data-sdiold="@e.SdiViejo" data-sdinew="@e.SdiNuevo" data-status="@e.Status">
+                    <td>@e.Paterno @e.Materno @e.Nombre</td>
+                    <td>@e.NombreEmpresa</td>
+                    <td>@e.fechaImss.Value.ToString("dd/MM/yyyy")</td>
+                    <td>@e.AniosCumplidos</td>
+                    <td>@e.FactorInt</td>
+                    <th>@e.SdiViejo</th>
+                    <th>@e.SdiNuevo</th>
+                    <th>
+                        @if (e.Status == true)
+                    {
+                            <label class="label-success" style="color:#fff"> Guardado. </label>
+                        }
+                        else
+                        {
+                            <label id="labelCambio" class="label-default" style="color:#fff"> Sin Guardar. </label>
+                        }
+
+                    </th>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">
+        <strong>Info!</strong> No se encontró datos en esas fechas para esta sucursal..
+    </div>
+
+
+}
+</div>
+<script>
+    $(document).ready(function () {
+        $('#tablaIMSS').DataTable({
+            dom: 'Bfrtip',
+            "scrollY": "250px",
+            "scrollCollapse": true,
+            "paging": false,
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "Sin registros - Busca de nuevo",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Sin registros disponibles",
+                "infoFiltered": "(filtered from _MAX_ total records)",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                }
+            },
+            buttons: [{
+                extend: 'excelHtml5',
+                customize: function (xlsx) {
+                    var sheet = xlsx.xl.worksheets['ReporteCumpleIMSS.xml'];
+
+                    $('row c[r^="C"]', sheet).attr('s', '2');
+                }
+            },
+            {
+                className: "cambiar",
+                text: "Cambiar SDI",
+                action: function () {
+                    var selected = $("#tablaIMSS").find(".selected");
+                    if (selected.length > 0) {
+                        var empleados = [];
+
+                        selected.each(function () {
+                            var item = {};
+                            item["idContrato"] = parseInt($(this).data("idcontrato"));
+                            item["IdEmpresaEmpleado"] = parseInt($(this).data("idempresa"));
+                            item["FechaIMSS"] = $(this).data("fechaimss");
+                            item["Anio"] = parseInt($(this).data("anio"));
+                            item["FactorIntegracion"] = parseFloat($(this).data("factor"));
+                            item["SDIViejo"] = parseFloat($(this).data("sdiold"));
+                            item["SDINuevo"] = parseFloat($(this).data("sdinew"));
+
+
+                            empleados.push(item);
+                        });
+                        console.log(empleados);
+                        var request = $.ajax({
+                            url: "/cumpleIMSS/crearRegistro/",
+                            method: "POST",
+                            data: {
+                                cumple: empleados
+                            },
+                            beforeSend: function () {
+                                waitingDialog.show('Procesando...');
+
+                            }
+                        });
+                        request.done(function (result) {
+                            $.each(result, function (i, item) {
+
+                                if (item.Estatus == false) {
+                                    $.notify("El Usuario " + item.Paterno + " " + item.Materno + " " + item.Nombre + " ya habia sido modificado", "error");
+                                } else if (item.Estatus == true) {
+                                    $.notify("El Usuario " + item.Paterno + " " + item.Materno + " " + item.Nombre + " fue modificado", "success");
+                                    $("#labelCambio").removeClass("label-default");
+                                    $("#labelCambio").addClass("label-success");
+                                    $("#labelCambio").text("Guardado");
+
+
+                                }
+                            });
+                            waitingDialog.hide();
+
+                        });
+                    }
+
+                }
+            },
+            ],
+            select: {
+                style: 'multi',
+
+            }
+
+        });
+        $("#metodoBusquerda").change(function () {
+            var seleccion = $('select[id=metodoBusquerda]').val();
+
+
+            $('#empresa').prop('selectedIndex', 0);
+            $('#cliente').prop('selectedIndex', 0);
+            $('#sucursal').prop('selectedIndex', 0);
+
+
+
+            if (seleccion == "empresa") {
+                $("#porEmpresa").show();
+                
+                $("#porCliente").hide();
+                $("#porSucursal").hide();
+        
+
+            } else if (seleccion == "cliente") {
+                
+                $("#porEmpresa").hide();
+                $("#porCliente").show();
+                $("#porSucursal").hide();
+   
+            } else if (seleccion == "sucursal") {
+                $("#porEmpresa").hide();
+                $("#porCliente").hide();
+                $("#porSucursal").show();
+                
+            }
+        });
+
+
+        $("#buscar").click(function () {
+            var empresa = $('select[id=empresa]').val();
+            var cliente = $('select[id=cliente]').val();
+            var sucursal = $('select[id=sucursal]').val();
+            var fechaInicio = $("#fechaInicio").val();
+            var fechaFin = $("#fechaFin").val();
+            if (empresa != '') {
+                var request = $.ajax({
+                    url: "/CumpleIMSS/cumpleIMSSEmpresa",
+                    method: "POST",
+                    data: {
+                        Idempresa: empresa,
+                        FechaInicio: fechaInicio,
+                        FechaFIn : fechaFin
+                    },
+                    beforeSend: function () {
+                        waitingDialog.show('Procesando...');
+                    }
+                });
+
+                request.done(function (data) {
+                    waitingDialog.hide();
+            $('#busquedaCumple').html(data);
+                });
+            } else if (cliente != '') {
+                var request = $.ajax({
+                    url: "/CumpleIMSS/cumpleIMSSCliente",
+                    method: "POST",
+                    data: {
+                        IdCliente: cliente,
+                        FechaInicio: fechaInicio,
+                        FechaFIn: fechaFin
+                    },
+                    beforeSend: function () {
+                        waitingDialog.show('Procesando...');
+                    }
+                });
+
+                request.done(function (data) {
+                    waitingDialog.hide();
+                    $('#busquedaCumple').html(data);
+                });
+            } else if (sucursal != '') {
+                var request = $.ajax({
+                    url: "/CumpleIMSS/cumpleIMSSSucursal",
+                    method: "POST",
+                    data: {
+                        IdSucursal: sucursal,
+                        FechaInicio: fechaInicio,
+                        FechaFIn: fechaFin
+                    },
+                    beforeSend: function () {
+                        waitingDialog.show('Procesando...');
+                    }
+                });
+
+                request.done(function (data) {
+                    waitingDialog.hide();
+                    $('#busquedaCumple').html(data);
+                });
+            }
+
+            
+
+        });
+
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.css" />
+<script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.js"></script>
+<link href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css" rel="stylesheet" />
+<script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.2.2/js/dataTables.select.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.2/css/select.dataTables.min.css" />
+<script src="//cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
+<script src="~/Scripts/notify.js"></script>

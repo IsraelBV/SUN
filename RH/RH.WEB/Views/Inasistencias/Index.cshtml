@@ -1,0 +1,45 @@
+﻿@using RH.BLL;
+@using RH.Entidades
+@using Common.Enums
+@using Common.Helpers
+@using Common.Utils;
+@model List<DatosEmpleado>
+@{
+    ViewBag.Title = "Inasistencias";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"/>
+
+<h2>Inasistencias</h2>
+<table id="tblEmpleados2" class="table">
+    <thead>
+    <tr><th>ID</th><th>Nombre</th><th>Esatus</th></tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.IdEmpleado</td>
+            <td>@item.Paterno - @item.Materno - @item.Nombres</td>
+        </tr>   
+    }
+    </tbody>
+</table>
+
+
+
+
+
+
+
+<script>
+$(document).ready(function () {
+    $("#tblEmpleados2").DataTable({
+        
+    });
+});
+</script>

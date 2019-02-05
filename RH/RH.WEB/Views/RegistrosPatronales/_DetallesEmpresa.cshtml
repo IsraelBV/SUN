@@ -1,0 +1,109 @@
+﻿@using Common.Helpers
+@using Common.Enums
+
+@model  RH.BLL.RegistroDatos
+    @{ 
+        var listaEstados = ViewBag.EstadoLista;
+        var Pais = Convert.ToString(Model.Pais);
+
+        Paises pais = (Paises)Enum.Parse(typeof(Paises), Pais);
+        
+
+    }
+<style>
+    .modal-dialog {
+        width: 1100px !important;
+    }
+    .panel-heading {
+        color: black !important;
+    }
+    small{
+        font-size: 13.5px;
+    }
+</style>
+
+<div class="container">
+    <div class="form-horizontal ">
+        <div class="col-md-6 col-xs-12">
+            <div class="form-group">
+                <label class="col-md-4">Registro Patronal</label>
+                <input type="text" class="col-md-8" value="@Model.RegistroPatronal" disabled />
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Razón Social</label>
+                <input type="text" class="col-md-8" value="@Model.RazonSocial" disabled />
+                
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Guía</label>
+                <input type="text" class="col-md-8" value="@Model.Guia" disabled />
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Clave</label>
+                <input type="text" class="col-md-8" value="@Model.ClaveSeguro" disabled />
+                
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">RFC</label>
+                <input type="text" class="col-md-8" value="@Model.RFC" disabled />
+                
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Clase</label>
+                <input type="text" class="col-md-8" value="@Model.Clase" disabled />
+                
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Prima de Riesgo</label>
+                <input type="text" class="col-md-8" value="@Model.PrimaRiesgo" disabled />
+                 
+            </div>
+         
+
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-md-4">País</label>
+                <input type="text" class="col-md-5" value="@pais" disabled />
+                
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Estado</label>
+                <input type="text" class="col-md-5" value="@Model.Estado" disabled />
+                
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Municipio</label>
+                <input type="text" class="col-md-5" value="@Model.Municipio" disabled />
+                
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Código Postal</label>
+                <input type="text" class="col-md-5" value="@Model.CP" disabled />
+                
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Colonia</label>
+                <input type="text" class="col-md-5" value="@Model.Colonia" disabled />
+                
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">No. Exterior</label>
+                <input type="text" class="col-md-5" value="@Model.NoExt" disabled />
+                
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Calle</label>
+                <input type="text" class="col-md-5" value="@Model.Calle" disabled />
+                
+
+            </div>
+      
+        </div>
+
+
+    </div>
+</div>

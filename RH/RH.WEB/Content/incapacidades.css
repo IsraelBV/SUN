@@ -1,0 +1,112 @@
+﻿/*Estilos títulos generales: Título - Separador*/
+#titulo{
+    width:100%;
+    padding:0;
+}
+
+#titulo h2{
+    position:absolute;
+    float:left;
+    margin-bottom:10px;
+}
+
+.modal-header h3{
+    color:white;
+}
+
+hr{
+    width:100%;
+    position:relative;
+    top:55px;
+    border:1px solid #255480;
+    margin-bottom:70px;
+}
+
+/*Boton nueva incapacidad*/
+.newIncap {
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+/*Diseño tablas Hover - Separadores - Stripe*/
+
+/*Stripe*/
+.table-striped>tbody>tr:nth-of-type(odd){
+    background: rgba(195, 211, 229, .2);
+}
+
+/*Hover*/
+.table>tbody>tr:hover{
+     background: rgba(195, 211, 229, .5);
+}
+
+/*Separador de encabezado*/
+.table>thead>tr>th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #8EA0A9;
+}
+
+/*Separador entre filas*/
+.table>tbody>tr>td{
+    border-top: 1px solid #B1B7BA;
+}
+
+.panel{
+    width:80%;
+    /*border:2px solid #95BDBE;*/
+    /*box-shadow: 3px 3px 10px -1px rgba(0,0,0,0.5);*/
+    margin-left:10%;
+    margin-top:2%;
+}
+
+.control-label{
+    margin-left:30px;
+}
+
+.modal-dialog{
+    width:45%;
+}
+
+.obs{
+    margin:0px;
+    padding:0px;
+}
+
+#txtObs{
+    margin-left:2%;
+}
+
+.cerrar{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    box-shadow: 3px 3px 10px -1px rgba(0,0,0,0.5);
+}
+
+@media all and (max-width: 1024px) {
+    .modal-dialog {
+       width:66%;
+    }
+}
+
+
+/*Info*/
+#finiI{
+    margin-top:33px;
+}
+
+#ffinI, #diasI, #obsI{
+    margin-top:20px;
+}
+
+#idI, #folioI{
+    margin-top:27px;
+}
+
+#tipoI, #claseI{
+    margin-top:16px;
+}

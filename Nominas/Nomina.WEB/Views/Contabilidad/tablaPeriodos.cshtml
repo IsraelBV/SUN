@@ -1,0 +1,163 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@model List<PeriodoCuenta>
+    @{ 
+        int count = 1;
+    }
+<table class="display compact" id="muestra" width="100%">
+    <thead>
+        <tr>
+            <td></td>
+            <td width="20%" >Periodo</td>
+            <td >Cliente</td>
+            <td >Tipo de Nomina</td>
+            <td  width="10%">Fecha Inicio</td>
+            <td  width="10%">Fecha Fin</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.Where(x=>x.status == true))
+        {
+            <tr data-idperiodo="@p.IdPeriodo">
+                <td>@count</td>
+                <td >@p.Nombre</td>
+                <td>@p.Cliente</td>
+                <td>@p.TipoNomina</td>
+                <td >@p.FechaInicio.ToString("dd-MM-yyyy")</td>
+                <td >@p.FechaFin.ToString("dd-MM-yyyy")</td>
+            </tr>
+            count++;
+        }
+       
+    </tbody>
+</table>
+
+
+<script>
+    var onTable = $('#muestra').DataTable({
+        dom: 'Bfrtip',
+        "scrollY": "450px",
+        "scrollCollapse": true,
+        "paging": false,
+        "searching": true,
+        "bInfo": false,
+        select: { style: 'multi' },
+        "columnDefs": [
+    { "width": "5%", "targets": 0 },
+    { "width": "30%", "targets": 1 },
+    { "width": "10%", "targets": 2 },
+    { "width": "10%", "targets": 3 },
+    { "width": "10%", "targets": 4 }
+        ],
+        buttons: [{
+            className: 'seleccionarall',
+            text: 'Selec Todos',
+            action: function () {
+                onTable.rows().select();
+            }, key: { key: 'a' }
+        },
+            {
+                className: 'seleccionarcero',
+                text: 'Deselc Todos',
+                action: function () {
+                    onTable.rows().deselect();
+                }
+            },
+        {
+
+            className: 'btnAsistencia',
+            text: 'Generar Reporte',
+            action: function () {
+                var selected = $("#muestra").find(".selected");
+                var empresa = $('select[id=empresa]').val();
+                var fechainicio = $("#fechaInicio").val();
+                var fechaFin = $("#fechaFin").val();
+
+                console.log(fechainicio)
+                console.log(fechaFin)
+                if (selected.length > 0) {
+                    utils.confirmDialog("¿DESEA CONTINUAR?", "Se procesarán " + selected.length + " Registros", "CONFIRMAR", "CANCELAR", function (response) {
+                        if (response) {
+                            var idperiodo = [];
+                            selected.each(function () {
+                                var id = parseInt($(this).data("idperiodo"));
+                                idperiodo.push(id);
+                            });
+
+                            if ($('#empleado').prop('checked')) {
+                                var request = $.ajax({
+                                    url: "/Contabilidad/reporteByEmpleado/",
+                                    method: "POST",
+                                    data: {
+                                        idperiodos: idperiodo,
+                                        idempresa: empresa,
+                                        fechaInicio: fechainicio,
+                                        fechaFin: fechaFin
+                                    },
+                                    beforeSend: function () {
+                                        waitingDialog.show('Procesando...');
+
+                                    }
+                                });
+                                request.done(function (result) {
+                                    waitingDialog.hide();
+                                    window.open('/Contabilidad/descargarReporteContable?ruta=' + result, '_blank');
+                                });
+                            } else {
+                                var request = $.ajax({
+                                    url: "/Contabilidad/reporteGeneral/",
+                                    method: "POST",
+                                    data: {
+                                        idperiodos: idperiodo,
+                                        idempresa: empresa,
+                                        fechaInicio: fechainicio,
+                                        fechaFin: fechaFin
+                                    },
+                                    beforeSend: function () {
+                                        waitingDialog.show('Procesando...');
+
+                                    }
+                                });
+                                request.done(function (result) {
+                                    waitingDialog.hide();
+                                    window.open('/Contabilidad/descargarReporteContable?ruta=' + result, '_blank');
+                                });
+                            }
+
+                 
+
+                        }
+                        else if (selected.length === 0) {
+                            utils.showMessage("Reporte", "Seleccione al menos un registro para generar el reporte", 10000, "danger");
+                        }
+                    });
+                }
+            }
+    
+        }]
+    });
+
+    $('#muestra tbody').on('dblclick', 'tr', function () {
+        var idPeriodo = $(this).data("idperiodo");
+        $(this).addClass("selected");
+        var empresa = $('select[id=empresa]').val();
+        
+        var request = $.ajax({
+            url: "/Contabilidad/ListaDeRayaByEmpresa/",
+            method: "POST",
+            data: {
+                idEmpresa: empresa,
+                idPeriodo: idPeriodo
+            },
+            beforeSend: function () {
+               waitingDialog.show('Procesando...');
+                
+            }
+        });
+        request.done(function (result) {
+           waitingDialog.hide();
+            window.open('/Contabilidad/descargarListaRaya?ruta=' + result, 'Popup');
+        });
+    });
+    
+</script>

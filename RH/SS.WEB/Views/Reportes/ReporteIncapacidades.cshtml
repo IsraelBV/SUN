@@ -1,0 +1,57 @@
+﻿@using RH.Entidades
+@model List<Empresa>
+
+<h1>Reporte Incapacidades <span> <i class="fa fa-wheelchair" aria-hidden="true"></i> </span></h1>
+<div class="jumbotron sendContiner">
+    <div class="row">
+        <div class="col-md-12" style="padding-bottom: 1.5em;">
+            <div class="form-group">
+                <select id="tipoReporte" name="tipoReporte" class="form-control col-md-12" data-rule-required="true">
+                    <option value="0" selected>GENERAL</option>
+                    <option value="1">DESGLOSADO</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>Empresa : </label>
+                    @if (Model != null)
+                    {
+                        <select id="selectEmpresas" name="idEmpresa" class="form-control dataVldt" data-rule-required="true" data-info="Empresa">
+                            @foreach (var Item in Model)
+                            {
+                                <option value="@Item.IdEmpresa">@Item.RazonSocial</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label title="Fechas en las que fueron registradas al sat">Fecha Inicio Timbrado sat: </label>
+                    <input type="date" class="form-control dataVldt" id="fechaInicio" name="fechaI" data-rule-required="true" data-rule-date="true" data-info="Fecha Inicio"/>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label title="Fechas en las que fueron registradas al sat">Fecha Final Timbrado sat: </label>
+                    <input type="date" class="form-control dataVldt" id="fechaFin" name="fechaF" data-rule-required="true" data-rule-date="true" data-info="Fecha Final"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-primary " id="descargarReporteIncap">Generar reporte  Incapacidades  </a>
+
+
+</div>
+<script>
+   
+</script>
+<script type="text/javascript" src="~/scripts/Reportes/Incapacidad.js"></script>
+<script type="text/javascript" src="~/scripts/bootstrap-notify.min.js"></script>
+

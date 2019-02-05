@@ -1,0 +1,609 @@
+﻿@using Common.Helpers;
+@using Common.Utils
+@using Common.Enums;
+@using RH.BLL;
+@using RH.Entidades.GlobalModel;
+@model IEnumerable<Nomina.BLL.DatosEmision>
+@{
+    var totalNominas = 0;
+    var cfdiGenerados = 0;
+    int contentSumary = 0;
+    var esFiniquito = false;
+    if (Model != null)
+    {
+        totalNominas = Model.Count();
+        cfdiGenerados = Model.Count(x => x.Generado == true);
+    }
+
+    if (ViewBag.isFiniquito != null)
+    {
+        esFiniquito = ViewBag.isFiniquito;
+    }
+
+    var idPeriodo = ViewBag.idPeriodo;
+    int numRegistro = 1;
+    List<NotificationSummary> summary = ViewBag.Summary;
+
+    if (summary != null)
+    {
+        contentSumary = summary.Count;
+    }
+}
+
+@if (Model != null)
+{
+
+    <style>
+        .detalleCfdi {
+            font: 1.0em/1.5em "Trebuchet MS", Verdana, sans-serif;
+        }
+
+
+        th, td {
+            white-space: nowrap;
+        }
+
+
+        div.container {
+            width: 100%;
+        }
+
+        .dt-buttons {
+            padding-left: 10px;
+        }
+
+        table {
+            margin: 10px;
+        }
+
+        a.dt-button.seleccionarall {
+            background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+        }
+
+        a.dt-button.seleccionarcero {
+            background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+        }
+
+        a.dt-button.generarCFDI {
+            background-image: linear-gradient(to bottom, #fff 0%, #337ab7 100%) !important;
+        }
+
+        a.dt-button.generarCFDI33 {
+            background-image: linear-gradient(to bottom, #fff 0%, #248ea7 100%) !important;
+        }
+
+        a.dt-button.imprimirRecibo {
+            background-image: linear-gradient(to bottom, #fff 0%, #FF6A6A 100%) !important;
+        }
+
+        #titulo {
+            position: fixed;
+            top: 5px;
+            margin-top: -10px;
+            color: #fff;
+        }
+
+        .badge-danger {
+            background-color: orangered;
+        }
+    </style>
+
+@*<div class="main-content-title">
+        <h4>Emisión de CFDIs</h4>
+    </div>*@
+    <div id="titulo">
+        <div class="main-content-title">
+            <h4 class="pull-left">Emision de CFDI</h4>
+        </div>
+    </div>
+    <div class="main-content-body " style="padding: 5px;" id="generar-cfdis">
+        @*<div class="table-panel">
+            <a id="selTodos" class="label label-primary" title="Seleccionar todos los registros"><span class="glyphicon glyphicon-unchecked"></span> Sel Todos</a>
+            <a id="btnGenerateCFDIs" class="label label-primary"><span class="glyphicon glyphicon-open"></span>GENERAR CFDIs</a>
+            <a id="downloadRecibos" class="label label-primary"><span class="glyphicon glyphicon-download-alt"></span>DESCARGAR RECIBOS</a>
+        </div>*@
+        <table class="display" id="table-generar-cfdis" width="100%">
+            <thead>
+            <tr>
+
+                <th>@(esFiniquito ? "Finiquito" : "Nómina")</th>
+                <th>Nombre</th>
+                @*<th>Metodo Pago</th>*@
+                @*<th>RFC Receptor</th>*@
+                <th>Emisor</th>
+                <th class="text-right">Total @(esFiniquito ? "Finiquito" : "Nómina")</th>
+                <th title="Fecha del Timbrado">Fecha Certificación</th>
+                <th class="text-center" title="Version del cfdi">Versión</th>
+                <th title="Fecha de Cancelacion">Fecha Cancelacion</th>
+                @*<th>Folio Fiscal</th>*@
+                <th class="text-center">Estatus</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                var selected = "unselected";
+                var cfdiStatus = "pending";
+                var labelStatus = "PENDIENTE";
+                var labelClass = "label-default";
+                if (item.Generado == true)
+                {
+                    labelStatus = "GENERADO";
+                    labelClass = "label-success";
+                    selected = "selected";
+                    cfdiStatus = "ready";
+                }
+                var formaPago = item.MetodoPago.ToString().Replace('_', ' ');
+                <tr data-idnomina="@(esFiniquito ? item.Idfiniquito : item.IdNomina)" data-idemisor="@item.IdEmisor" class=" @cfdiStatus">
+
+                    <td>@(esFiniquito ? item.Idfiniquito : item.IdNomina)</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreEmpleado)
+                    </td>
+                    @*<td>
+                            @formaPago
+                        </td>*@
+                    @*<td data-column="receptor">
+                        @Html.DisplayFor(modelItem => item.RfcReceptor)
+                    </td>*@
+                    <td data-column="emisor">
+                        @Html.DisplayFor(modelItem => item.NombreEmisor)
+                    </td>
+                    <td class="data-number text-right">
+                        @Html.DisplayFor(modelItem => item.StrTotalNomina)
+                    </td>
+                    <td data-column="fechaCert">
+                        @Html.DisplayFor(modelItem => item.FechaTimbrado)
+                    </td>
+                    <td data-column="version" class=" text-center">
+                        @Html.DisplayFor(modelItem => item.Version)
+                    </td>
+                    <td data-column="fechaCance">
+                        @Html.DisplayFor(modelItem => item.FechaCancelacion)
+                    </td>
+                    @*<td data-column="uddi">
+                            @Html.DisplayFor(modelItem => item.Uddi)
+                        </td>*@
+
+                    <td class="text-center">
+                        <span data-idtimbrado="@item.IdTimbrado" class="label @labelClass" style="display: block">@labelStatus</span>
+                    </td>
+                </tr>
+                numRegistro++;
+            }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="detalleError" class="modal fade">
+        <div class="modal-dialog" style="width: 1100px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Respuestas de validación del PAC</h4>
+                </div>
+                <div class="modal-body" style="height: 500px;">
+                    <div id="errorEmpleados"></div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="summaryModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Summary</h4>
+                </div>
+                <div class="modal-body">
+                    @if (summary != null)
+                    {
+                        foreach (var itemS in summary)
+                        {
+                            <div class="alert alert-info">
+                                <strong>Info!</strong> @itemS.Msg1
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <strong>Info!</strong> .
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        var seleccionados = [];
+        //$("#error").click(function () {
+        //    //var IdNomina = $("td").parent().each().data("idnomina");
+
+        //    $(this).parent().each(function () {
+        //        var IdNomina = $(this).find("tr").data("idnomina");
+        //        alert(IdNomina);
+        //    });
+        //    //var modalError = $("#detalleError");
+        //    //$.get("../../ProcesoNomina/detallePrincipal?id=" + IdNomina, function (data) {
+        //    //    $("#error").html(data);
+        //    //    modalError.modal();
+        //    //});
+        //});
+
+
+        $(document).ready(function() {
+
+            var activaIcon = 0;
+            activaIcon = @contentSumary;
+            var textSum = "Summary";
+
+            if (activaIcon > 0) {
+                textSum = "<span class='badge badge-danger'>" + activaIcon + "</span> Summary";
+            } else {
+                textSum = "<span class='badge'>" + activaIcon + "</span>  Summary";
+            }
+
+
+            var table = $("#table-generar-cfdis").DataTable({
+                dom: 'Bfrtip',
+                scrollY: '80vh',
+                scrollCollapse: true,
+                paging: false,
+                searching: true,
+                "language": { "url": "../scripts/datatables-spanish.json" },
+                info: false,
+                "buttons": [
+                    {
+                        className: 'seleccionarall',
+                        text: '<i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i> Todos',
+                        titleAttr: 'Seleccionar todos los registros',
+                        action: function() {
+                            table.rows().select();
+                        },
+                        key: {
+                            key: 'a'
+                        }
+                    },
+                    {
+                        className: 'seleccionarcero',
+                        text: '<i class="fa fa-square-o fa-lg" aria-hidden="true"></i> Ninguno',
+                        titleAttr: 'Deselecciona todos los registros',
+                        action: function() {
+                            table.rows().deselect();
+                        },
+                        key: {
+                            key: ''
+
+                        }
+                    },
+                    {
+                        className: 'generarCFDI',
+                        text: '<i class="fa fa-star fa-lg" aria-hidden="true"></i> Timbrar recibos 3.2',
+                        titleAttr: 'Envia los cfdi para su validacion y timbrado.',
+                        enabled: false,
+                        action: function() {
+                            var btnGenCfdi = $('.generarCFDI');
+                            var btnSummary = $('.btnSummary');
+
+                            var btnDowRecibos = $('.imprimirRecibo');
+                            var selected = $("#table-generar-cfdis").find(".selected.pending");
+                            var nominas = [];
+                            var emisores = [];
+                            selected.each(function() {
+                                var idNomina = parseInt($(this).data("idnomina"));
+                                nominas.push(idNomina);
+
+                                var idEmi = parseInt($(this).data("idemisor"));
+                                emisores.push(idEmi);
+
+                            });
+
+
+                            if (selected.length > 0) {
+                                utils.confirmDialog("¿DESEA CONTINUAR? CFDI 3.2",
+                                    "SE GENERARÁN " + nominas.length + " CFDI's Version 3.2",
+                                    "CONFIRMAR",
+                                    "CANCELAR",
+                                    function(confirm) {
+                                        if (confirm) {
+                                            var request = $.ajax({
+                                                url: "/Cfdi/GenerarCfdi",
+                                                method: "POST",
+                                                data: { idNominas: nominas, idEmisores: emisores },
+                                                beforeSend: function() {
+                                                    waitingDialog.show('Generando CFDIs 3.3 ... <i class="fa fa-cog fa-spin fa-2x "></i>');
+                                                    btnGenCfdi.addClass('disabled');
+                                                    btnDowRecibos.addClass('disabled');
+                                                    btnGenCfdi
+                                                        .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> Generando cfdi...");
+                                                    btnSummary
+                                                        .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> Summary...");
+                                                    OBGenerateCFDIs();
+                                                }
+                                            });
+
+                                            request.done(function(data) {
+                                                waitingDialog.hide();
+                                                utils.LoadActivePage();
+
+                                                btnGenCfdi.removeClass('disabled');
+                                                btnDowRecibos.removeClass('disabled');
+                                                btnGenCfdi.html("<span>Timbrar recibos</span>");
+
+                                                utils.showMessage("PROCESO COMPLETADO", "... ", 1000);
+
+                                                onChangeTableCFDIs(selected);
+                                            });
+
+                                            request.always(OCGenerateCFDIs);
+                                        }
+                                    });
+                            } else {
+                                utils.showMessage("CFDI ",
+                                    "Debe seleccionar los registros con estatus pendiente",
+                                    5000,
+                                    "info");
+                            }
+                        },
+                        key: {
+                            key: '',
+
+                        }
+                    },
+                    {
+                        className: 'generarCFDI33',
+                        text: '<i class="fa fa-star fa-lg" aria-hidden="true"></i> Timbrar recibos 3.3',
+                        titleAttr: 'Envia los cfdi para su validacion y timbrado.',
+                        enabled: true,
+                        action: function() {
+                            var btnGenCfdi = $('.generarCFDI33');
+                            var btnSummary = $('.btnSummary');
+
+                            var btnDowRecibos = $('.imprimirRecibo');
+                            var selected = $("#table-generar-cfdis").find(".selected.pending");
+                            var nominas = [];
+                            var emisores = [];
+                            selected.each(function() {
+                                var idNomina = parseInt($(this).data("idnomina"));
+                                nominas.push(idNomina);
+
+                                var idEmi = parseInt($(this).data("idemisor"));
+                                emisores.push(idEmi);
+
+                            });
+
+                            if (selected.length > 0) {
+                                utils.confirmDialog("¿DESEA CONTINUAR - CFDI 3.3?",
+                                    "SE GENERARÁN " + nominas.length + " CFDI's Version 3.3",
+                                    "CONFIRMAR",
+                                    "CANCELAR",
+                                    function(confirm) {
+                                        if (confirm) {
+                                            var request = $.ajax({
+                                                url: "/Cfdi/GenerarCfdi33",
+                                                method: "POST",
+                                                data: { idNominas: nominas, idEmisores: emisores },
+                                                beforeSend: function() {
+                                                    waitingDialog.show('Generando CFDIs 3.3 ... <i class="fa fa-cog fa-spin fa-2x "></i>');
+                                                    btnGenCfdi.addClass('disabled');
+                                                    btnDowRecibos.addClass('disabled');
+                                                    btnGenCfdi
+                                                        .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> Generando cfdi 3.3 ...");
+                                                    btnSummary
+                                                        .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> Summary...");
+                                                    OBGenerateCFDIs();
+                                                }
+                                            });
+
+                                            request.done(function(data) {
+                                                waitingDialog.hide();
+                                                utils.LoadActivePage();
+
+                                                btnGenCfdi.removeClass('disabled');
+                                                btnDowRecibos.removeClass('disabled');
+                                                btnGenCfdi.html("<span>Timbrar recibos</span>");
+
+                                                utils.showMessage("PROCESO COMPLETADO", "... ", 1000);
+
+                                                onChangeTableCFDIs(selected);
+                                            });
+
+                                            request.always(OCGenerateCFDIs);
+                                        }
+                                    });
+                            } else {
+                                utils.showMessage("CFDI ",
+                                    "Debe seleccionar los registros con estatus pendiente",
+                                    5000,
+                                    "info");
+                            }
+                        },
+                        key: {
+                            key: '',
+
+                        }
+                    },
+                    {
+                        className: 'imprimirRecibo1',
+                        text: '<i class="fa fa-download fa-lg" aria-hidden="true"></i> Descargar cfdi',
+                        titleAttr: 'Descargar recibos timbrados - XML y PDF.',
+                        action: function() {
+                            var btnDowRecibos = $('.imprimirRecibo');
+                            btnDowRecibos.addClass('disabled');
+                            var selected = $("#table-generar-cfdis").find(".selected.ready");
+
+                            var nominas = [];
+
+                            selected.each(function() {
+                                var IdNomina = parseInt($(this).data("idnomina"));
+                                nominas.push(IdNomina);
+                            });
+
+                            if (selected.length > 0) {
+                                utils.confirmDialog("Se descargarán " + selected.length + " recibos",
+                                    "¿Desea continuar?",
+                                    "SI",
+                                    "NO",
+                                    function(response) {
+                                        if (response) {
+                                            var form = document.createElement("form");
+                                            form.setAttribute("method", "post");
+                                            form.setAttribute("action", "/Cfdi/DownloadRecibos");
+
+                                            form._submit_function_ = form.submit;
+                                            for (var i = 0; i < nominas.length; i++) {
+                                                var hiddenField = document.createElement("input");
+                                                hiddenField.setAttribute("type", "hidden");
+                                                hiddenField.setAttribute("name", "idNominas");
+                                                hiddenField.setAttribute("value", nominas[i]);
+                                                form.appendChild(hiddenField);
+                                            }
+
+                                            document.body.appendChild(form);
+                                            form._submit_function_();
+
+                                            t = setTimeout(function() { btnDowRecibos.removeClass('disabled'); }, 5000);
+                                        }
+                                    });
+
+                            } else {
+                                utils.showMessage("CFDI ",
+                                    "Debe seleccionar los registros con estatus listo",
+                                    5000,
+                                    "warning");
+                            }
+                        },
+                        key: {
+                            key: '',
+
+                        }
+                    },
+                    {
+                        className: 'imprimirRecibo',
+                        text: '<i class="fa fa-check fa-lg" aria-hidden="true"></i> Validación PAC',
+                        titleAttr:
+                            'Muestra la respuesta de la validación del PAC - Proveedor Autorizado de Certificación',
+                        action: function() {
+                            var modalDetalle = $("#detalleError");
+                            $.get("../../Cfdi/indexErrores?idPeriodo=" + @idPeriodo,
+                                function(data) {
+                                    $("#errorEmpleados").html(data);
+                                    modalDetalle.modal();
+                                });
+
+                        }
+                    },
+                    {
+                        className: 'btnSummary',
+                        text: textSum,
+                        action: function() {
+                            var modalSummary = $("#summaryModal");
+                            modalSummary.modal();
+                        },
+                        key: { key: 's' }
+                    }
+                ]
+            });
+
+
+            //Evento Select
+            $('#table-generar-cfdis tbody').on('click',
+                'tr',
+                function() {
+                    var id = this.id;
+
+
+                    var index = $.inArray(id, seleccionados);
+                    if (index === -1) {
+                        seleccionados.push(id);
+                    } else {
+                        seleccionados.splice(index, 1);
+                    }
+
+                    $(this).toggleClass('selected');
+
+                    $('input[type=search]').focus();
+                });
+
+
+            //Select ALL
+            $('#selTodos').click(function() {
+
+                if ($('#selTodos').hasClass('selectTodos')) {
+
+                    $('#table-generar-cfdis tbody tr').each(function() {
+                        $(this).removeClass('selected');
+                    });
+
+                    $('#selTodos').removeClass('selectTodos');
+                    $('#selTodos').find("span").removeClass('glyphicon-check').addClass('glyphicon-unchecked');
+                } else {
+
+                    seleccionados = [];
+                    $('#table-generar-cfdis tbody tr').each(function() {
+                        $(this).removeClass('selected').addClass('selected');
+                        var id = this.id;
+                        seleccionados.push(id);
+
+                    });
+
+                    $('#selTodos').addClass('selectTodos');
+                    $('#selTodos').find("span").removeClass('glyphicon-unchecked').addClass('glyphicon-check');
+                }
+
+            });
+
+            //->
+            $('#table-generar-cfdis tbody').on('click',
+                'span',
+                function() {
+                    var idtimbre = $(this).data('idtimbrado');
+
+                    if (idtimbre > 0) {
+                        alert('idTimbre :' + idtimbre);
+                    }
+
+                });
+
+
+        });
+
+        $("#detalleError").on("shown.bs.modal",
+            function() {
+                var table = $("#tableEmpleadoError").DataTable({
+                    scrollY: '500px',
+                    scrollCollapse: true,
+                    paging: false,
+                    searching: true,
+                    "language": { "url": "../scripts/datatables-spanish.json" },
+                    info: false,
+                    select: true
+
+                });
+            });
+
+
+    </script>
+}
+else
+{
+    <div>
+        <div class="alert alert-warning">
+            <h4> <strong>Info!</strong> No se encontrarón registros para certificar <span class="label label-default"></span></h4>
+        </div>
+    </div>
+}

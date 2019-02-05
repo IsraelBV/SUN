@@ -1,0 +1,79 @@
+﻿@model RH.Entidades.Empleado_Infonavit
+
+@using (Ajax.BeginForm("CreateInfonavit", "Empleados", new AjaxOptions { OnSuccess = "InfonavitFormSuccess", OnFailure = "OnFailure", OnBegin = "$('#modal-new-infonavit').modal('hide');" }, new { @class = "tooltipForm frmInfonavit", id = "frmNewInfonavit" }))
+{
+   
+    <div class="row">
+    
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="num-credito" class="control-label">Número de Crédito</label>
+                <input type="number" name="NumCredito" class="form-control NumCredito"
+                       data-rule-required="true"
+                       data-rule-digit="true"
+                       data-rule-maxlength="10"
+                       data-rule-minlength="10" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="TipoCredito" class="control-label">Tipo de Crédito</label>
+                <select name="TipoCredito" class="form-control TipoCredito" data-rule-required="true">
+                    <option value="1">Cuota Fija</option>
+                    <option value="2">Porcentaje</option>
+                    <option value="3">V.S.M. (Veces el Salario Mínimo)</option>
+                    <option value="4">V.S.M. (UMA)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Cantidad" class="control-label">Factor de Descuento</label>
+                <input type="number" step="any" class="form-control FactorDescuento" name="FactorDescuento" data-rule-required="true" />
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="FechaInicio" class="control-label">Fecha de Inicio</label>
+                <input type="date" name="FechaInicio" class="form-control FechaInicio" data-rule-required="true" data-rule-date="true" />
+            </div>
+        </div>
+
+        <input type="hidden" name="IdEmpleadoContrato" value="@ViewBag.IdEmpleadoContrato" />
+        <input type="hidden" id="Salario" name="Salario" value="0" />
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DescuentoDiario" class="control-label">Descuento Diario</label>
+                <input type="number" step="any" class="form-control DescuentoDiario" name="DescuentoDiario" readonly data-rule-required="true" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DescuentoBimestral" class="control-label">Descuento Bimestral</label>
+                <input type="number" step="any" class="form-control DescuentoBimestral" name="DescuentoBimestral" readonly data-rule-required="true" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Bimestre" class="control-label">Bimestre Aplicado</label>
+                <input type="text" class="form-control BimestreAplicado" name="Bimestre" readonly />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DiasBimestre" class="control-label">Dias del Bimestre</label>
+                <input type="number" step="any" class="form-control DiasBimestre" name="DiasBimestre" readonly />
+            </div>
+        </div>
+    </div>
+}

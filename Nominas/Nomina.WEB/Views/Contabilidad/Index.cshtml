@@ -1,0 +1,63 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@model List<Empresa>
+
+@{
+    var conceptos = ViewBag.conceptos;
+}
+
+<div class="col-md-6 col-md-offset-4">
+    <h3>Configuracion de las Claves Contables</h3>
+</div>
+
+<div class="col-md-12" style="align-items:center; margin :10px;">
+    <div class="col-md-4">
+        <label>Empresa: </label>
+        <select class="form-control" id="empresa">
+            <option value="0">Seleccionar Empresa</option>
+            @foreach (var e in Model)
+            {
+                <option value="@e.IdEmpresa">@e.RazonSocial</option>
+            }
+        </select>
+    </div>
+
+</div>
+
+<div class="col-md-12">
+    <div class="col-md-12" style="margin-left :10px;margin-top :10px;margin-right: 30px;" id="cuentas">
+
+
+    </div>
+</div>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
+<script>
+
+
+
+    $("#empresa").change(function () {
+        var empresa = $('select[id=empresa]').val();
+        var request = $.ajax({
+            url: "/Contabilidad/tablasCuentas",
+            method: "POST",
+            data:
+                {
+                    idEmpresa: empresa
+                },
+            beforeSend: function () {
+                waitingDialog.show('Procesando...');
+            }
+        });
+
+        request.done(function (data) {
+            waitingDialog.hide();
+            $('#cuentas').html(data);
+        });
+
+    });
+
+
+</script>

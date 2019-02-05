@@ -1,0 +1,54 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>HOME - Alianza</title>
+    <link href="~/Content/index.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+</head>
+<body>
+<div>
+    <div class="container">
+        <div class="col-md-12">
+            <h4>Sucursales accedidas recientemente</h4>
+            <hr />
+            <div class="col-md-12" id="recientes"> 
+                @{Html.RenderAction("SucursalesRecientes", "Home");}
+            </div>
+            </div>
+            <div class="col-md-12" id="clientes">
+               
+                <div id="listaClientes" class="col-md-12">
+                    @Html.Action("SucursalesIndex", "Home", new { pagina = 1})
+                </div>
+            </div>
+        </div>
+
+        <!--Notificaciones
+        <div class="col-md-3" id="notificaciones">
+            <h4>Notificaciones</h4>
+            <hr />
+
+            <p style="text-align:center"><strong> Próximamente </strong> </p>
+            <p> <img src="~/Images/smile.gif" /> </p>
+            <p style="text-align:center"><strong>Programadores Trabajando</strong></p>
+        </div>-->
+    </div>
+
+</body>
+</html>
+
+<script>
+    function OnSuccessSearch(data) {
+        $("#listaClientes").html(data);
+    }
+
+    function OnFailureSearch() {
+        alert("Algo inesperado sucedió!");
+    }
+</script>

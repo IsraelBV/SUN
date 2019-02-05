@@ -1,0 +1,15 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@model List<Cliente>
+
+@if (Model.Count() != 0)
+{
+    <label>Cliente: </label>
+    <select class="form-control" id="cliente">
+        <option value="0">Todas</option>
+        @foreach (var e in Model)
+        {
+            <option value="@e.IdCliente">@e.Nombre</option>
+        }
+    </select>
+}

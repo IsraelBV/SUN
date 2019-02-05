@@ -1,0 +1,52 @@
+﻿@using RH.Entidades
+@model RH.Entidades.Banco
+@using Common.Helpers;
+@using Common.Enums;
+@using RH.BLL;
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Banco</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IdBanco)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdBanco)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+
+    </dl>
+</div>
+<p>
+@if (ControlAcceso.ValidarEjecutarAccion(Modulos.Bancos, AccionCrud.Editar, SessionHelpers.GetIdUsuario()))
+{
+    @Html.ActionLink("Edit", "Edit", new {id = Model.IdBanco}) <text>|</text>
+}
+    @Html.ActionLink("Regresar a Index", "Index")
+</p>

@@ -1,0 +1,80 @@
+﻿@using Common.Helpers;
+@model RH.Entidades.Puesto
+
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+@if (Model == null)
+{
+
+    Response.Redirect("~/Departamentos/index");
+}
+else
+{
+
+    using (Ajax.BeginForm("Edit", "Puestos", null, new AjaxOptions { OnComplete = "CloseModal()" }, new { id = "formularioEdit", @class = "tooltipForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Edita el Puesto</h3>
+        </div>
+        <div class="modal-body" id="pModalBody">
+            <div>
+                <div class="form-horizontal">
+
+                    @*Primer Row*@
+                    <div class="row">
+                        <div class="form-group has-feedback col-xs-4">
+                           @Html.EditorFor(model => model.IdPuesto, new { htmlAttributes = new { @class = "form-control", type="hidden"}})
+                        </div>
+
+                        <div class="form-group col-xs-4">
+                            @Html.EditorFor(model => model.IdDepartamento, new { htmlAttributes = new { @class = "form-control", type = "hidden" } })
+                        </div>
+                    </div>
+
+                    @*Segundo Row*@
+
+                    <div class="row">
+                        <div class="control-label col-md-2 col-xs-4">
+                            <label>Descripción</label>
+                        </div>
+                        <div class="form-group col-xs-8">
+                            <input type="text" name="Descripcion" class="form-control" value="@Model.Descripcion" id="Descripcion" data-rule-lettersonly="true" data-rule-required="true" data-rule-minlength="3" data-rule-maxlength="25">
+                        </div>                     
+
+                    </div>
+                    
+                    <div class="row">
+                        <div class="control-label col-md-2 col-xs-4">
+                            <label>Recibo</label>
+                        </div>
+                        <div class="form-group col-xs-8">
+                            <input type="text" name="PuestoRecibo" class="form-control" value="@Model.PuestoRecibo" id="PuestoRecibo" data-rule-lettersonly="true" data-rule-required="true" data-rule-minlength="3" data-rule-maxlength="25">
+                        </div>   
+                    </div>
+
+                    <div class="row">
+                        <div class="control-label col-md-2 col-xs-4">
+                            <label>Status</label>
+                        </div>
+                        <div class="checkbox col-xs-4">
+                            @Html.EditorFor(model => model.Status)
+                        </div>
+                    </div>
+
+
+                    </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-actions no-color">
+                <input type="submit" class="btn btn-primary input-group-sm save" value="Guardar" /> <a class="btn btn-danger" data-dismiss="modal">Cancelar</a>
+            </div>
+        </div>
+    }
+}
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>

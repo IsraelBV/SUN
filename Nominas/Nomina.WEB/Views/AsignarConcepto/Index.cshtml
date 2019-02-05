@@ -1,0 +1,88 @@
+﻿@using RH.BLL;
+@using RH.Entidades;
+@using Nomina.BLL;
+@model List<Concepto>
+    @{ 
+        
+    }
+<link href="~/Content/catEmpleados.css" rel="stylesheet" />
+<div class="main-content-body main-content-body-with-footer module " id="detalleNomina">
+    <div class="row">
+       
+           <div class="col-md-5">
+
+               <table id="conceptos2" class="display compact" width="100%"  cellspacing="0">
+                   <thead>
+                       <tr class="info">
+                           <th>ID</th>
+                           <th class="select-filter">Descripción</th>
+                           <th class="select-filter">Tipo</th>
+                       </tr>
+                   </thead>
+
+                   <tbody>
+
+                       @foreach (var c in Model)
+                       {
+                           if (c.TipoFormula == 4)
+                           {
+                               <tr class="unselected" style="display:none;" id="@c.IdConcepto" data-id="@c.IdConcepto" data-tipo-concepto="@c.TipoConcepto" data-tipo-formula="@c.TipoFormula">
+                                   <td>@c.IdConcepto</td>
+                                   <td>@c.NombreConcepto</td>
+                                   <th>
+                                       @if (c.TipoConcepto == 1)
+                                       {
+                                           <text> P+ </text>
+                                       }
+                                       else if (c.TipoConcepto == 2)
+                                       {
+                                           <text> D- </text>
+                                       }
+
+                                   </th>
+                               </tr>
+                           }
+                           else
+                           {
+                               <tr class="unselected" id="@c.IdConcepto" data-id="@c.IdConcepto" data-tipo-concepto="@c.TipoConcepto" data-tipo-formula="@c.TipoFormula">
+                                   <td>@c.IdConcepto</td>
+                                   <td>@c.NombreConcepto</td>
+                                   <td>
+                                       @if (c.TipoConcepto == 1)
+                                       {
+
+                                           <text> P+ </text>
+                                       }
+                                       else if (c.TipoConcepto == 2)
+                                       {
+                                           <text> D- </text>
+                                       }
+                                       else if (c.TipoConcepto == 0)
+                                       {
+                                           <text> O- </text>
+                                       }
+
+                                   </td>
+                               </tr>
+                           }
+
+                       }
+
+
+                   </tbody>
+               </table>
+           </div>
+           <div id="concep" class="col-md-7 divemp" style="padding:-10px;">
+               <div class="table-panel">
+               </div>
+           </div>
+       
+       
+      
+    </div>
+</div>
+   
+    <script>
+        
+    </script>
+

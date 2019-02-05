@@ -1,0 +1,317 @@
+﻿@using RH.Entidades;
+@using RH.BLL;
+@model List<NOM_PeriodosPago>
+
+<style>
+    .dt-buttons {
+        padding-left: 10px;
+    }
+
+    #titulo {
+        position: fixed;
+        top: 5px;
+        margin-top: -10px;
+        color: #fff;
+    }
+</style>
+<div id="titulo">
+    <div class="main-content-title">
+        <h4 class="pull-left">Periodos De Pago</h4>
+    </div>
+</div>
+
+<div class="main-content-body" style="padding: 5px;">
+    @*<div class="table-panel">
+            <a class="btnPeriodoModal" disabled="disabled" ><span class="glyphicon glyphicon-eye-open"></span> DETALLE</a>
+        </div>*@
+    <table class="display" id="tablaPeriodos">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Descripción</th>
+                <th>Días</th>
+                <th>Tipo</th>
+                <th>Fechas</th>
+                <th>Bimestre</th>
+                <th>Solo C</th>
+                <th>Especial</th>
+                <th>Último</th>
+                <th class="text-center">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var status = "ACTIVO";
+                var classStatus = "label-success";
+                if(item.Autorizado == true)
+                {
+                    status = "AUTORIZADO";
+                    classStatus = "label-default";
+                }
+                if (item.CfdiGenerado == 2)
+                {
+                    classStatus = "label-primary";
+                }
+                <tr data-idperiodopago="@item.IdPeriodoPago" class="unselected @(item.SoloComplemento == true ? "text-danger" : "")">
+                    <td>@item.IdPeriodoPago</td>
+                    <td><b>@item.Descripcion</b></td>
+                    <td>@item.DiasPeriodo</td>
+                    <td>@Cat_Sat.GetPeriodicidadPagoById(item.IdTipoNomina).Descripcion</td>
+                    <td>@item.Fecha_Inicio.ToString("dd/MM") - @item.Fecha_Fin.ToString("dd/MM")</td>
+                    <td>@item.Bimestre</td>
+                    <td class=" text-danger">@(item.SoloComplemento == true ? "Si" : "-" )</td>
+                    <td>
+                        @if(item.Especial == true)
+                        {
+                            <input type="checkbox" checked disabled />
+                        }
+                        else
+                        {
+                            <input type="checkbox" disabled />
+                        }
+                    </td>
+                    <td>
+                        @if (item.Ultimo == true)
+                        {
+                            <input type="checkbox" checked disabled />
+                        }
+                        else
+                        {
+                            <input type="checkbox" disabled />
+                        }
+                    </td>
+                    <td class="status text-center">
+                        <span class="label @classStatus" style="display: block;">@status</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="modal fade" id="modal-periodo">
+    <div class="modal-dialog" style="width:1250px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="pull-left">Crear Nuevo Periodo de Pago</h4>
+            </div>
+            <div class="modal-body" id="modal-seleccion-empleados-body">
+                <div id="modalPeriodo">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-Detalleperiodo">
+    <div class="modal-dialog" style="width:1250px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="pull-left">Detalle Periodo</h4>
+            </div>
+            <div class="modal-body" id="modal-seleccion-empleados-body">
+                <div id="modalDetallePeriodo">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    //$('.btnPeriodoModal').click(function () {
+    //    var modalDetalle = $("#modal-periodo");
+    //    $.get("../../PeriodosPago/NuevoPeriodo", function (data) {
+    //        $("#modalPeriodo").html(data);
+    //        modalDetalle.modal();
+    //    });
+    //})
+    $(document).ready(function () {
+
+        var tableperi = $('#tablaPeriodos').DataTable({
+            dom: 'Bfrtip',
+            "paging": false,
+            "scrollY": "75vh",
+            "select": true,
+            "language": { "url": "../scripts/datatables-spanish.json" },
+            "order": [[0, "desc"]],
+            "buttons": [
+            {
+                className: '',
+                text: 'Detalle Periodo',
+                action: function () {
+                    var $row = $("#tablaPeriodos").find(".selected");
+                    if ($row.length > 0) {
+                        var IdPeriodo = $row.data("idperiodopago");
+                        var modalDetalle = $("#modal-Detalleperiodo");
+                        $.get("../../PeriodosPago/PeriodoDetalle?id=" + IdPeriodo, function (data) {
+                            $("#modalDetallePeriodo").html(data);
+                            modalDetalle.modal();
+                        });
+                    }
+                },
+                key: {
+                    key: 'd',
+
+                }
+            },
+            {
+                className: 'crearPeriodo',
+                text: 'Crear Periodo',
+                action: function () {
+                    var modalDetalle = $("#modal-periodo");
+                    $.get("../../PeriodosPago/NuevoPeriodo", function (data) {
+                        $("#modalPeriodo").html(data);
+                        modalDetalle.modal();
+                    });
+                }
+            },
+             {
+                 className: 'eliminarPeriodo',
+                 text: 'Eliminar Periodo',
+                 action: function () {
+                     var $row = $("#tablaPeriodos").find(".selected");
+
+                     var IdPeriodo = $row.data("idperiodopago");
+
+                     if ($.isNumeric(IdPeriodo)) {
+                         utils.confirmDialog("¿DESEA CONTINUAR?", "Se Eliminrá el Periodo: " + IdPeriodo, "CONFIRMAR", "CANCELAR", function (response) {
+                             if (response) {
+                                 var request = $.ajax({
+                                     url: "/PeriodosPago/eliminarPeriodo/",
+                                     method: "POST",
+                                     data: {
+
+                                         idPeriodo: IdPeriodo
+                                     }
+                                 }); request.done(function (data) {
+
+                                     utils.showMessage("Eliminar periodos", data, 5000, "");
+                                     $("#main-content").load("/PeriodosPago/GetPeriodosPago/");
+                                 })
+                             }
+                         });
+                     }
+                 }
+             }
+
+            ],
+        });
+
+
+
+        $('#tablaPeriodos tbody').on('dblclick', 'tr', function () {
+            var datarow = tableperi.row(this).data();
+
+            var modalDetalle = $("#modal-Detalleperiodo");
+            $.get("../../PeriodosPago/PeriodoDetalle?id=" + datarow[0], function (data) {
+                $("#modalDetallePeriodo").html(data);
+                modalDetalle.modal();
+            });
+        });
+
+
+        $("#modal-periodo").on("shown.bs.modal", function () {
+            var table = $('#normal').DataTable({
+                "paging": false,
+                "scrollY": "200px",
+            });
+        });
+
+        $("#modal-Detalleperiodo").on("shown.bs.modal", function () {
+            var tableDetalle = $('#empleadosPeri').DataTable({
+                dom: 'Bfrtip',
+                "language": {
+                    "url": "../scripts/datatables-spanish.json",
+                    "select": {
+                        "rows": {
+                            _: "%d registros seleccionados",
+                            0: "Ningun Registro Seleccionado",
+                            1: "%d registro seleccionado"
+                        }
+                    }
+
+                },
+
+                "paging": false,
+                "scrollY": "200px",
+                "select": {
+                    style: 'multi'
+                }, "buttons": [
+                      {
+                          className: 'seleccionarall',
+                          text: 'Seleccionar: Todos',
+                          action: function () {
+                              tableDetalle.rows().select();
+                          }, key: {
+
+                              key: 'a',
+
+                          }
+                      },
+                  {
+                      className: 'seleccionarcero',
+                      text: 'Seleccionar: Ninguno',
+                      action: function () {
+                          tableDetalle.rows().deselect();
+                      },
+                      key: {
+                          key: 'd',
+
+                      }
+                  },
+                {
+                    className: 'borrarRegistro',
+                    text: 'Eliminar',
+                    action: function () {
+                        arrayE = [];
+                        var selected = $("#empleadosPeri").find(".selected");
+                        selected.each(function () {
+                            var id = parseInt($(this).data("idempleado"));
+                            arrayE.push(id);
+                        });
+                        var IdPeriodo = selected.data("idperiodopago");
+
+                        if (arrayE.length > 0) {
+                            var request = $.ajax({
+                                url: "/PeriodosPago/eliminarLista/",
+                                method: "POST",
+                                data: {
+                                    arrayE: arrayE,
+                                    idPeriodo: IdPeriodo
+                                }
+                            });
+                            request.done(function (data) {
+                                $("#empleadosDetalles").load("/PeriodosPago/empleadosAgregados/?idPeriodo=" + IdPeriodo);
+                            });
+                        }
+
+                    },
+                    key: {
+                        key: 'd',
+
+                    }
+                }]
+            });
+        });
+
+        //si el modal se cierra se actualiza el main-content
+        $('#modal-Detalleperiodo').on('hidden.bs.modal', function () {
+            $("#main-content").load("/PeriodosPago/GetPeriodosPago/");
+        })
+
+    });
+</script>

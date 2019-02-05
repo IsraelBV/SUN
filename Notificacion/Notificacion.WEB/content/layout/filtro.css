@@ -1,0 +1,71 @@
+﻿#side-bar {
+    position: fixed;
+    background-color: #fff;
+    height: calc(100% - 56px);
+    color: #000;
+    overflow: scroll;
+    width: 56px;
+    display: none;
+    z-index: 2;
+}
+
+#side-bar ul {
+    background-color: #fff;
+}
+
+.liactive {
+    background-color: #e0e0e0 !important;
+}
+
+#side-bar ul li {
+    list-style-type: none;
+    width: 100%;
+    position: relative;
+    text-align: left;
+    float: left;
+    padding: 0;
+    display: list-item;
+}
+
+.side-bar-text {
+    display: none;
+}
+
+#side-bar a {
+    width: 100%;
+    color: #000;
+    height: 64px !important;
+    vertical-align: middle;
+}
+
+#side-bar i {
+    line-height: 58px !important;
+}
+
+#user-image {
+    width: 30px;
+    position: relative;
+    top: 15px;
+    margin-right: 15px;
+}
+
+#side-bar .collapsible-header {
+    border-bottom: 0;
+}
+
+main {
+    background: #fff;
+}
+
+/*Filtro de tipos*/
+#filAltas{
+    color:#03CE47;
+}
+
+#filIMSS{
+    color:#00C993;
+}
+
+#filBajaIMSS{
+    color:#034701;
+}

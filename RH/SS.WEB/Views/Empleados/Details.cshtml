@@ -1,0 +1,378 @@
+﻿@using RH.Entidades;
+@using RH.BLL;
+@using Common.Helpers;
+@using Common.Utils;
+@{
+    ViewBag.Title = "Detalle";
+    Empleado empleado = ViewBag.Empleado;
+    Empleado_Contrato contrato = ViewBag.Contrato;
+    SucursalDatos sucursal = ViewBag.Sucursal;
+    Empresa empresa = ViewBag.Empresa;
+    decimal sm = ViewBag.SM;
+    decimal uma = ViewBag.UMA;
+    int i = 1;
+}
+<link type="text/css" rel="stylesheet" href="~/Content/PanelWithTabs.css" />
+<link type="text/css" rel="stylesheet" href="~/Content/EmpleadoDetalle.css" />
+
+<!-- CSS para el tooltip validator -->
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+<link type="text/css" rel="stylesheet" href="~/Content/animate.min.css" />
+
+<style>
+    .badge-danger {
+        background-color: gray;
+    }
+
+    .badge-active {
+        background-color: forestgreen;
+    }
+</style>
+
+
+
+<div class="col-md-5">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                   <a data-toggle="collapse" data-parent="#accordion" href="#datos-personales">Datos Personales</a>
+                </h4>
+            </div>
+            <div id="datos-personales" class="panel-collapse collapse in">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <b>Clave</b>
+                        <span class="pull-right" id="IdEmpleado">@empleado.IdEmpleado</span>
+                    </li>
+
+                    <li class="list-group-item ">
+                        <b>ID Contrato</b>
+                        @if (contrato.Status)
+                        {
+                            <span class="badge badge-active pull-right" id="IdEmpleadoContrato">@contrato.IdContrato</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger pull-right" id="IdEmpleadoContrato">@contrato.IdContrato</span>
+                        }
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>Nombre</b>
+                        <span class="pull-right">@empleado.Nombres @empleado.APaterno @empleado.AMaterno</span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>NSS</b>
+                        <span class="pull-right" id="list-nss">@empleado.NSS</span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>RFC</b>
+                        <span class="pull-right">@empleado.RFC</span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>CURP</b>
+                        <span class="pull-right">@empleado.CURP</span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>Fecha Nacimiento</b>
+                        <span class="pull-right">@empleado.FechaNacimiento.ToString("dd/MM/yyyy")</span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>Fecha Alta</b>
+                        <span class="pull-right">@contrato.FechaAlta.ToString("dd/MM/yyyy")</span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>Fecha IMSS</b>
+                        <span class="pull-right" id="list-fecha-imss">
+                            @if (contrato.FechaIMSS != null)
+                            {
+                                @contrato.FechaIMSS.Value.ToString("dd/MM/yyyy")
+                            }
+                        </span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>Tipo de Nómina</b>
+                        <span class="pull-right">
+                            @Cat_Sat.GetPeriodicidadPagoById(contrato.IdPeriodicidadPago).Descripcion                            
+                        </span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>SD</b>
+                        <span class="pull-right" id="sd">@contrato.SD</span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>SDI</b>
+                        <span class="pull-right" id="sdi">@contrato.SDI</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Datos ocultos para cálculos -->
+        <text class="hidden" id="tipoNomina">@contrato.IdPeriodicidadPago</text>
+        <text class="hidden" id="salarioMinimo">@sm</text>
+        <text class="hidden" id="uma">@uma</text>
+        <!-- /Datos ocultos para cálculos -->
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#empresas">Configuración</a>
+                </h4>
+            </div>
+            <div class="panel-collapse collapse" id="empresas">
+                <ul class="list-group">
+                    
+                        <li class="list-group-item">
+                            <b>Empresa</b>
+                            <span class="pull-right">@empresa.RazonSocial</span>
+                        </li>
+                    <li class="list-group-item">
+                        <b>Cliente</b>
+                        <span class="pull-right">@sucursal.Nombre</span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <b>Sucursal</b>
+                        <span class="pull-right">@sucursal.Ciudad</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="col-md-7">
+    <div class="panel with-nav-tabs panel-primary">
+        <div class="panel-heading clearfix">
+            <div class="pull-left">
+                <h1 class="panel-title"></h1>
+            </div>
+            <div class="pull-right">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tabSS" data-toggle="tab" class="tabLink">Datos Personales</a></li>
+                    <li><a href="#tabINFONAVIT" data-toggle="tab" class="tabLink" id="tabLinkInfonavit">INFONAVIT</a></li>
+                    <li><a href="#tabFONACOT" data-toggle="tab" class="tabLink">FONACOT</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="tabSS">
+                    @using (Ajax.BeginForm("UpdateSS", "Empleados", new AjaxOptions { OnSuccess = "SSFormSuccess", OnFailure = "OnFailure", OnBegin = "OnBegin" }, new { @class = "tooltipForm" }))
+                    {
+                        <input type="hidden" value="@empleado.IdEmpleado" name="IdEmpleado" />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="nss" class="control-label">NSS</label>
+                                    <input type="text" value="@empleado.NSS" class="form-control" name="nss" id="nss" disabled
+                                           data-rule-maxlength="11"
+                                           data-rule-minlength="11"
+                                           data-rule-digits="true" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fecha-imss" class="control-label">Fecha IMSS</label>
+                                    @{ var fechaImss = contrato.FechaIMSS.ToStringOrEmptyDate<DateTime>("yyyy-MM-dd"); }
+                                    <input type="date" name="fecha-imss" id="fecha-imss" value="@fechaImss" class="form-control" disabled
+                                            data-rule-date="true"
+                                            />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            @if (contrato.FechaBaja != null)
+                            {
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="BajaIMSS" class="control-label">Baja IMSS</label>
+                                            @{ var fechaContrato = contrato.FechaBaja.ToStringOrEmptyDate<DateTime>("yyyy-MM-dd"); }
+                                                <input type="date" name="BajaIMSS" id="BajaIMSS" value="@fechaContrato" class="form-control" disabled 
+                                                       data-rule-date="true" />
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fonacot" class="control-label">FONACOT</label>
+                                    <input type="text" name="fonacot" id="fonacot" class="form-control" disabled value="@empleado.FONACOT" 
+                                           data-rule-digits="true" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="tab-pane fade" id="tabINFONAVIT">
+                    @*@{Html.RenderAction("Infonavit", "Empleados", new { id = contrato.IdContrato });}*@
+                </div>
+                <div class="tab-pane fade" id="tabFONACOT">
+                    @{Html.RenderAction("GetFonacot", "Empleados", new { IdEmpleadoContrato = contrato.IdContrato });}
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-right clearfix">
+            <div class="btn-group" role="group" id="panel-boton-desactivado">
+                <button type="button" class="btn btn-primary" id="btnEditar"><span class="glyphicon glyphicon-pencil"></span></button>
+            </div>
+            <div class="btn-group pull-right" role="group" id="panel-boton-activado">
+                <button type="button" class="btn btn-danger" id="btnCancelar"><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-primary" id="btnGuardar"><span class="glyphicon glyphicon-floppy-save"></span></button>
+            </div>
+            <div class="btn-group pull-right" role="group" id="panel-infonavit">
+                <button type="button" class="btn btn-primary btnAgregarInfonavit"> <span class="glyphicon glyphicon-plus"></span> </button>
+                <button type="button" class="btn btn-primary btnSaveInfonavit" onclick="$('#frmNewInfonavit').submit();"> <span class="glyphicon glyphicon-floppy-save"></span> </button>
+            </div>
+            <div class="btn-group pull-right" role="group" id="panel-fonacot">
+                <a class="btn btn-primary" data-toggle="modal" href="#fonacot-modal"><span class="glyphicon glyphicon-plus"></span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-detalle-infonavit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Detalle del Crédito INFONAVIT</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+              
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary btn-edit-infonavit">Editar</button>
+                <button type="button" class="btn btn-primary btn-save-edit-infonavit hidden" onclick="$('#infonavit-detail').submit()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-historial-infonavit">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Historial de Pagos del Crédito INFONAVIT</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-new-infonavit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Nuevo Crédito INFONAVIT</h4>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="$('#frmNewInfonavit').submit()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+ function calcDescuento(form) {
+        let tipoCredito = parseInt(form.find(".TipoCredito").val());
+        let factorDescuento = form.find(".FactorDescuento").val();
+        let $descuentoDiario = form.find(".DescuentoDiario");
+        let $descuentoBimestral = form.find(".DescuentoBimestral");
+        let fechaInicio = form.find(".FechaInicio").val();
+        let $bimestreAplicado = form.find(".BimestreAplicado");
+        let $diasBimestre = form.find(".DiasBimestre");
+        let sd = $("#sd").html();
+        let sdii = $("#sdi").html();
+        let uma = $("#uma").html();
+        let sm = $("#salarioMinimo").html();
+        $("#Salario").val(sdii);
+        let bimestre = 0;
+        let descDiario = 0;
+
+
+
+        if (fechaInicio == "" || factorDescuento == 0 || factorDescuento == "") {
+            $descuentoBimestral.val(0);
+            $descuentoDiario.val(0);
+            $diasBimestre.val(0);
+            $bimestreAplicado.val("");
+            return 0;
+        }
+
+
+        let db = getDiasBimestre(fechaInicio);
+
+        switch (tipoCredito) {
+            case 1: //Si es por cuota fija
+                bimestre = calcPesos(factorDescuento);
+                descDiario = bimestre / db.diasBimestre;
+                break;
+            case 2: //si es tipo porcentaje
+                descDiario = CalcPorcentaje(factorDescuento, sdii);
+                bimestre = (descDiario * db.diasBimestre) + 15;
+                break;
+            case 3: //si es por CF VSM
+                bimestre = calcVSM(sm, factorDescuento);
+                descDiario = bimestre / db.diasBimestre;
+                break;
+            case 4: //si es por CF VSM por UMA
+                bimestre = calcVSM(uma, factorDescuento);
+                descDiario = bimestre / db.diasBimestre;
+                break;
+            default:
+                bimestre = 0;
+                descDiario = 0;
+                break;
+        }
+
+        if (isNaN(bimestre) || isNaN(descDiario)) {
+            bimestre = 0;
+            descDiario = 0;
+        }
+
+        $descuentoBimestral.val(bimestre.toFixed(2));
+        $descuentoDiario.val(descDiario.toFixed(2));
+        $diasBimestre.val(db.diasBimestre);
+        $bimestreAplicado.val(db.bimestreAplicado);
+    }
+</script>
+<script src="~/scripts/EmpleadoDetalle.js"></script>
+<script src="~/scripts/Infonavit.js"></script>
+
+<script src="~/scripts/jquery.unobtrusive-ajax.min.js"></script>
+<!-- Scripts para el validador -->
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>
+
+<script type="text/javascript" src="~/scripts/bootstrap-notify.min.js"></script>

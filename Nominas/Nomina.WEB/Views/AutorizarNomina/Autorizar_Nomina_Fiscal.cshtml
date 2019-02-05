@@ -1,0 +1,85 @@
+﻿
+@using RH.Entidades;
+
+@model NOM_Facturacion
+@{
+
+
+}
+
+        <div class="col-md-12">
+            <div class="form-group" style="text-align:center">
+                <div class="col-md-12">
+                    <h4> </h4>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-6">Cuota IMSS- Infonavit</label>
+
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" name="F_Cuota_IMSS_Infonavit" id="F_Cuota_IMSS_Infonavit" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.##}",Model.F_Cuota_IMSS_Infonavit) ">
+                </div>
+
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Impuesto sobre Nómina</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" name="F_Impuesto_Nomina" id="F_Impuesto_Nomina" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.##}",Model.F_Impuesto_Nomina)">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Amortización Infonavit</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.##}",Model.F_Amortizacion_Infonavit)" name="F_Amortizacion_Infonavit" id="F_Amortizacion_Infonavit">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Fonacot</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.##}",Model.F_Fonacot)" name="F_Fonacot" id="F_Fonacot">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Pensión Alimenticia</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.##}",Model.F_Pension_Alimenticia)" name="F_Pension_Alimenticia" id="F_Pension_Alimenticia">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Relativo</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.##}",Model.F_Relativo)" name="F_Relativo" id="F_Relativo">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Percepciones</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.##}",Model.F_Total_Nomina)" name="F_Total_Percepciones" id="F_Total_Percepciones">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-6"><label>Total General</label></div>
+                <div class="input-group">
+                    <span class="input-group-addon">$</span>
+                    <input type="text" class="form-control" style="text-align:right; width:100%;" value="@String.Format("{0:###,###,##0.00}",Model.F_Total_Fiscal)" name="F_Total_Fiscal">
+                </div>
+
+            </div>
+        </div>
+
+

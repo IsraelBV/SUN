@@ -1,0 +1,146 @@
+﻿@using Common.Helpers
+@using Common.Enums
+
+@model  RH.Entidades.C_FactoresIntegracion
+
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+@{
+//ViewBag.Title = ("Editar factor");
+//Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+
+
+}
+
+
+
+@if (Model == null)
+    {
+
+        Response.Redirect("~/FactoresDeIntegracion/index");
+    }
+    else
+    {
+
+        decimal primavac = Model.PrimaVacacional * 100;
+
+
+   
+            @Html.HiddenFor(x => x.IdFactor)
+
+            <div class="panel panel-default">
+          
+            <div class="panel-body">
+                <div class="form-horizontal ">
+                    <div class="row">
+
+                        @*Razon social primer div*@
+                        <label class="contron-label col-md-2 col-xs-4">Antiguedad</label>
+                        <div class="form-group has-feedback col-md-4 col-xs-8">
+                            @Html.TextBoxFor(x => x.Antiguedad, new { @class = "form-control input-group-sm",disabled = "disabled"})
+                            <input type="hidden" id="anti" value="@Model.Antiguedad" name="anti" />
+                        </div>
+
+                        @*CP segundo div*@
+                        <div class="col-xs-2">
+                            <label>Dias de Aguinaldo</label>
+                        </div>
+                        <div class="form-group has-feedback col-xs-4">
+                            <input type="text" name="DiasAguinaldo" class="form-control" id="DiasAguinaldo" value="@Model.DiasAguinaldo" onkeyup="Operacion()" data-rule-required="true" data-rule-number="true" data-rule-maxlength="5">
+                            @*@Html.TextBoxFor(x => x.DiasAguinaldo, new { @class = "form-control", @onKeyUp = "Operacion()" })*@
+                        </div>
+
+                    </div>
+                    @*Segundo row*@
+                    <div class="row">
+                        @*RFC tercer div*@
+                        <div class="contron-label col-md-2 col-xs-4">
+                            <label>Dias de Vacaciones</label>
+                        </div>
+                        <div class="form-group has-feedback col-xs-4">
+                            <input type="text" name="DiasVacaciones" class="form-control" id="DiasVacaciones" value="@Model.DiasVacaciones" onkeyup="Operacion()" data-rule-required="true" data-rule-number="true" data-rule-maxlength="5">
+                            @*@Html.TextBoxFor(x => x.DiasVacaciones, new { @class = "form-control", @onKeyUp = "Operacion()" })*@
+                        </div>
+
+                        @*Colonia cuarto div*@
+
+                        <div class="col-xs-2">
+                            <label>Prima Vacacional</label>
+                        </div>
+                        <div class="form-group has-feedback col-xs-4">
+                            
+                            <input class="form-control" type="text" id="prima" name="prima" value="@primavac" onKeyUp = "Operacion()" data-rule-required="true" data-rule-number="true" data-rule-maxlength="5" /><br>
+                        </div>
+
+
+
+
+                    </div>
+                    @*fin segundo row*@
+
+
+
+                    @*cuarto row*@
+                    <div class="row">
+
+                        @*Prima de riesgo quinto div*@
+                        <div class="contron-label col-md-2 col-xs-4">
+                            <label>Factor</label>
+                        </div>
+                 
+
+                        <div class="form-group has-feedback col-xs-4">
+                            @Html.TextBoxFor(x => x.Factor, new { @class = "form-control input-group-sm", disabled = "disabled" })
+                            <input type="hidden" id="factor2" name="factor2" /><br>
+
+                        </div>
+
+
+
+
+
+                    </div>
+                    @*fin cuarto row*@
+
+                  
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+    
+
+
+}
+
+<script>
+//Función que realiza la suma
+
+
+function Operacion() {
+    var DiasVacaciones = document.formulario.DiasVacaciones.value;
+    var DiasAguinaldo = document.formulario.DiasAguinaldo.value;
+    var prima = document.formulario.prima.value;
+    try {
+        //Calculamos el número escrito:
+        DiasVacaciones = (isNaN(parseInt(DiasVacaciones))) ? 0 : parseInt(DiasVacaciones);
+        DiasAguinaldo = (isNaN(parseInt(DiasAguinaldo))) ? 0 : parseInt(DiasAguinaldo);
+        prima = (isNaN(parseInt(prima))) ? 0 : parseInt(prima);
+        prima = prima / 100;
+        vacionesprima = prima * DiasVacaciones;
+        resultvaca = vacionesprima / 365;
+
+        DiasAguinaldo = DiasAguinaldo / 365;
+        document.formulario.Factor.value = 1 + resultvaca + DiasAguinaldo;
+        document.formulario.factor2.value = 1 + resultvaca + DiasAguinaldo;
+    }
+    //Si se produce un error no hacemos nada
+    catch (e) { }
+}
+</script>
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>

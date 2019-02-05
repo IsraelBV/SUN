@@ -1,0 +1,236 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@model List<EmpleadoNomina>
+@{
+
+}
+<style>
+    /*.nav-tabs {
+
+        background-color: #762a34;
+
+    }*/
+    /*.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+        background-color: #762a34;
+    }*/
+    .dt-buttons {
+        padding-top: 10px;
+    }
+
+    a.dt-button.seleccionarall {
+        background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+    }
+
+    a.dt-button.seleccionarcero {
+        background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+    }
+
+    a.dt-button.guardar {
+        background-image: linear-gradient(to bottom, #fff 0%, #337ab7 100%) !important;
+    }
+</style>
+
+
+<table id="empleadoPeriodo" class="display compact" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Paterno</th>
+            <th>Materno</th>
+            <th>Nombres</th>
+            <th>RFC</th>
+            <th title="Periodicidad de Pago">Per. Pago</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+            {
+            <tr data-idempleado="@a.idempleado" data-idperiodicidad="@a.IdPeriodicidadPago">
+                <td>@a.idempleado</td>
+                <td>@a.Paterno</td>
+                <td>@a.Materno</td>
+                <td>@a.Nombres</td>
+                <td>@a.RFC</td>
+                <td title="@a.PeriodicidadPago"><span class="badge">@a.PeriodicidadPago.Substring(0, 1)</span></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        if ($.fn.dataTable.isDataTable('#empleadoPeriodo')) {
+            var table1 = $('#empleadoPeriodo').DataTable();
+            table1.destroy();
+        }
+        else {
+            var table2 = $('#empleadoPeriodo').DataTable({
+                dom: 'Bfrtip',
+                retrieve: true,
+                "scrollY": "45vh",
+                "scrollCollapse": true,
+                "paging": false,
+                "info": true,
+                "language": { "url": "../scripts/datatables-spanish.json" },
+                "select": {
+                    style: 'multi'
+                }, "buttons": [
+                      {
+                          className: 'seleccionarall',
+                          text: '<i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i> Todos',
+                          titleAttr: 'Seleccionar todos los registros',
+                          action: function () {
+                              table2.rows().select();
+                          }, key: { key: 'a' }
+                      },
+                {
+                    className: 'seleccionarcero',
+                    text: '<i class="fa fa-square-o fa-lg" aria-hidden="true"></i> Ninguno',
+                    titleAttr: 'Deselecciona todos los registros',
+                    action: function () {
+                        table2.rows().deselect();
+                    },
+                    key: { key: 'd' }
+                },
+                {
+                    className: 'seleccionarcero',
+                    text: '<i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i> QN',
+                    titleAttr: 'Selecciona solo los Tipo Q - Quincenales',
+                    action: function () {
+
+                        table2.rows().deselect();
+
+                        $('#empleadoPeriodo tbody tr').each(function () {
+                            var varPeriodicidad = $(this).data("idperiodicidad");
+                            if (varPeriodicidad === 4) {
+                                $(this).addClass('selected');
+                            }
+                        });
+                    },
+                    key: { key: 'q' }
+                },
+                {
+                    className: 'seleccionarcero',
+                    text: '<i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i> SEM',
+                    titleAttr: 'Selecciona solo los Tipo S - Semanales',
+                    action: function () {
+
+                        table2.rows().deselect();
+
+                        $('#empleadoPeriodo tbody tr').each(function () {
+                            var varPeriodicidad = $(this).data("idperiodicidad");
+                            if (varPeriodicidad === 2) {
+                                $(this).addClass('selected');
+                            }
+                        });
+                    },
+                    key: { key: 'q' }
+                },
+
+
+                  {
+                      className: 'guardar',
+                      text: 'Crear Periodo',
+                      action: function () {
+
+                          var xTipo = $("#tiponomina").val();
+                          var xDiasPeriodo = $("#DiasPeriodo").val();
+                          var xDescripcion = $("#Descripcion").val();
+
+
+                          if (xDiasPeriodo <= 0) {
+                              utils.showMessage("Los días del periodo no debe ser menor o igual a 0 ", 5000, "info");
+                              return false;
+                          }
+
+
+                          if (xDescripcion.trim() === "") {
+                              utils.showMessage("Escriba la Descripción del periodo", 5000, "info");
+                              $("#Descripcion").focus();
+                              return false;
+                          }
+
+                          if (xTipo > 0) {
+                              var item = [];
+                              var arrayE = [];
+
+                              item.push($("#tiponomina").val());
+                              item.push($("#DiasPeriodo").val());
+                              item.push($("#Descripcion").val());
+                              item.push($("#Fecha_Inicio").val());
+                              item.push($("#Fecha_Fin").val());
+                              if ($("#ultimo").is(':checked')) {
+                                  item.push(true);
+                              } else {
+                                  item.push(false);
+                              }
+                              item.push(false);
+                              item.push("1");
+                              if ($("#Complemento").is(':checked')) {
+                                  item.push(true);
+                              } else {
+                                  item.push(false);
+                              }
+                              var selected = $("#empleadoPeriodo").find(".selected");
+
+                              selected.each(function () {
+                                  var id = parseInt($(this).data("idempleado"));
+                                  arrayE.push(id);
+                              });
+
+
+                              var request = $.ajax({
+                                  url: "/PeriodosPago/CrearPeriodo/",
+                                  method: "POST",
+                                  data: {
+                                      arrayE: arrayE,
+                                      periodoDatos: item
+                                  }
+                              });
+                              request.done(function (data) {
+
+
+                                  $('#modal-periodo').modal('hide');
+                                  $('.modal-backdrop').remove();
+                                  utils.loadMainPage("PeriodosPago", "GetPeriodosPago", "#main-content", true);
+                              });
+                          } else {
+
+                              utils.showMessage("Periodos pagos ", "Debe seleccionar un tipo de nomina.", 5000, "info");
+                          }
+                          //-> final function
+                      },
+                      key: {
+                          key: '',
+
+                      }
+                  },
+
+                ],
+
+
+            });
+
+
+            //EVENT
+            table2.on('select', function (e, dt, type, indexes) {
+                if (type === 'row') {
+                    $('input[type=search]').focus();
+                }
+            });
+
+
+            //-> fin else
+        }
+
+
+
+
+    });
+
+
+</script>

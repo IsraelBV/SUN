@@ -1,0 +1,551 @@
+﻿@using Nomina.BLL;
+@using RH.Entidades;
+@model List<AutorizacionDetalle>
+@{
+    var periodo = Session["periodo"] as NOM_PeriodosPago;
+    decimal totalPercepcion = 0;
+    decimal totalDeduccion = 0;
+    decimal totalObligacion = 0;
+
+    if ((int)Session["activarComplemento"] == 1)
+    {
+        foreach (var p in Model.Where(x => x.TipoConcepto == 1))
+        {
+            totalPercepcion = totalPercepcion + p.TotalConcepto;
+        }
+    }
+    else
+    {
+        foreach (var p in Model.Where(x => x.TipoConcepto == 1 && x.Complemento == false))
+        {
+            totalPercepcion = totalPercepcion + p.TotalConcepto;
+        }
+    }
+
+
+    foreach (var d in Model.Where(x => x.TipoConcepto == 2))
+    {
+        if (d.IdConcepto != 51 && d.IdConcepto != 52)
+        {
+            totalDeduccion = totalDeduccion + d.TotalConcepto;
+        }
+        else
+        {
+            if (d.IdConcepto == 51 && d.TotalConcepto > 0)
+            {
+                totalDeduccion = totalDeduccion + d.TotalConcepto;
+            }
+        }
+
+    }
+
+    foreach (var o in Model.Where(x => x.Obligacion == true))
+    {
+        totalObligacion = totalObligacion + o.TotalConcepto;
+    }
+    decimal TotalNeto = totalPercepcion - totalDeduccion;
+
+    var factura = ViewBag.Facturacion;
+    var procesada = ViewBag.Procesar;
+    var Autorizado = ViewBag.Autorizado;
+    var obligaciones = ViewBag.obligaciones;
+}
+<script src="~/Scripts/AutorizarNomina.js"></script>
+
+<style>
+    .well {
+        background-color: #D8D8D8 !important;
+    }
+
+    #titulo {
+        position: fixed;
+        top: 5px;
+        margin-top: -10px;
+    }
+
+    .btnAutorizada {
+        background-image: linear-gradient(to bottom, #fff 0%, #df0101 100%) !important;
+    }
+
+    .btngeneral {
+        background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+    }
+</style>
+
+@if (procesada == false || procesada == null)
+{
+
+    <div class="error-page">
+        <div class="error-page-content">
+            <div class="error-title">
+            </div>
+            <div class="error-description">
+                <h1>¡Oops!</h1>
+                <p>Al parecer la nomina seleccionada no ha sido procesada , favor de Procesar la Nomina antes de Ingresar al Modulo de Autorizacion.</p>
+                <a data-controller="ProcesoNomina" data-action="" data-target="#main-content" data-tables="true" class="btn btn-default btn-ajax">PROCESAR NÓMINA</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div id="titulo">
+        <div class="main-content-title">
+            @if (Autorizado == false)
+            {
+                <div id="noAutorizada">
+                    <h4 class="pull-left ">Nomina Sin Autorizar </h4>
+                </div>
+                <div id="siAutorizada" style="display:none;">
+                    <h4 class="pull-left">Nomina Autorizada </h4>
+                </div>
+            }
+            else
+            {
+                <h4 class="pull-left">Nomina Autorizada </h4>
+            }
+
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel with-nav-tabs panel-default">
+                <div class="panel-heading clearfix text-center">
+
+
+                    @*<a id="ImprimirAutorizacion" data-toggle="modal" href=''>Imprimir</a>*@
+                    <div class="pull-left" style="margin-top:10px;">
+                        <a id="ImprimirAutorizacion" class="btn btn-default btngeneral" href="#">Imprimir</a>
+                        @if ((int)Session["activarComplemento"] == 1)
+                        {
+                            <text>
+                                @Ajax.ActionLink("Autorizar Nomina", "Autorizacion_Factura", "AutorizarNomina", new { Id = "alink" }, new AjaxOptions { UpdateTargetId = "ModalFactura", OnBegin = "utils.showProgress()", OnComplete = "utils.hideProgress()", OnSuccess = "showModalFactura(this)" }, new { id = "linkSub", @class = "btn btn-default btngeneral" })            </text>
+                        }
+                        else
+                        {
+                            <text>
+                                @Ajax.ActionLink("Autorizar Nomina", "Autorizar_Nomina_Fiscal", "AutorizarNomina", new { Id = "alink" }, new AjaxOptions { UpdateTargetId = "ModalFactura", OnBegin = "utils.showProgress()", OnComplete = "utils.hideProgress()", OnSuccess = "showModalFactura(this)" }, new { id = "linkSub", @class = "btn btn-default btngeneral" })</text>
+                        }
+
+
+
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-4">
+                        <h4 class="text-center"><b>Percepciones</b></h4>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <lable class="col-md-8"><b><P align="center">Concepto</P></b></lable>
+                                <lable class="col-md-4"><b><P align="center">Total</P></b></lable>
+                            </div>
+                            <div style="height:300px;overflow-y:scroll;">
+                                @if ((int)Session["activarComplemento"] == 1)
+                                {
+                                    foreach (var P in Model.Where(x => x.TipoConcepto == 1))
+                                    {
+                                        if (P.TotalConcepto != 0)
+                                        {
+                                            <div class="form-group well well-sm">
+                                                <b class="col-md-8">@P.NombreConcepto</b>
+                                                <lable class="col-md-4"><P ALIGN=right>@P.TotalConcepto</P></lable>
+                                            </div>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (var P in Model.Where(x => x.TipoConcepto == 1 && x.Complemento == false))
+                                    {
+                                        if (P.TotalConcepto != 0)
+                                        {
+                                            <div class="form-group well well-sm">
+                                                <b class="col-md-8">@P.NombreConcepto</b>
+                                                <lable class="col-md-4"><P ALIGN=right>@P.TotalConcepto</P></lable>
+                                            </div>
+                                        }
+
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <label class="col-md-7" style="padding-top:8px;"> Total general</label>
+                        <label class="col-md-5" style="padding-top:8px;">@totalPercepcion</label>
+                        <label class="col-md-7" style="padding-top:8px;">Neto Total: </label>
+                        <label class="col-md-5" style="padding-top:8px;">@TotalNeto</label>
+                    </div>
+
+                    <div class="col-md-4">
+                        <h4 class="text-center"><b>Deducciones</b></h4>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <lable class="col-md-8"><b><P align="center">Concepto</P></b></lable>
+                                <lable class="col-md-4"><b><P align="center">Total</P></b></lable>
+                            </div>
+                            <div style="height:300px;overflow-y:scroll;">
+                                @foreach (var P in Model.Where(x => x.TipoConcepto == 2 && x.Complemento == false))
+                                {
+                                    if (P.TotalConcepto != 0)
+                                    {
+                                        <div class="form-group well well-sm">
+                                            <b class="col-md-8">@P.NombreConcepto</b>
+                                            <lable class="col-md-4"><P ALIGN=right>@P.TotalConcepto</P></lable>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <label class="col-md-7" style="padding-top:8px;"> Total general</label>
+                        <label class="col-md-5" style="padding-top:8px;">@totalDeduccion</label>
+                    </div>
+                    <div class="col-md-4">
+                        <h4 class="text-center">Obligaciones</h4>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <lable class="col-md-8"><b><P align="center">Concepto</P></b></lable>
+                                <lable class="col-md-4"><b><P align="center">Total</P></b></lable>
+                            </div>
+                            <div style="height:300px;overflow-y:scroll;">
+                                <div class="form-group well well-sm">
+                                    <b class="col-md-8">Fondo Retiro SAR</b>
+                                    <lable class="col-md-4"><P ALIGN=right>@obligaciones.FondoRetiro</P></lable>
+                                </div>
+                                <div class="form-group well well-sm">
+                                    <b class="col-md-8">Guarderia</b>
+                                    <lable class="col-md-4"><P ALIGN=right>@obligaciones.Guarderia</P></lable>
+                                </div>
+                                <div class="form-group well well-sm">
+                                    <b class="col-md-8">IMSS Empresa</b>
+                                    <lable class="col-md-4"><P ALIGN=right>@obligaciones.IMSSEmpresa</P></lable>
+                                </div>
+                                <div class="form-group well well-sm">
+                                    <b class="col-md-8">INFONAVIT Empresa</b>
+                                    <lable class="col-md-4"><P ALIGN=right>@obligaciones.InfonavitEmpresa</P></lable>
+                                </div>
+                                <div class="form-group well well-sm">
+                                    <b class="col-md-8">Riesgo de Trabajo</b>
+                                    <lable class="col-md-4"><P ALIGN=right>@obligaciones.RiesgoTrabajo</P></lable>
+                                </div>
+                                <div class="form-group well well-sm">
+                                    <b class="col-md-8">Impuesto sobre Nomina</b>
+                                    <lable class="col-md-4"><P ALIGN=right>@obligaciones.ImpuestoNomina</P></lable>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="col-md-7" style="padding-top:8px;"> Total general</label>
+                        <label class="col-md-5" style="padding-top:8px;">@(obligaciones.FondoRetiro + obligaciones.Guarderia + obligaciones.IMSSEmpresa + obligaciones.RiesgoTrabajo + obligaciones.ImpuestoNomina + obligaciones.InfonavitEmpresa)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="modal fade" id="modal-Dispersion">
+    <div class="modal-dialog" style="width:500px" id="modal-tamanio">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">title</h4>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div id="ModalDispersion"></div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default " id="ImprimirDispersion"><span class="glyphicon glyphicon-print"></span></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-circle"></span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@if ((int)Session["activarComplemento"] == 1)
+{
+    //using (Html.BeginForm("GuardarFactura", "AutorizarNomina", FormMethod.Post, new { id = "formulario", @class = "tooltipForm" }))
+    //{
+    <div class="modal fade" id="modal-Factura">
+        <div class="modal-dialog" style="width:550px !important; ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">title</h4>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <div id="ModalFactura"></div>
+                </div>
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-default btn-lg " id="ImprimirDispersion"><span class="glyphicon glyphicon-print"></span></button>*@
+                    <div class="pull-left">
+                        <div class="form-group">
+                            <div class="col-md-6"><label>IVA</label></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">%</span>
+                                <input type="text" class="form-control" style="text-align:right; width:100%;" onkeyup="Operacion()" value="@(factura.IVA)" name="IVA" id="IVA">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-default btn-sm dropdown-toggle" id="imprimirDispersion" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-print"></span>
+                        </button>
+                        @*<input type="submit" class="btn btn-default btn-sm dropdown-toggle" id="GuardarFactura" value="Guardar" />*@
+                        <a class="btn btn-default" id="GuardarFactura">Guardar</a>
+                        
+@if (Autorizado == false)
+{
+    <a id="botonAutorizar" class="btn btn-danger autorizar">Autorizar</a>
+    <button type="button" class="btn btn-default " data-dismiss="modal"><span class="glyphicon glyphicon-remove-circle"></span></button>
+}
+else
+{
+    <a class="btn btn-danger">Nomina Autorizada</a>
+    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-circle"></span></button>
+}
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    //}
+}
+else
+{
+    <div class="modal fade" id="modal-Factura">
+        <div class="modal-dialog" style="width:550px !important; ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">title</h4>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <div id="ModalFactura"></div>
+
+                </div>
+                <div class="modal-footer">
+
+                    @if (Autorizado == false)
+                    {
+
+                        <button class="btn btn-default btn-sm dropdown-toggle" id="imprimirDispersion" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-print"></span>
+                        </button>
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-circle"></span></button>
+                                                    <a id="botonAutorizar" class="btn btn-default autorizar">Autorizar</a>
+
+                    }
+                    else
+                    {
+                        <button class="btn btn-default btn-sm dropdown-toggle" id="imprimirDispersion" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-print"></span>
+                        </button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove-circle"></span></button>
+                                                    <a class="btn btn-danger">Nomina Autorizada</a>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+
+        var table1 = $('#tblPercepciones').DataTable({
+            "dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
+            "paging": false,
+            "scrollY": "300px",
+            "bInfo": false,
+            "searching": false,
+            order: [[0, 'asc']],
+
+
+        });
+
+        var table2 = $('#tblDeduccciones').DataTable({
+            "paging": false,
+            "scrollY": "300px",
+            "bInfo": false,
+            "searching": false,
+            order: [[0, 'asc']],
+            fixedColumns: {
+                leftColumns: 1,
+                rightColumns: 1
+            }
+
+        });
+        var table3 = $('#tblObligaciones').DataTable({
+            "paging": false,
+            "scrollY": "300px",
+            "searching": false,
+            "bInfo": false,
+            order: [[0, 'asc']],
+            fixedColumns: {
+                leftColumns: 1,
+                rightColumns: 1
+            }
+
+        });
+
+
+    });
+
+    function Operacion() {
+        var porcentajeServicio = $(C_Porcentaje_Servicio).val();
+        var totalServicio = $(C_Total_Servicio).val();
+        var percepciones = $(C_Percepciones).val();
+        var cuottas = $(C_Cuotas_IMSS_Infonavit).val();
+        var impuesto = $(C_Impuesto_Nomina).val();
+        var rela = $(C_Relativos).val();
+        var descuentos = $(C_Descuentos).val();
+        var otros = $(C_Otros).val();
+        var subtotal = $(C_Subtotal).val()
+        var total = $(C_Total_Complemento).val();
+        var iva = $(IVA).val();
+        var totalIVA = $(C_Total_IVA).val();
+        //variables de Sindicato
+        var porcentajeComision = $(S_Porcentaje_Comision).val();
+        var totalComision = $(S_Total_Comision).val();
+        var percepcionesSin = $(S_Percepcion_Sindicato).val();
+        var percepcionesFis = $(S_Percepcion_Fiscal).val();
+        var ivaPercepFis = $(S_IVA_Percepcion_Fiscal).val();
+        var dif_Mont = $(S_Dif_Montvde).val();
+        var cuotaLegado = $(S_Cuota_Legado).val();
+        var costoIMSS = $(S_Costo_IMSS).val();
+        var ivaIMSS = $(S_IVA_Costo_IMSS).val()
+        var totalPorcentajeNomina = $(S_Total_Porcentaje_Nomina).val();
+        var ivaPorcentajeNomina = $(S_IVA_Porcentaje_Nomina).val();
+        var totalSindicato = $(S_Total_Sindicato).val();
+
+
+        //converciones Complemento
+        porcentajeServicio = (isNaN(parseFloat(porcentajeServicio))) ? 0 : parseFloat(porcentajeServicio);
+        totalServicio = (isNaN(parseFloat(totalServicio))) ? 0 : parseFloat(totalServicio);
+        percepciones = (isNaN(parseFloat(percepciones))) ? 0 : parseFloat(percepciones);
+        cuottas = (isNaN(parseFloat(cuottas))) ? 0 : parseFloat(cuottas);
+        impuesto = (isNaN(parseFloat(impuesto))) ? 0 : parseFloat(impuesto);
+        rela = (isNaN(parseFloat(rela))) ? 0 : parseFloat(rela);
+        descuentos = (isNaN(parseFloat(descuentos))) ? 0 : parseFloat(descuentos);
+        otros = (isNaN(parseFloat(otros))) ? 0 : parseFloat(otros);
+        subtotal = (isNaN(parseFloat(subtotal))) ? 0 : parseFloat(subtotal);
+        total = (isNaN(parseFloat(total))) ? 0 : parseFloat(total);
+        iva = (isNaN(parseFloat(iva))) ? 0 : parseFloat(iva);
+        totalIVA = (isNaN(parseFloat(totalIVA))) ? 0 : parseFloat(totalIVA);
+
+        //Converciones Sindicato
+        porcentajeComision = (isNaN(parseFloat(porcentajeComision))) ? 0 : parseFloat(porcentajeComision);
+        totalComision = (isNaN(parseFloat(totalComision))) ? 0 : parseFloat(totalComision);
+        percepcionesSin = (isNaN(parseFloat(percepcionesSin))) ? 0 : parseFloat(percepcionesSin);
+        percepcionesFis = (isNaN(parseFloat(percepcionesFis))) ? 0 : parseFloat(percepcionesFis);
+        ivaPercepFis = (isNaN(parseFloat(ivaPercepFis))) ? 0 : parseFloat(ivaPercepFis);
+        dif_Mont = (isNaN(parseFloat(dif_Mont))) ? 0 : parseFloat(dif_Mont);
+        cuotaLegado = (isNaN(parseFloat(cuotaLegado))) ? 0 : parseFloat(cuotaLegado);
+        costoIMSS = (isNaN(parseFloat(costoIMSS))) ? 0 : parseFloat(costoIMSS);
+        ivaIMSS = (isNaN(parseFloat(ivaIMSS))) ? 0 : parseFloat(ivaIMSS);
+        totalPorcentajeNomina = (isNaN(parseFloat(totalPorcentajeNomina))) ? 0 : parseFloat(totalPorcentajeNomina);
+        ivaPorcentajeNomina = (isNaN(parseFloat(ivaPorcentajeNomina))) ? 0 : parseFloat(ivaPorcentajeNomina);
+        totalSindicato = (isNaN(parseFloat(totalSindicato))) ? 0 : parseFloat(totalSindicato);
+
+
+        //operaciones complemento
+        porcentajeServicio = porcentajeServicio / 100;
+        rela = cuottas + impuesto;
+        totalServicio = percepciones * porcentajeServicio;
+        subtotal = percepciones + rela + descuentos + otros + totalServicio
+        iva = iva / 100;
+        totalIVA = subtotal * iva;
+        total = subtotal + totalIVA;
+
+
+        //operaciones sindicato
+        porcentajeComision = porcentajeComision / 100;
+        ivaPercepFis = iva * percepcionesFis;
+        totalComision = porcentajeComision * percepcionesSin;
+        ivaIMSS = costoIMSS * iva;
+        ivaPorcentajeNomina = iva * totalPorcentajeNomina;
+        totalSindicato = +totalComision + percepcionesSin + percepcionesFis + ivaPercepFis + dif_Mont + +cuotaLegado + costoIMSS + ivaIMSS + totalPorcentajeNomina + ivaPorcentajeNomina;
+
+        //resultado complemento
+        $(C_Total_IVA).val(totalIVA);
+        $(C_Subtotal).val(subtotal);
+        $(C_Total_Servicio).val(totalServicio);
+        $(C_Relativos).val(rela);
+        $(C_Total_Complemento).val(total);
+
+        //resultado sindicato
+        $(S_Total_Comision).val(totalComision);
+        $(S_IVA_Percepcion_Fiscal).val(ivaPercepFis);
+        $(S_IVA_Costo_IMSS).val(ivaIMSS);
+        $(S_IVA_Porcentaje_Nomina).val(ivaPorcentajeNomina);
+        $(S_Total_Sindicato).val(totalSindicato);
+
+    }
+
+
+
+
+    $("#imprimirDispersion").click(function () {
+        window.location = "/AutorizarNomina/ImprimirDispersion";
+    });
+
+    $("#modal-Factura").on("hidden.bs.modal", function () {
+        $(this).removeData('bs.modal');
+    });
+
+    $("#GuardarFactura").click(function () {
+        var itemC = {};
+        itemC["C_Porcentaje_Servicio"] = $("#C_Porcentaje_Servicio").val();
+        itemC["C_Total_Servicio"] = $("#C_Total_Servicio").val();
+        itemC["C_Percepciones"] = $("#C_Percepciones").val();
+        itemC["C_Cuotas_IMSS_Infonavit"] = $("#C_Cuotas_IMSS_Infonavit").val();
+        itemC["C_Impuesto_Nomina"] = $("#C_Impuesto_Nomina").val();
+        itemC["C_Relativos"] = $("#C_Relativos").val();
+        itemC["C_Descuentos"] = $("#C_Descuentos").val();
+        itemC["C_Otros"] = $("#C_Otros").val();
+        itemC["C_Subtotal"] = $("#C_Subtotal").val();
+        itemC["C_Total_IVA"] = $("#C_Total_IVA").val();
+        itemC["C_Total_Complemento"] = $("#C_Total_Complemento").val();
+        itemC["IdEmpresaC"] = $("#complemento-tab").data("idempresac");
+        var itemS = {};
+        itemS["S_Porcentaje_Comision"] = $("#S_Porcentaje_Comision").val();
+        itemS["S_Total_Comision"] = $("#S_Total_Comision").val();
+        itemS["S_Percepcion_Sindicato"] = $("#S_Percepcion_Sindicato").val();
+        itemS["S_Percepcion_Fiscal"] = $("#S_Percepcion_Fiscal").val();
+        itemS["S_IVA_Percepcion_Fiscal"] = $("#S_IVA_Percepcion_Fiscal").val();
+        itemS["S_Dif_Montvde"] = $("#S_Dif_Montvde").val();
+        itemS["S_Cuota_Legado"] = $("#S_Cuota_Legado").val();
+        itemS["S_Costo_IMSS"] = $("#S_Costo_IMSS").val();
+        itemS["S_IVA_Costo_IMSS"] = $("#S_IVA_Costo_IMSS").val();
+        itemS["S_Total_Porcentaje_Nomina"] = $("#S_Total_Porcentaje_Nomina").val();
+        itemS["S_IVA_Porcentaje_Nomina"] = $("#S_IVA_Porcentaje_Nomina").val();
+        itemS["S_Total_Sindicato"] = $("#S_Total_Sindicato").val();
+
+        var request = $.ajax({
+            url: "/AutorizarNomina/GuardarFactura/",
+            method: "POST",
+            data: {
+                facturaC: itemC,
+                facturaS: itemS
+
+            }, success: function (result) {
+                notification = utils.showMessage("Guardando Datos", "¡Datos guardados exitosamente!", 1000, "");
+
+            }
+
+        });
+    });
+</script>
+
+
+
+

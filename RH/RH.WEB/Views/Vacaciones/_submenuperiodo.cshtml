@@ -1,0 +1,52 @@
+﻿@using RH.BLL;
+@using Common.Helpers;
+@using Common.Enums;
+@model  List<RH.BLL.DatosEmpleadoVacaciones>
+
+@{ 
+    int numero = 0;
+    int diascorres = 0;
+    var fecha1 = "";
+    var fecha2 = "";
+    foreach (var a in Model.Where(s => s.status == true))
+    {
+        numero = numero + a.DiasTomados;
+        if (fecha1 == null)
+        {
+            fecha1 = "";
+        }else
+        {
+            fecha1 = a.Inicio.ToString("dd/MM/yyy");
+            fecha2 = a.Fin.ToString("dd/MM/yyy");
+        }
+
+
+    }
+    foreach (var c in Model)
+    {
+        diascorres = c.Dias;
+    }
+}
+
+<td class="tdDiasTomados">@numero</td>
+<td>@fecha1 - @fecha2 </td>
+<td style="text-align:center">
+    @if (ControlAcceso.ValidarEjecutarAccion(Modulos.Vacaciones, AccionCrud.Agregar, SessionHelpers.GetIdUsuario()))
+    {
+        
+           
+
+        <a   href="#" data-toggle="tooltip" data-placement="left" title="Generar Vacaciones" class="btn btn-primary btnGenerar btn-sm">
+            <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
+        </a>
+        
+    }
+</td>
+<td style="text-align: center">
+    @if (ControlAcceso.ValidarEjecutarAccion(Modulos.Vacaciones, AccionCrud.Consultar, SessionHelpers.GetIdUsuario()))
+    {
+        <a href="#" data-toggle="tooltip" data-placement="rigth" title="Historial " class="btn btn-default btnHistorial btn-sm">
+            <i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i>
+        </a>
+    }
+</td>

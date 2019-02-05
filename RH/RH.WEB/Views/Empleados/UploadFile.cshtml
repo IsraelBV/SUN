@@ -1,0 +1,54 @@
+﻿@using System.Data;
+@using RH.BLL;
+@model Tuple<List<ValidationEmpleado>, string>
+
+@if (Model != null)
+{
+    if (Model.Item1.Count > 0)
+    {
+        <div id="accordion" class="panel-group"  role="tablist" aria-multiselectable="true">
+            @for (int i = 0; i < Model.Item1.Count; i++)
+            {
+                var empleadoValidacion = Model.Item1[i];
+
+                <div class="panel panel-default">
+                    <div class="panel-heading heading-warnings" data-target="#collapse_@i" data-toggle="collapse">
+                        <h5 class="mb-0">
+                            @empleadoValidacion.Nombre
+                            <span class="badge badge-pill badge-warning" style="background-color:#ffc107">@empleadoValidacion.NumWar</span>
+                            <span class="badge badge-pill badge-danger" style="background-color:#dc3545">@empleadoValidacion.NumError</span>
+                        </h5>
+                    </div>
+                    <div id="collapse_@i" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                        @foreach (var dataValidacion in empleadoValidacion.data)
+                        {
+                            var color = dataValidacion.Type ? "warning" : "danger";
+                                <div class="alert alert-@color" role="alert">
+                                    <strong>@dataValidacion.Title</strong> @dataValidacion.Msg
+                                </div>                            
+                        }
+                    </div>
+
+                </div>
+            }
+        </div>
+        
+    }
+    else
+    {
+        string color = Model.Item2 == "" ? "alert alert-success" : "alert alert-warning";
+
+        <div class="@color">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @if (Model.Item2 != "")
+            {
+                <strong>ATENCION:</strong> @Model.Item2
+            }
+            else
+            {
+                <strong> DATOS CORRECTOS: DE CLIC EN GUARDAR</strong>
+                <input id="countRecords" type="hidden" />
+            }
+        </div>
+    }
+}

@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "Empleados";
+    ViewBag.Extra = "Nuevo Registro";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+
+    var asignados = ViewBag.DepartamentosAsignados;
+
+}
+
+@if (asignados > 0)
+{
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/Content/Empleados/EmpleadosFrm.css" />
+    <link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+    <div class="panel panel-default">
+        <!-- Botones de navegación Intersecciones -->
+        <div class="panel-heading">
+            <div class="btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn active-section" id="pt_datos_personales"><span class="badge">1</span> Datos Personales </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn inactive-section" id="pt_datos_contratacion"><span class="badge">2</span> Datos de Contrato </button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn inactive-section" id="pt_datos_nomina"><span class="badge">3</span> Datos Bancarios</button>
+                </div>
+            </div>
+        </div>
+        <!-- / Botones de navegacioón interseciones -->
+
+        <div class="panel-body">
+            <div class="section" id="section1">
+                @{
+                    Html.RenderAction("FormDatosPersonales", "Empleados");
+                }
+            </div>
+            <div class="section" id="section2">
+                @{
+                    Html.RenderAction("NewContrato", "Empleados");
+                }
+            </div>
+            <div class="section" id="section3">
+                @{
+                    Html.RenderAction("NewDatosBancarios", "Empleados");
+                }
+            </div>
+            <div id="loadingImg" class="section text-center">
+                <img src="~/Images/ajax-loader.gif" alt="Cargando...">
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="btn-toolbar" role="toolbar">
+
+                <!-- Navegación Entre paneles -->
+                <div class="btn-group" id="navButtons">
+                    <!--Botón Anterior-->
+                    <button type="button" class="btn btn-default" id="btnAnterior" disabled><span class="glyphicon glyphicon-menu-left"></span> Anterior</button>
+                    <!--Botón Siguiente-->
+                    <button type="button" class="btn btn-default" id="btnContinuar">Siguiente <span class="glyphicon glyphicon-menu-right"></span></button>
+                </div>
+                <!-- /Navegación entre paneles -->
+                <!-- Botón para regresar al index -->
+                <div class="btn-group pull-left" role="group" id="backButton">
+                    <a href="@Url.Action("Index", "Empleados")" class="btn btn-danger" id="btnCancelar"><span class="glyphicon glyphicon-remove"></span> Cancelar</a>
+                </div>
+                <!-- /Botón para regresar al index -->
+                <!--Botón para guardar los datos de la nómina, aparece solo cuando la sección 3 está visible-->
+                <button type="button" class="btn btn-primary pull-right" id="btnGuardar">Terminar</button>
+
+                <div class="clearfix"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/Empleados/EmpleadoFrm.js"></script>
+
+    <!-- Scripts para el validador -->
+                    <script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+                    <script src="~/Scripts/validator/messages_es.js"></script>
+                    <script src="~/Scripts/validator/TooltipValidator.js"></script>
+                    }
+                    else
+                    {
+                        
+                            <div class="panel">
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="" id="foto">
+                                            <img src="~/Images/locks.png" />
+                                        </div>
+                                    </div>
+                                   
+                                             <div class="col-md-6">
+                                                 <div class="" id="_error" style="text-align:center;">
+                                                     <p><br><br><br><br><br><br><br><br><br><br><strong>Lo sentimos: Esta página no está disponible</strong><br>La dirección a la que intentas ingresar no es accesible si no cuentas con puestos dentro de la sucursal.</p>
+                                                     </div>
+                                                 </div>
+                                        </div>
+                                    </div>
+                                    <h3>.</h3>
+                                    }

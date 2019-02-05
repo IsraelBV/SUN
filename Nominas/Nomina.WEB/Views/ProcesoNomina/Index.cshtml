@@ -1,0 +1,972 @@
+﻿@using System.Linq
+@using Common.Utils;
+@using RH.Entidades.GlobalModel;
+@model System.Collections.Generic.List<Nomina.BLL.ProcesadoModelo2>
+@{
+
+    //var registros = Model.Count();
+    //var seleccionados = Model.Where(x => x.Seleccionado == true).Count();
+    var procesando = ViewBag.Procesando;
+    var autorizado = ViewBag.Autorizado;
+    //var tableSelect = procesando ? "table-disabled" : "table-multiselect";
+    //bool modoComplemento = ViewBag.Complemento;
+
+    var primero = Model?.FirstOrDefault();
+    decimal sumPercepciones = 0;
+    decimal sumDeducciones = 0;
+    decimal sumTotal = 0;
+    int columnsHiddens = 0;
+    int indxConcepto = 5;
+    int[] visibles = ViewBag.visible;
+    int[] ocultos = ViewBag.oculto;
+    int numRegistro = 1;
+    bool SoloComplemento = false;
+    List<NotificationSummary> summary = null;
+    int contentSumary = 0;
+    if (Model != null)
+    {
+        SoloComplemento = ViewBag.SoloComplemento;
+        summary = ViewBag.Summary;
+        contentSumary = summary.Count;
+    }
+
+}
+
+@if (Model != null)
+{
+    <style>
+        .tooltip {
+            background-color: #000;
+            border: 1px solid #fff;
+            padding: 10px 15px;
+            width: 200px;
+            display: none;
+            color: #fff;
+            text-align: left;
+            font-size: 12px;
+            /* outline radius for mozilla/firefox only */
+            -moz-box-shadow: 0 0 10px #000;
+            -webkit-box-shadow: 0 0 10px #000;
+        }
+
+
+        /*Lista */
+
+        #listadoConceptos {
+            counter-reset: li;
+            list-style: none;
+            *list-style: decimal;
+            font: 15px 'trebuchet MS', 'lucida sans';
+            padding: 0;
+            margin-bottom: 4em;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+        }
+
+            #listadoConceptos ol {
+                margin: 0 0 0 2em;
+            }
+
+            #listadoConceptos li {
+                position: relative;
+                display: block;
+                padding: .4em .4em .4em .8em;
+                *padding: .4em;
+                margin: .5em 0 .5em 2.5em;
+                color: #fff;
+                text-decoration: none;
+                transition: all .3s ease-out;
+            }
+
+                /*#listadoConceptos li:hover{
+            background: #762a34;
+        }*/
+
+                #listadoConceptos li:before {
+                    content: counter(li);
+                    counter-increment: li;
+                    position: absolute;
+                    left: -2.5em;
+                    top: 50%;
+                    margin-top: -1em;
+                    background: #762a34;
+                    height: 2em;
+                    width: 2em;
+                    line-height: 2em;
+                    text-align: center;
+                    font-weight: bold;
+                }
+
+                #listadoConceptos li:after {
+                    position: absolute;
+                    content: '';
+                    border: .5em solid transparent;
+                    left: -1em;
+                    top: 50%;
+                    margin-top: -.5em;
+                    transition: all .3s ease-out;
+                }
+
+                #listadoConceptos li:hover:after {
+                    left: -.5em;
+                    border-left-color: #762a34;
+                }
+
+        .warning {
+            background-color: #A9BCF5 !important;
+        }
+
+        table {
+            margin: 10px;
+        }
+
+        a.dt-button.seleccionarall {
+            background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+        }
+
+        a.dt-button.seleccionarcero {
+            background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+        }
+
+        a.dt-button.btnDetalles {
+            background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+        }
+
+        a.dt-button.btnConceptos {
+            background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+        }
+
+        a.dt-button.btnRecibos {
+            background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+        }
+
+        a.dt-button.btnprocesado {
+            background-image: linear-gradient(to bottom, #fff 0%, #228b22 100%) !important;
+        }
+
+        a.dt-button.btnprocesadoA {
+            background-image: linear-gradient(to bottom, #fff 0%, #337ab7 100%) !important;
+        }
+
+        a.dt-button.btnReporteExcel {
+            background-image: linear-gradient(to bottom, #fff 0%, #228b22 100%) !important;
+        }
+
+        #titulo {
+            position: fixed;
+            top: 5px;
+            margin-top: -10px;
+            color: #fff;
+        }
+
+        .badge-danger {
+            background-color: orangered
+        }
+
+        tfoot > tr > th {
+            text-align: right;
+        }
+        .negritasTotal {
+            font-weight:600;
+        }
+    </style>
+
+    <div id="titulo">
+        <div class="main-content-title">
+            <h4 class="pull-left">Procesar Nómina</h4>
+            @if (procesando)
+            {
+                <a title="PROCESANDO SU NÓMINA, POR FAVOR ESPERE... " disabled>
+                    <span class='glyphicon glyphicon-hourglass fa-spin'></span> PROCESANDO...
+                </a>
+            }
+            else if (autorizado)
+            {
+                <a title="NÓMINA AUTORIZADA " disabled>
+                    <span class='glyphicon glyphicon-lock'></span> NÓMINA AUTORIZADA
+                </a>
+            }
+        </div>
+    </div>
+    <div class="module" id="proceso-nomina">
+        <div class="main-content-body" style="padding: 5px;">
+            <div class="table-panel">
+                @*<a id="selTodos" class="label label-primary" title="Seleccionar todos los registros"><span class="glyphicon glyphicon-unchecked"></span> Sel Todos</a>*@
+
+            </div>
+            @if (Model.Count > 0)
+            {
+                <table class="display nowrap  compact procesoNomina" id="table-proceso-nomina" @*style="margin-left: 2px;"*@ width="100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Empleado</th>
+                            <th title="Dias Laborados - Numero de días de pago">Días</th>
+                            <th class="text-right">Percepciones</th>
+                            <th class="text-right">Deducciones</th>
+                            @if ((int)Session["activarComplemento"] == 1)
+                            {
+                                <th class="text-right">Complemento</th>
+                            }
+
+
+                            @if (primero != null)
+                            {
+                                if (primero.Conceptos != null)
+                                {
+                                    foreach (var itemConcepto in primero.Conceptos)
+                                    {
+                                        <th class="text-right">@itemConcepto.NombreConcepto</th>
+                                    }
+                                    columnsHiddens = primero.Conceptos.Count;
+                                }
+                            }
+                            <th class="text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var nomina in Model)
+                        {
+                            var procesado = nomina.Seleccionado ? 1 : 0;
+                            <tr id="@nomina.IdEmpleado" class="" data-id-empleado="@nomina.IdEmpleado" data-id-nomina="@nomina.IdNomina" data-procesado="@procesado" data-sbcotizacion="@nomina.Sbc" data-tipotarifa="@nomina.TipoTarifa">
+                                <td> @numRegistro</td>
+                                <th title="E:@nomina.IdEmpleado - N:@nomina.IdNomina">@nomina.Paterno @nomina.Materno @nomina.Nombres</th>
+                                <td>@nomina.DiasLaborados</td>
+                                <td class="text-right">@nomina.Percepciones</td>
+                                @{sumPercepciones += nomina.Percepciones;}
+                                <td class="text-right">@nomina.Deducciones</td>
+                                @{sumDeducciones += nomina.Deducciones;}
+                                @if ((int)Session["activarComplemento"] == 1)
+                                {
+                                    <td class="text-right">@nomina.TotalComplemento</td>
+                                }
+
+                                @if (nomina.Conceptos != null)
+                                {
+                                    foreach (var itemTotalConcepto in nomina.Conceptos)
+                                    {
+                                        <td class="text-right">@itemTotalConcepto.TotalConcepto</td>
+                                    }
+                                }
+                                <td class="text-right negritasTotal">@nomina.TotalNomina</td>
+                                @{sumTotal += nomina.TotalNomina;}
+                            </tr>
+                            numRegistro++;
+                        }
+
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                </table>
+            }
+            else
+            {
+                if (SoloComplemento)
+                {
+                    <div class="alert alert-info">
+                        <strong>Info!</strong> Debe subir los datos de complemento, en el módulo "Nomina > Complemento"
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <strong>Info!</strong> No se encontrarón datos para mostrar..
+                    </div>
+                }
+
+            }
+        </div>
+        <div class="main-content-footer divTotales">
+            <div class="col-md-12">
+                <div class="col-md-2">
+                    <label for="totPercepciones" class="control-label">Percepciones</label>
+                    <input type="text" id="totPercepciones" name="totPercepciones" class="form-control" value="@ViewBag.totalP" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label for="totDeducciones" class="control-label">Deducciones</label>
+                    <input type="text" id="totDeducciones" name="totDeducciones" class="form-control" value="@ViewBag.totalD" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label for="totNominas" class="control-label">Total Nóminas</label>
+                    <input type="text" id="totNominas" name="totNominas" class="form-control" value="@ViewBag.totalN" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label for="totNominas" class="control-label">Salario minimo</label>
+                    <input type="text" id="totNominas" name="totNominas" class="form-control" value="@ViewBag.SMGV" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label for="totNominas" class="control-label">UMA</label>
+                    <input type="text" id="totNominas" name="totNominas" class="form-control" value="@ViewBag.UMA" readonly />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div id="conceptosModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width: 1000px">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Conceptos</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <ol style="margin-left: 15px;" id="listadoConceptos">
+                                @if (primero != null)
+                                {
+                                    if (primero.Conceptos != null)
+                                    {
+                                        foreach (var itemConcepto in primero.Conceptos)
+                                        {
+
+                                            var typeBtn = (visibles.Contains(itemConcepto.IdConcepto)) ? "btn-primary" : "btn-default";
+                                           
+                                            <div class="col-md-6">
+                                                <li><a class="toggle-vis btn @typeBtn" data-id="@itemConcepto.IdConcepto" data-column="@indxConcepto">@itemConcepto.NombreConcepto</a></li>
+                                            </div>
+                                            indxConcepto++;
+                                            
+                                        }
+
+                                    }
+                                }
+                            </ol>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardar" data-dismiss="modal">Guardar Configuración</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="detallesNomina" class="modal fade">
+        <div class="modal-dialog" style="width: 1100px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Detalles Nómina</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="detallenom"></div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="summaryModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Summary</h4>
+                </div>
+                <div class="modal-body">
+                    @if (summary.Any())
+                    {
+                        foreach (var itemS in summary)
+                        {
+                            <div class="alert alert-info">
+                                <strong>ID: @itemS.Reg</strong> @itemS.Msg1.
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <strong>Info!</strong> Muestra información del procesado actual.
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal Creditos Infonavit-->
+    <div id="creditos" class="modal fade">
+        <div class="modal-dialog" style="width: 1100px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Infonavit</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="creditoscontent"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+
+            var Tabla = $("#table-proceso-nomina");
+            var tablaColumnas = Tabla.find("thead tr th").length;
+            var tfoot = "<tr><th></th><th></th><th></th>";
+           
+            function sumCells(table, column) { //RECIBE UNA TABLA Y UN NUMERO DE COLUMNA Y DEVUELVE LA SUMA DE LA COLUMNA
+                var suma = 0.0;
+                table.find("tbody tr").each(function () {
+                    suma += (parseFloat($(this).find("td:eq(" + column + ")").text())*100);
+                });
+                return suma / 100;
+            }
+
+            for (var i = 2; i < tablaColumnas - 1; i++) {//ITERADOR DE COLUMNAS
+                tfoot += "<th>" + sumCells(Tabla, i); + "</th>";
+            }
+
+            tfoot += "</tr>";
+            Tabla.find("tfoot").html(tfoot);//INYECTA EL PIE DE TABLA 
+            
+            var activaIcon = 0;
+            activaIcon = @contentSumary;
+            var textSum = "Summary";
+            if (activaIcon > 0) {
+                textSum = "<span class='badge badge-danger'>" + activaIcon + "</span> Summary";
+            } else {
+                textSum = "<span class='badge'>" + activaIcon + "</span>  Summary";
+            }
+
+
+            var table = $("table.procesoNomina").DataTable({
+                dom: 'Bfrtip',
+                scrollY: '70vh',
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                "language": { "url": "../scripts/datatables-spanish.json" },
+                info: false,
+                select: { style: 'multi' },
+                "fixedColumns": {leftColumns: 3,rightColumns: 1},
+                "buttons": [
+                    {
+                        className: 'seleccionarall',
+                        text: '<i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i> Todos',
+                        titleAttr: 'Seleccionar todos los registros',
+                        action: function() {
+                            table.rows().select();
+
+
+                        },
+                        key: { key: 'a' }
+                    },
+                    {
+                        className: 'seleccionarcero',
+                        text: '<i class="fa fa-square-o fa-lg" aria-hidden="true"></i> Ninguno',
+                        titleAttr: 'Deselecciona todos los registros',
+                        action: function() {
+                            table.rows().deselect();
+                        }
+                    },
+                    {
+                        className: 'btnDetalles',
+                        text: '<i class="fa fa-info-circle fa-lg" aria-hidden="true"></i> Ver Detalle',
+                        titleAttr: 'Muestra el detalle de la nómina',
+                        action: function() {
+                            var selected = $("#table-proceso-nomina").find(".selected");
+                            if (selected.length === 1) {
+                                var IdNomina = parseInt(selected.data("id-nomina"));
+                                var modalDetalle = $("#detallesNomina");
+                                $.get("../../ProcesoNomina/detallePrincipal?id=" + IdNomina,
+                                    function(data) {
+                                        $("#detallenom").html(data);
+                                        modalDetalle.modal();
+                                    });
+                            } else if (selected.length === 0) {
+                                utils.showMessage("Detalle de Nómina",
+                                    "Seleccione una nomina para ver su detalle",
+                                    10000);
+                            } else if (selected.length > 0) {
+                                utils.showMessage("Detalle de Nómina",
+                                    "Dele seleccionar solo una nomina para ver su detalle",
+                                    10000);
+                            }
+
+                        },
+                        key: {
+                            key: 'd',
+
+                        }
+                    },
+                    {
+                        className: 'btnCreditos',
+                        text: 'Creditos inf',
+                        titleAttr: 'Abre un módulo para indicar los dias de infonavit a considerar en el procesado',
+                        action: function() {
+
+                            var modalCreditos = $("#creditos");
+                            $.get("../../ProcesoNomina/Creditos",
+                                function(data) {
+                                    $("#creditoscontent").html(data);
+                                    modalCreditos.modal();
+                                });
+                        }
+
+                    },
+                    //{
+                    //    className: 'btnConceptos',
+                    //    text: 'Conceptos',
+                    //    titleAttr: 'Muestra/Oculta las columnas de conceptos',
+                    //    action: function() {
+                    //        var modalDetalle = $("#conceptosModal");
+                    //        modalDetalle.modal();
+                    //    },
+                    //    key: { key: 'd' }
+                    //},
+                    //{
+                    //    className: 'btnRecibos',
+                    //    text: '<i class="fa fa-download fa-lg" aria-hidden="true"></i> Recibos',
+                    //    titleAttr: 'Descarga el recibo fiscal en pdf',
+                    //    action: function() {
+                    //        var btnDowRecibos = $('.btnRecibos');
+
+                    //        var selected = $("#table-proceso-nomina").find(".selected");
+                    //        var nominas = [];
+
+
+                    //        selected.each(function() {
+                    //            var id = parseInt($(this).data("id-nomina"));
+                    //            nominas.push(id);
+                    //        });
+
+
+                    //        if (nominas.length > 0) {
+                    //            btnDowRecibos.addClass('disabled');
+                    //            var form = document.createElement("form");
+                    //            form.setAttribute("method", "post");
+                    //            form.setAttribute("action", "/ProcesoNomina/GetRecibos");
+
+                    //            form._submit_function_ = form.submit;
+                    //            for (var i = 0; i < nominas.length; i++) {
+                    //                var hiddenField = document.createElement("input");
+                    //                hiddenField.setAttribute("type", "hidden");
+                    //                hiddenField.setAttribute("name", "idNominas");
+                    //                hiddenField.setAttribute("value", nominas[i]);
+                    //                form.appendChild(hiddenField);
+                    //            }
+
+                    //            document.body.appendChild(form);
+                    //            form._submit_function_();
+                    //            t = setTimeout(function() { btnDowRecibos.removeClass('disabled'); }, 5000);
+
+                    //        } else {
+                    //            utils.showMessage("WAR", "Debe seleccionar los registros.", 3000);
+                    //        }
+
+
+                    //    }
+
+                    //},
+                    {
+                        className: 'btnRecibos33',
+                        text: '<i class="fa fa-download fa-lg" aria-hidden="true"></i> Recibos 3.3',
+                        titleAttr: 'Descarga el recibo fiscal version 3.3 en pdf',
+                        action: function() {
+                            var btnDowRecibos = $('.btnRecibos');
+
+                            var selected = $("#table-proceso-nomina").find(".selected");
+                            var nominas = [];
+
+
+                            selected.each(function() {
+                                var id = parseInt($(this).data("id-nomina"));
+                                nominas.push(id);
+                            });
+
+
+                            if (nominas.length > 0) {
+                                btnDowRecibos.addClass('disabled');
+                                var form = document.createElement("form");
+                                form.setAttribute("method", "post");
+                                form.setAttribute("action", "/ProcesoNomina/GetRecibos33");
+
+                                form._submit_function_ = form.submit;
+                                for (var i = 0; i < nominas.length; i++) {
+                                    var hiddenField = document.createElement("input");
+                                    hiddenField.setAttribute("type", "hidden");
+                                    hiddenField.setAttribute("name", "idNominas");
+                                    hiddenField.setAttribute("value", nominas[i]);
+                                    form.appendChild(hiddenField);
+                                }
+
+                                document.body.appendChild(form);
+                                form._submit_function_();
+                                t = setTimeout(function() { btnDowRecibos.removeClass('disabled'); }, 5000);
+
+                            } else {
+                                utils.showMessage("WAR", "Debe seleccionar los registros.", 3000);
+                            }
+
+
+                        }
+
+                    },
+                    {
+                        className: 'btnRecibosComple',
+                        text: '<i class="fa fa-download fa-lg" aria-hidden="true"></i> Recibos C',
+                        titleAttr: 'Descarga el recibo de complemento en pdf',
+                        action: function() {
+                            var btnDowRecibosComp = $('.btnRecibosComple');
+
+                            var selected = $("#table-proceso-nomina").find(".selected");
+                            var nominas = [];
+
+
+                            selected.each(function() {
+                                var id = parseInt($(this).data("id-nomina"));
+                                nominas.push(id);
+                            });
+
+
+                            if (nominas.length > 0) {
+                                btnDowRecibosComp.addClass('disabled');
+                                var form = document.createElement("form");
+                                form.setAttribute("method", "post");
+                                form.setAttribute("action", "/ProcesoNomina/GetRecibosComplemento");
+
+                                form._submit_function_ = form.submit;
+                                for (var i = 0; i < nominas.length; i++) {
+                                    var hiddenField = document.createElement("input");
+                                    hiddenField.setAttribute("type", "hidden");
+                                    hiddenField.setAttribute("name", "idNominas");
+                                    hiddenField.setAttribute("value", nominas[i]);
+                                    form.appendChild(hiddenField);
+                                }
+
+                                document.body.appendChild(form);
+                                form._submit_function_();
+                                t = setTimeout(function() { btnDowRecibosComp.removeClass('disabled'); }, 5000);
+
+                            } else {
+                                utils.showMessage("WAR", "Debe seleccionar los registros.", 3000);
+                            }
+
+
+                        },
+
+
+                    },
+                    {
+                        className: 'btnprocesado',
+                        text: '<i class="fa fa-cogs fa-lg" aria-hidden="true"></i> Procesar Nominas',
+                        action: function() {
+                            var btnProcesarN = $(this);
+
+                            var btnProcesar = $('.btnprocesado');
+                            var btnSummary = $('.btnsummary');
+
+                            var btnDowRecibos = $('.btnRecibos');
+                            var btnVerDetalle = $('.btnDetalles');
+                            var btnDowRecibosComp = $('.btnRecibosComple');
+
+                            var selected = $("#table-proceso-nomina").find(".selected");
+                            if (selected.length > 0) {
+                                utils.confirmDialog("¿DESEA CONTINUAR?",
+                                    "Se procesarán " + selected.length + " nóminas",
+                                    "CONFIRMAR",
+                                    "CANCELAR",
+                                    function(response) {
+                                        if (response) {
+                                            var empleados = [];
+                                            selected.each(function() {
+                                                var id = parseInt($(this).data("id-empleado"));
+                                                empleados.push(id);
+                                            });
+                                            var request = $.ajax({
+                                                url: "/ProcesoNomina/ProcesarNominas/",
+                                                method: "POST",
+                                                data: {
+                                                    empleados: empleados
+                                                },
+                                                beforeSend: function() {
+                                                    waitingDialog.show('Procesando...');
+                                                    btnProcesar.addClass('disabled');
+                                                    btnDowRecibos.addClass('disabled');
+                                                    btnDowRecibosComp.addClass('disabled');
+                                                    btnVerDetalle.addClass('disabled');
+                                                    $("#table-proceso-nomina")
+                                                        .switchClass("table-multiselect", "table-disabled");
+                                                    btnProcesar
+                                                        .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> PROCESANDO...");
+                                                    btnSummary
+                                                        .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> Summary...");
+                                                    btnProcesar
+                                                        .attr("title", "PROCESANDO SU NÓMINA, POR FAVOR ESPERE...");
+                                                }
+                                            });
+                                            request.done(function(result) {
+                                                waitingDialog.hide();
+
+                                                if (result.nominas !== 0) {
+                                                    utils.showMessage("PROCESO COMPLETADO", result.status, 10000);
+                                                } else {
+                                                    utils.showMessage("Procesado", result.status, 10200, "danger");
+                                                }
+
+                                                btnProcesar.removeClass('disabled');
+                                                btnDowRecibos.removeClass('disabled');
+                                                btnDowRecibosComp.addClass('disabled');
+                                                btnVerDetalle.removeClass('disabled');
+                                                utils.LoadActivePage();
+                                            });
+                                        }
+                                    });
+                            } else {
+                                utils.showMessage("WAR", "Debe seleccionar los registros a procesar.", 8000);
+                            }
+                        },
+                        key: {
+
+                        }
+                    },
+                    //--------ESTE BOTON VA A FUNCIONAR PARA EN CONSENSADO ANUAL DEL PAGO DEL ISR ---------------
+                     //{
+                     //    className: 'btnprocesadoA',
+                     //    text: '<i class="fa fa-cogs fa-lg" aria-hidden="true"></i> Procesar Nominas Anual',
+                     //    action: function() {
+                     //        var btnProcesarN = $(this);
+
+                     //        var btnProcesar = $('.btnprocesado');
+                     //        var btnSummary = $('.btnsummary');
+
+                     //        var btnDowRecibos = $('.btnRecibos');
+                     //        var btnVerDetalle = $('.btnDetalles');
+                     //        var btnDowRecibosComp = $('.btnRecibosComple');
+
+                     //        var selected = $("#table-proceso-nomina").find(".selected");
+                     //        if (selected.length > 0) {
+                     //            utils.confirmDialog("¿DESEA CONTINUAR?",
+                     //                "Se procesarán " + selected.length + " nóminas",
+                     //                "CONFIRMAR",
+                     //                "CANCELAR",
+                     //                function(response) {
+                     //                    if (response) {
+                     //                        var empleados = [];
+                     //                        selected.each(function() {
+                     //                            var id = parseInt($(this).data("id-empleado"));
+                     //                            empleados.push(id);
+                     //                        });
+                     //                        var request = $.ajax({
+                     //                            url: "/ProcesoNomina/ProcesarNominas/",
+                     //                            method: "POST",
+                     //                            data: {
+                     //                                empleados: empleados,
+                     //                                anual:true
+                     //                            },
+                     //                            beforeSend: function() {
+                     //                                waitingDialog.show('Procesando...');
+                     //                                btnProcesar.addClass('disabled');
+                     //                                btnDowRecibos.addClass('disabled');
+                     //                                btnDowRecibosComp.addClass('disabled');
+                     //                                btnVerDetalle.addClass('disabled');
+                     //                                $("#table-proceso-nomina")
+                     //                                    .switchClass("table-multiselect", "table-disabled");
+                     //                                btnProcesar
+                     //                                    .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> PROCESANDO...");
+                     //                                btnSummary
+                     //                                    .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> Summary...");
+                     //                                btnProcesar
+                     //                                    .attr("title", "PROCESANDO SU NÓMINA, POR FAVOR ESPERE...");
+                     //                            }
+                     //                        });
+                     //                        request.done(function(result) {
+                     //                            waitingDialog.hide();
+
+                     //                            if (result.nominas !== 0) {
+                     //                                utils.showMessage("PROCESO COMPLETADO", result.status, 10000);
+                     //                            } else {
+                     //                                utils.showMessage("Procesado", result.status, 10200, "danger");
+                     //                            }
+
+                     //                            btnProcesar.removeClass('disabled');
+                     //                            btnDowRecibos.removeClass('disabled');
+                     //                            btnDowRecibosComp.addClass('disabled');
+                     //                            btnVerDetalle.removeClass('disabled');
+                     //                            utils.LoadActivePage();
+                     //                        });
+                     //                    }
+                     //                });
+                     //        } else {
+                     //            utils.showMessage("WAR", "Debe seleccionar los registros a procesar.", 8000);
+                     //        }
+                     //    },
+                     //    key: {
+
+                     //    }
+                     //},
+                    {
+                        className: 'btnReporteExcel',
+                        text: 'Reporte Excel',
+                        action: function() {
+
+                            var request = $.ajax({
+                                url: "/ProcesoNomina/reporteNomina/",
+                                contentType: 'application/json; charset=utf-8',
+                                datatype: 'json',
+                                method: "POST",
+
+                                beforeSend: function() {
+                                    waitingDialog.show('Generando Reporte Nomina......');
+
+                                }
+                            });
+                            request.done(function(data) {
+                                waitingDialog.hide();
+                                //utils.loadMainPage("Incidencias", "Index", "#main-content", "false", null);
+                                window.location = "/ProcesoNomina/descargarPlantilla?ruta=" + data;
+                            });
+                        }
+                    },
+                    {
+                        className: 'btnsummary',
+                        text: textSum,
+                        action: function() {
+                            var modalSummary = $("#summaryModal");
+                            modalSummary.modal();
+                        },
+                        key: { key: 's' }
+                    }
+                ],
+                "columnDefs": [
+                    @{
+                        int i = 5;
+                        if (primero != null)
+                        {
+                            if (primero.Conceptos != null)
+                            {
+                                foreach (var concepto in primero.Conceptos)
+                                {
+                                    if (visibles.Contains(concepto.IdConcepto))
+                                    {
+                                        <text>{
+                        "targets": [</text>
+                                        @i
+                                        <text>],
+                        "visible": true,
+                        "searchable": false
+                    },</text>
+                                    }
+                                    else if (ocultos.Contains(concepto.IdConcepto))
+                                    {
+                                        <text>{
+                        "targets": [</text>
+                                        @i
+                                        <text>],
+                        "visible": false,
+                        "searchable": false
+                    },</text>
+                                    }
+                                    i++;
+                                }
+                            }
+
+                        }
+                    }
+                ]
+            });
+            table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                @{
+                    <text>var cell = table.cell({
+                    row: rowIdx,
+                    column:</text>
+                            @indxConcepto;
+                        <text>}).node();
+                $(cell).addClass('warning'); </text>
+                }
+            });
+            
+            $("#guardar").click(function() {
+                var arrayV = [];
+
+                var arrayO = [];
+                $('ol li').each(function(indice, elemento) {
+                    if ($(this).find('.btn-primary').attr('data-id')) {
+                        var visibles = $(this).find('.btn-primary').attr('data-id');
+                        arrayV.push(visibles);
+                    } else if ($(this).find('.btn-default').attr('data-id')) {
+                        var ocultos = $(this).find('.btn-default').attr('data-id');
+                        arrayO.push(ocultos);
+                    }
+
+                });
+
+
+                var request = $.ajax({
+                    url: "/ProcesoNomina/GuardarConceptosVO/",
+                    method: "POST",
+                    data: {
+                        visibles: arrayV,
+                        ocultos: arrayO
+
+                    },
+                    success: function(result) {
+                        notification = utils.showMessage("Guardando Datos", "¡Datos guardados exitosamente!", 1000, "");
+                        //utils.loadMainPage("EmpleadoComplemento", "Index", "#main-content", "false", null);
+                    }
+
+                });
+            });
+
+            //Evento para Mostra-Ocultar columnas de conceptos
+            $('a.toggle-vis').on('click',
+                function(e) {
+                    e.preventDefault();
+
+                    // Get the column API object
+                    var column = table.column($(this).attr('data-column'));
+
+                    // Toggle the visibility
+                    column.visible(!column.visible());
+
+                    //add-remove class
+                    if ($(this).hasClass("btn-primary")) {
+
+                        $(this).removeClass("btn-primary").addClass("btn-default");
+
+                    } else {
+                        $(this).removeClass("bnt-default").addClass("btn-primary");
+                    }
+
+                });
+
+
+        });
+
+
+    </script>
+
+}
+else
+{
+    <div>
+        <div class="alert alert-warning">
+            <h4> <strong>Info!</strong> No se encontrarón registros para procesar <span class="label label-default"></span></h4>
+        </div>
+    </div>
+}

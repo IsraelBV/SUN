@@ -1,0 +1,417 @@
+﻿@using RH.BLL;
+@using Common.Helpers;
+@using Common.Enums;
+@using System.Linq;
+@using RH.Entidades;
+@using SYA.BLL;
+@model List<DatosEmpleado>
+
+@{
+    ViewBag.Title = "Empleados";
+    ViewBag.Modulo = Modulos.RHEmpleados;
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    List<Plantilla> plantillas = ViewBag.Plantillas;
+    List<Plantilla> plBajas = ViewBag.PlantillasBaja;
+    List<RegistroDatos> Empresas = ViewBag.Empresas;
+    List<C_Esquema> Esquemas = ViewBag.Esquemas;
+}
+
+<link rel="stylesheet" href="~/Content/Empleados/EmpleadoIndex.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/u/bs/dt-1.10.12,se-1.2.0/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/validator/TooltipValidator.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-select.min.css" />
+
+<input type="hidden" id="IdSucursal" value="@ViewBag.IdSucursal" />
+
+
+<div class="panel with-nav-tabs panel-primary" id="panelEmpleados">
+    <div class="panel-heading clearfix text-center">
+        <div class="pull-left">
+            <h4 class="panel-title">Empleados</h4>
+        </div>
+
+        <div class="pull-right">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#activos">Activos</a></li>
+                <li><a data-toggle="tab" href="#inactivos">Inactivos</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body" id="panBody">
+        <div class="tab-content">
+            <div class="tab-pane active" id="activos">
+                @{ Html.RenderAction("EmpleadosActivos", "Empleados", new { id = ViewBag.IdSucursal });}
+            </div>
+            <div class="tab-pane" id="inactivos">
+                @{ Html.RenderAction("EmpleadosInactivos", "Empleados", new { id = ViewBag.IdSucursal });}
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="col-md-6" id="alert-message">
+            <h1 id="alert">Operación Exitosa</h1>
+        </div>
+        <div class="btn-toolbar pull-right" role="toolbar">
+            <!-- Aparece cuando selecciona un registro y desaparece cuando selecciona mas de un registro -->
+            <div class="btn-group btn-toolbar-hidden btn-toolbar-inactivos-hidden btn-toolbar-inactivos-one" role="group" id="btn-toolbar-one">
+                <a class="btn btn-info" id="btnKardex" data-toggle="boton" data-placement="top" data-container="body" title="Kardex">
+                    <span class="glyphicon glyphicon-list"></span>
+                </a>
+
+                <a class="btn btn-info" id="btnDetalle" data-toggle="boton" data-placement="top" data-container="body" title="Detalle">
+                    <i class="fa fa-info-circle fa-lg"></i>
+                </a>
+            </div>
+
+            <!-- este boton es el de baja que desaparece cuando no esta seleccionado ningun colaborador y cuando el colaborador tiene una incapacidad-->
+            <div class="btn-group btn-toolbar-hidden" role="group"  id="btn-baja">
+                <a class="btn btn-danger" id="btnModalBaja" data-toggle="boton" data-placement="top" data-container="body" title="Dar de Baja">
+                    <i class="fa fa-user-times"></i>
+                </a>
+            </div>
+
+            <!-- Aparece cuando selecciona uno o varios registros -->
+            <div class="btn-group btn-toolbar-hidden" role="group" id="btn-toolbar-many">
+               
+                <a class="btn btn-info" id="btnContrato" data-toggle="boton" data-placement="top" data-container="body" title="Plantillas">
+                    <span class="glyphicon glyphicon-print"></span>
+                </a>
+                <div class="btn-group btn-toolbar-hidden btn-toolbar-inactivos-hidden" role="group" id="btn-toolbar-inactivos-many">
+                    <a class="btn btn-info" id="btnPlantillaBaja" data-toggle="boton" data-placement="top" data-container="body" title="Imprimir Baja">
+                        <span class="fa fa-print fa-lg"></span>
+                    </a>
+                </div>
+
+                <a class="btn btn-info" id="btnTransfer" data-toggle="boton" data-placement="top" data-container="body" title="Cambiar de Empresa">
+                    <span class="glyphicon glyphicon-transfer"></span>
+                </a>
+                <a class="btn btn-info" id="btnReenvioAlerta" data-toggle="boton" data-placement="top" data-container="body" title="Reenviar Alerta">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </a>
+            </div>
+            
+
+            <!-- Para empleados inactivos -->
+            <div class="btn-group btn-toolbar-inactivos-hidden btn-toolbar-inactivos-one" role="group" id="btn-toolbar-inactivos-one">
+                <a class="btn btn-danger" id="btnModalRecontratacion" data-toggle="boton" data-placement="top" data-container="body" title="Recontratar">
+                    <span class="glyphicon glyphicon-repeat"></span>
+                </a>
+            </div>
+            <div class="btn-group btn-toolbar-inactivos-hidden btn-toolbar-inactivos-many" role="group" id="btn-toolbar-inactivos-many">
+                <a class="btn btn-info" id="btnPlantillaBajaInact" data-toggle="boton" data-placement="top" data-container="body" title="Imprimir Baja">
+                    <span class="fa fa-print fa-lg"></span>
+                </a>
+            </div>
+
+            
+
+            <!-- Siempre visible -->
+            <div class="btn-group" role="group">
+
+                @*<button class="btn btn-default"
+                       title="Exportar Reporte"
+                       data-container="body"
+                       data-toggle="confirmation"
+                       data-title="¿Realmente quieres eliminar la falta?"
+                       data-placement="bottom"
+                       data-singleton="true"
+                       data-popout="true"
+                       data-btn-ok-label="Sí"
+                       data-btn-ok-class="hovernuevo"
+                       data-btn-cancel-label="No"
+                       data-btn-cancel-class="hovercancelado" id="btnExp"><span class="fa fa-file-text"></span></button>*@
+                <a class="btn btn-default" data-toggle="boton" data-placement="top" data-container="body" title="Exportar Reporte" @*href="@Url.Action("DescargarReporte", "Empleados")"*@ id="btnExp">
+                    <span class="fa fa-file-text"></span>
+                </a>
+
+                <a class="btn btn-default" data-toggle="boton" data-placement="top" data-container="body" title="Importación Másiva" href="@Url.Action("ImportacionMasiva", "Empleados")" id="btnImp">
+                    <span class="glyphicon glyphicon-import"></span>
+                </a>
+
+                <a class="btn btn-default" href="@Url.Action("NuevoRegistro", "Empleados")" data-toggle="top" data-placement="top" data-container="body" title="Nuevo Registro" id="btnNewEmp">
+                    <i class="fa fa-user-plus"></i>
+                </a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<!-- Modal para baja de empleado -->
+<div class="modal fade" id="ModalBajaEmpleado" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Baja</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label">Fecha de Baja</label>
+                    @*<input type="date" name="fechaBaja" id="fechaBaja" class="form-control hoy" />*@
+                    <input type="date" name="fechaBaja" id="fechaBaja" class="form-control hoy" />
+                  
+                </div>
+                <div class="form-group">
+                    <select id="MotivoBaja" name="MotivoBaja" class="form-control">
+                        <option value="Ausentismo">Ausentismo</option>
+                        <option value="Rescision de contrato">Rescisión de Contrato</option>
+                        <option value="Jubilacion">Jubilacion</option>
+                        <option value="Pension">Pension</option>
+                        <option value="Renuncia Voluntaria">Renuncia Voluntaria</option>
+                        <option value="Abandono de Empleo">Abandono de Empleo</option>
+                        <option value="Otros">Otros</option>
+                        <option value="Termino de contrato">Termino de contrato</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Comentario Baja</label> 
+                    <textarea rows="4" cols="50" name="bajaComentario" id="bajaComentario" class="form-control" maxlength="200"></textarea>                     
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnBaja"><span class="glyphicon glyphicon-folder-close"></span> Baja</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /_Modal para la baja de empleados -->
+<!-- Modal para la recontratación del empleado -->
+<div class="modal fade" id="modal-recontratacion">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Recontratación</h2>
+            </div>
+            <div class="modal-body" id="divFormRecontratacion">
+                @{Html.RenderAction("FormRecontratacion", "Empleados");}
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+                @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHEmpleados, AccionCrud.Editar, SessionHelpers.GetIdUsuario()))
+                {
+                    <button type="submit" class="btn btn-primary" id="btnRecontratar"><span class="glyphicon glyphicon-folder-open"></span>  Recontratar</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /_ Modal para la recontratación -->
+<!-- Modal para el kardex del empleado -->
+<div class="modal fade" id="modal-kardex">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Kardex del Empleado: <small id="mk-nombre-empleado"></small></h2>
+            </div>
+            <div class="modal-body">
+                <div id="kardex-container"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-contratos">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Contratos</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="Plantilla" class="control-label">Plantilla</label>
+                    <select name="Plantilla" id="Plantilla" class="form-control">
+                        @foreach (var item in plantillas)
+                        {
+                            <option value="@item.Id">@item.NombreArchivo</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnDownloadContrato"><span class="glyphicon glyphicon-save-file"></span> Descargar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-plantillas-baja">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Notificación de baja</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="PlantillaBaja" class="control-label">Plantilla</label>
+                    <select name="PlantillaBaja" id="PlantillaBaja" class="form-control">
+                        @foreach (var item in plBajas)
+                        {
+                            <option value="@item.Id">@item.NombreArchivo</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnDownloadBaja"><span class="glyphicon glyphicon-save-file"></span> Descargar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-plantillas-bajaInact">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Notificación de baja</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="PlantillaBajaInact" class="control-label">Plantilla</label>
+                    <select name="PlantillaBajaInact" id="PlantillaBajaInact" class="form-control">
+                        @foreach (var item in plBajas)
+                        {
+                            <option value="@item.Id">@item.NombreArchivo</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnDownloadBajaInact"><span class="glyphicon glyphicon-save-file"></span> Descargar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-transfer">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title">Transferir de Empresas</h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="EmpresaFiscal" class="control-label">Empresa Fiscal</label>
+                            <select name="EmpresaFiscal" id="EmpresaFiscal" class="form-control">
+                                <option value="0">Seleccione una empresa</option>
+                                @foreach (var item in Empresas.Where(x => x.IdEsquema == 1))
+                                {
+                                    <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="EmpresaComplemento" class="control-label">Empresa Complemento</label>
+                            <select name="EmpresaComplemento" id="EmpresaComplemento" class="form-control">
+                                <option value="">Seleccione una empresa</option>
+                                @foreach (var item in Empresas.Where(x => x.IdEsquema == 2))
+                                {
+                                    <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="EmpresaSindicato" class="control-label">Empresa Sindicato</label>
+                            <select name="EmpresaSindicato" id="EmpresaSindicato" class="form-control">
+                                <option value="">Seleccione una empresa</option>
+                                @foreach (var item in Empresas.Where(x => x.IdEsquema == 3))
+                                {
+                                    <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="EmpresaAsimilado" class="control-label">Empresa Asimilado</label>
+                            <select name="EmpresaAsimilado" id="EmpresaAsimilado" class="form-control">
+                                <option value="">Seleccione una empresa</option>
+                                @foreach (var item in Empresas.Where(x => x.IdEsquema == 4))
+                                {
+                                    <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="IdEmpresaSindicato" class="control-label">Fecha IMSS</label>
+                         <input type="date" class="form-control"id="fechaIMSS"/>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnTransferEmpresa"><span class="glyphicon glyphicon-save-file"></span> Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/bootstrap-select.min.js"></script>
+
+<script type="text/javascript" src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<script type="text/javascript" src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script type="text/javascript" src="~/Scripts/validator/metodos_adicionales.js"></script>
+<script type="text/javascript" src="~/Scripts/validator/TooltipValidator.js"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/u/bs/dt-1.10.12,se-1.2.0/datatables.min.js"></script>
+
+<script type="text/javascript" src="~/Scripts/bootstrap-notify.min.js"></script>
+
+<script type="text/javascript" src="~/Scripts/Empleados/EmpleadoIndex.js"></script>
+<script>
+    $('.panel-body').css({ height: $(window).innerHeight() - 215 });
+    $(window).resize(function () { $('.panel-body').css({ height: $(window).innerHeight() - 215 }); });
+
+    $('.dataTables_scrollBody').css({ height: $(window).innerHeight() - 315 });
+    $(window).resize(function () { $('.dataTables_scrollBody').css({ height: $(window).innerHeight() - 315 }); });
+
+
+    $("#btnExp").click(function () {
+
+        var request = $.ajax({
+            url: "/Empleados/ExportarEmpleados/",
+            method: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                waitingDialog.show('Generando Reporte......');
+
+            }
+        });
+        request.done(function (data) {
+            waitingDialog.hide();
+            window.open('/Empleados/descargarArchivo?ruta=' + data, '_blank');
+        })
+    });
+
+</script>

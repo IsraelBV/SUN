@@ -1,0 +1,282 @@
+﻿@using Common.Helpers
+@using Common.Enums
+
+@model  RH.BLL.RegistroDatos
+
+@{
+    ViewBag.Title = ("Empresa");
+    ViewBag.Extra = ("Editar Empresa");
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+  
+    var listaEstados = ViewBag.EstadoLista;
+    var listaRegimen = ViewBag.RegimenFiscalSelectList;
+}
+<style>
+    .tooltip {
+        background-color: #000;
+        border: 1px solid #fff;
+        padding: 10px 15px;
+        width: 300px;
+        display: none;
+        color: #fff;
+        text-align: center;
+        font-size: 12px;
+        /* outline radius for mozilla/firefox only */
+        -moz-box-shadow: 0 0 10px #000;
+        -webkit-box-shadow: 0 0 10px #000;
+    }
+        .tooltip-inner {
+        max-width: 300px !important;
+        padding: 3px 8px;
+        color: #fff;
+        text-align: center;
+        background-color: #000;
+        border-radius: 4px;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+
+@if (Model == null)
+{
+
+    Response.Redirect("~/RegistrosPatronales/index");
+}
+else
+{
+
+    using (Html.BeginForm("editar", "RegistrosPatronales", FormMethod.Post, new { id = "formulario", @class = "tooltipForm" }))
+    {
+        @Html.HiddenFor(x => x.IdRegistro)
+        <div class="panel with-nav-tabs panel-primary">
+            <div class="panel-heading clearfix text-center">
+                <div class="pull-left">
+                    <h4 class="panel-title">Editar datos de la empresa @Model.RazonSocial</h4>
+                </div>
+                <div class="pull-right">
+
+                    <ul class="nav nav-tabs">
+                        <li>
+                            <a class="btn btn-danger hovernuevo" tabindex="15" onclick="$(this).closest('form').submit()" href="#">Guardar</a>
+                        </li>
+
+                        <li>
+                            <a class="btn btn-danger hovercancelado" tabindex="16" href="~/RegistrosPatronales/index">Cancelar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-horizontal ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <h6 class="col-md-12">Los campos marcados con (<span style="color:red;">*</span>) son requeridos.</h6>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xs-12">
+                            <div class="form-group">
+                                <label class="col-md-4">Registro Patronal</label>
+                                <div class="col-md-8">
+                                    <input title="El Registro Patronal consta de una letra y 10 números" type="text" autofocus id="RegistroPatronal" name="RegistroPatronal" class="form-control input-sm" value="@Model.RegistroPatronal"
+                                           data-rule-maxlength="11"
+                                           data-rule-minlength="11"
+                                           input placeholder="Ej. A1234567890"
+                                           tabindex="1"
+                                            />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4"><span style="color:red;">*</span> Razón Social</label>
+                                <div class="col-md-8">
+                                    <input title="Coloca aquí la Razón Social de la Empresa a agregar" type="text" id="RazonSocial" name="RazonSocial" class="form-control input-sm" value="@Model.RazonSocial"
+                                           data-rule-required="true"
+                                           data-rule-maxlength="50"
+                                           input placeholder="Ej. Razón social S.A."
+                                           tabindex="2"
+                                            />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4">Guía</label>
+                                <div class="col-md-8">
+                                    <input title="La Guía consta de 5 números" type="text" id="Guia" name="Guia" class="form-control input-sm" value="@Model.Guia"
+                                           data-rule-number="true"
+                                           data-rule-maxlength="5"
+                                           data-rule-minlength="5"
+                                           input placeholder="Ej. 12345"
+                                           tabindex="3"
+                                            />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4">Clave </label>
+                                <div class="col-md-8">
+                                    <input title="La Clave consta de 2 números" type="text" id="ClaveSeguro" name="ClaveSeguro" class="form-control input-sm" value="@Model.ClaveSeguro"
+                                           data-rule-maxlength="2"
+                                            input placeholder="Ej. 12"
+                                           tabindex="4"
+                                            />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4"><span style="color:red;">*</span> RFC</label>
+                                <div class="col-md-8">
+                                    <input title="'ABCD123456EF7' ó 'ABC123456DE7'" type="text" id="RFC" name="RFC" class="form-control input-sm" value="@Model.RFC"
+                                           data-rule-required="true"
+                                           data-rule-RFC="true"
+                                           data-msg-RFC="¡Por favor ingresa un RFC válido!"
+                                           input placeholder="Ej. ABCD123456EF7"
+                                           tabindex="5"
+                                           />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4">Clase</label>
+                                <div class="col-md-8">
+                                    @HtmlLocalHelper.ComboEnum(typeof(ClasesRiesgo), "Clase", Model.Clase, true, htmlAttributes: new Dictionary<string, object> { { "tabIndex", 6 } })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4">Prima de Riesgo</label>
+                                <div class="col-md-8">
+                                    <input title="La Prima de Riesgo consta de un número entero seguido por 6 decimales" type="text" id="PrimaRiesgo" name="PrimaRiesgo" class="form-control input-sm" value="@Model.PrimaRiesgo"
+                                           data-rule-priesgo="true"
+                                           tabindex="7"
+                                           />
+                                </div>
+                            </div>
+
+                           @*Regimen Fiscal*@
+                            <div class="form-group">
+                                <label class="col-md-4">Regimen Fiscal</label>
+                                <div class="col-md-8">
+                                    @HtmlLocalHelper.ComboBox(listaRegimen, "RegimenFiscal", htmlAttributes: new Dictionary<string, object> { { "tabIndex", 8 } })
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-4">País</label>
+                                <div class="col-md-8">
+                                    @HtmlLocalHelper.ComboEnum(typeof(Paises), "Pais", Model.Pais.ToString(), false, htmlAttributes: new Dictionary<string, object> { { "tabIndex", 9 } })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4">Estado</label>
+                                <div class="col-md-8">
+                                    @HtmlLocalHelper.ComboBox(listaEstados, "Estado", htmlAttributes: new Dictionary<string, object> { { "tabIndex", 10 } })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4"><span style="color:red;">*</span> Municipio</label>
+                                <div class="col-md-8">
+                                    <input title="Coloca aquí el Municipio donde se encuentra la Empresa" type="text" id="Municipio" name="Municipio" class="form-control input-sm" value="@Model.Municipio"
+                                           data-rule-required="true"
+                                           data-rule-maxlength="50"
+                                           input placeholder="Ej. Benito Juárez"
+                                           tabindex="11"
+                                            />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4"><span style="color:red;">*</span> Código Postal</label>
+                                <div class="col-md-8">
+                                    <input title="El Código Postal consta de 5 números" type="number" id="CP" name="CP" class="form-control input-sm" value="@Model.CP"
+                                           data-rule-required="true"
+                                           data-rule-maxlength="5"
+                                           data-rule-number="true"
+                                           data-rule-minlength="5"
+                                           min="00000"
+                                           max="99999"
+                                           input placeholder="Ej. 12345"
+                                           tabindex="12"
+                                           />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4"><span style="color:red;">*</span> Colonia</label>
+                                <div class="col-md-8">
+                                    <input title="Coloca aquí el nombre de la Colonia donde está ubicada la Empresa" type="text" id="Colonia" name="Colonia" class="form-control input-sm" value="@Model.Colonia"
+                                           data-rule-required="true"
+                                           data-rule-maxlength="50"
+                                           input placeholder="Ej. Centro"
+                                           tabindex="13"
+                                            />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4"><span style="color:red;">*</span> No. Exterior</label>
+                                <div class="col-md-8">
+                                    <input title="Coloca aquí el número exterior de la Empresa" type="text" id="NoExt" name="NoExt" class="form-control input-sm" value="@Model.NoExt"
+                                           data-rule-required="true"
+                                           data-rule-maxlength="10"
+                                            input placeholder="Ej. 10"
+                                           tabindex="14"
+                                           />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4"><span style="color:red;">*</span> Calle</label>
+                                <div class="col-md-8">
+                                    <input title="Coloca aquí el nombre de la calle donde está ubicada la Empresa" type="text" id="Calle" name="Calle" class="form-control input-sm" value="@Model.Calle"
+                                           data-rule-required="true"
+                                           data-rule-maxlength="50"
+                                           input placeholder="Ej. Avenida Nader"
+                                           tabindex="15"
+                                            />
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+
+}
+
+        <script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+        <script src="~/Scripts/validator/messages_es.js"></script>
+        <script src="~/Scripts/validator/TooltipValidator.js"></script>
+        <script src="~/Scripts/validator/metodos_adicionales.js"></script>
+        <link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+<script>
+
+    // select all desired input fields and attach tooltips to them
+    $("#formulario :input").tooltip({
+
+        // place tooltip on the right edge
+        position: "center right",
+
+        // a little tweaking of the position
+        offset: [-2, 10],
+
+        // use the built-in fadeIn/fadeOut effect
+        effect: "fade",
+
+        // custom opacity setting
+        opacity: 0.7
+
+    });
+
+</script>

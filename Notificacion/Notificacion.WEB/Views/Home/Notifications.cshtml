@@ -1,0 +1,113 @@
+﻿@using Notificacion.BLL;
+@using Common.Enums;
+@using Common.Helpers;
+@using SYA.BLL;
+@model List<NotificacionDatos>
+@{
+    double numPaginas = ViewBag.NumPaginas;
+    int paginaActiva = ViewBag.PaginaActiva;
+    string disabled = "";
+    var next = paginaActiva + 1;
+    var prev = paginaActiva - 1;
+    var hoy = DateTime.Now;
+}
+
+@if(Model.Count > 0)
+{
+    <div id="pagination-header">
+        <span id="filter-title">Bandeja</span>
+        <span id="pagination-info" class="hide-on-small-and-down">@ViewBag.FirstRecord - @ViewBag.LastRecord de @ViewBag.TotalRecords</span>
+        <ul class="pagination" data-pagina-activa="@paginaActiva">
+            @{ disabled = paginaActiva == 0 ? "disabled" : "";}
+            <li class="@disabled">
+                <a id="btnPrev" class="btnPaginador" data-pagina="@prev" onclick="LoadPage(@prev)">
+                    <i class="material-icons">chevron_left</i>
+                </a>
+            </li>
+            @{ disabled = (paginaActiva + 1) == numPaginas ? "disabled" : ""; }
+            <li class="@disabled">
+                <a id="btnNext" class="btnPaginador" data-pagina="@next" onclick="LoadPage(@next)">
+                    <i class="material-icons">chevron_right</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <ul class="notification-list" data-numdays="@ViewBag.NumDays">
+        @foreach (var item in Model)
+        {
+            string user = @item.Usuario[0].ToString() + @item.UsuarioPaterno[0].ToString();
+            user = user.Equals("NN") ? "S" : user;
+            item.Status = item.Status != null ? item.Status : 2;
+            <li>
+                <div class="notification" id="@item.IdNotificacion" data-status="@item.Status" data-type="@item.TipoDescripcion" data-date="@item.Fecha.ToString("dd/MM/yyyy")">
+                    <label class="user-img @item.TipoDescripcion tooltipped" data-position="right" data-tooltip="@item.Usuario @item.UsuarioPaterno @item.UsuarioMaterno" data-user="@user.ToUpper()">
+                        @user.ToUpper()
+                    </label>
+                    <label class="title truncate hide-on-small-only">@item.Titulo</label>
+                    @if(hoy.Year != item.Fecha.Year)
+                    {
+                        <label class="date">@item.Fecha.ToString("dd/MM/yyyy") </label>
+                    }
+                    else
+                    {
+                        var time = hoy - item.Fecha;
+                        if(time.Days != 0)
+                        {
+                            if(time.Days == 1)
+                            {
+                                <label class="date truncate">Ayer a las @item.Fecha.ToString("H:mm")</label>
+                            }
+                            else
+                            {
+                                <label class="date truncate">@item.Fecha.ToString("dd MMM 'a las' H:mm")</label>
+                            }
+                        }
+                        else
+                        {
+                            if(time.Hours != 0)
+                            {
+                                <label class="date truncate">Hace @time.Hours hrs.</label>
+                            }
+                            else if(time.Minutes != 0)
+                            {
+                                <label class="date truncate">Hace @time.Minutes mins.</label>
+                            }
+                            else
+                            {
+                                <label class="date truncate">Justo Ahora</label>
+                            }
+                        }
+                    }
+                    <label class="client truncate hide-on-small-only" style="text-align:center;">@item.Cliente</label>
+                    @if (item.Status == (int) StatusNotificaciones.Vista)
+                    {
+                        <label class="status">
+                            <i class="material-icons blue-grey-text text-lighten-4">drafts</i>
+                        </label>
+                        
+                    }
+                    else if (item.Status == (int)StatusNotificaciones.Atendida)
+                    {
+                        <label class="status">
+                            <i class="material-icons blue-grey-text text-lighten-4">work</i>
+                        </label>
+                    }
+                    else
+                    {
+                        <label class="status">
+                            <i class="material-icons grey-text">mail</i>
+                        </label>
+                    }
+                </div>
+            </li>
+        }
+    </ul>   
+}
+else
+{
+    <br />
+    <h4 class="center">¡No hay notificaciones con los parámetros solicitados!</h4>
+}
+
+@*<script src="~/Scripts/notifications.js"></script>*@

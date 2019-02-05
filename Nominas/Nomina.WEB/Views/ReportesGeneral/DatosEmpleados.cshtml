@@ -1,0 +1,69 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@using RH.Entidades.GlobalModel
+@{
+
+    var clientes = ViewBag.sucursales as List<ClienteSucursal>;
+}
+
+
+<div class="col-md-12">
+    <div class="col-md-3">
+        <div class="ejercicio">
+            <div class="form-group">
+                <label>Cliente-Sucursal: </label>
+                <select id="Sucursales" class="form-control">
+                    @foreach (var e in clientes)
+                    {
+                        <option value="@e.IdSucursal">@e.Cliente - @e.Sucursal</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="empresa">
+            <div class="form-group">
+                <label>*</label>
+                <input type="button" id="btnBuscar" name="btnBuscar" value="Buscar " class="form-control input-sm btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="empresa">
+            <div class="form-group">
+                <label>*</label>
+                <input type="button" id="btnArchivo" name="btnArchivo" value="Descargar en Archivo Excel" class="form-control input-sm btn btn-success" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div id="contenidoEmpleados"></div>
+</div>
+
+
+<script>
+    $('#btnBuscar').on('click', function () {
+
+        var idSucursal = $('#Sucursales').val();
+
+        if (idSucursal == null) {
+            utils.showMessage("Debe seleccionar una Sucursal", "... ", 1000);
+            $('#Sucursales').focus();
+        } else {
+            $("#contenidoEmpleados").load("/ReportesGeneral/GetDatosEmpleadosBySucursal/?id=" + idSucursal);
+        }
+
+
+    });
+    $('#btnArchivo').on('click', function () {
+
+        var idSucursal = $('#Sucursales').val();
+        var textoCs = $('#Sucursales :selected').text(); //$("#myselect :selected").text();
+
+        window.location.href = "/ReportesGeneral/GetFileEmpleadosBySucursal?id=" + idSucursal + "&nombre=" + textoCs;
+
+    });
+</script>

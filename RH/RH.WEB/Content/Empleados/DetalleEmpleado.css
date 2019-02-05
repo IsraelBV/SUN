@@ -1,0 +1,84 @@
+﻿@import url('../titulos.css');
+.list-group-item span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 50%;
+}
+input {
+    text-transform: uppercase;
+}
+
+.panel-body {
+    height: 70vh;
+    /*overflow:hidden;
+    max-height: 470px;
+    min-height: 420px;*/
+}
+
+#form-empleado label, #form-contrato label {
+    bottom: 8px;
+}
+
+#panelEnabled {
+    display: none;
+}
+
+#panelBancario {
+    display:none;
+}
+
+#panelDocumentos {
+    display:none;
+}
+
+.disabledTab {
+    pointer-events: none;
+    background-color: transparent !important;
+}
+
+.progress {
+    margin-top: 15px;
+    margin-bottom: 0px;
+    display: none;
+}
+
+.progress-bar {
+    -webkit-transition: none !important;
+    transition: none !important;
+    width: 1%;
+}
+
+#alert-message{
+    display: none;
+}
+
+#alert {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.btn-table {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    padding: 2px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: #656760;
+}
+
+.btn-table:hover {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #3e3f3a;
+}
+.label-anterior{
+    color:dodgerblue
+}

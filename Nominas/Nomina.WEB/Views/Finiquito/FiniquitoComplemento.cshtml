@@ -1,0 +1,1711 @@
+﻿
+@using Nomina.BLL
+@using RH.Entidades
+@using Common.Utils;
+@model NOM_Finiquito
+@{
+    var empleado = ViewBag.empleado;
+    int idFiniquito = Model == null ? 0 : Model.IdFiniquito;
+
+    var finComp = ViewBag.finCom;
+    var finDet = ViewBag.finDet as List<finiquitoDetalle>;
+    //var finDesFis = ViewBag.finDesFis;
+    //var finDesCom = ViewBag.finDesCom;
+    //var esLiquidacion = ViewBag.esLiquidacion;
+    bool liquidacion = Model == null ? false : Model.EsLiquidacion;
+    bool isArt174 = Model == null ? false : Model.Art174;
+    bool art174 = true;
+    var autorizado = ViewBag.Autorizado;
+    var listaTarifas = ViewBag.ListaTarifas as List<SelectListItem>;
+
+}
+<link href="~/Content/finiquito.css" rel="stylesheet" />
+<style>
+    #titulo {
+        position: fixed;
+        top: 5px;
+        margin-top: -10px;
+    }
+
+    #botones {
+        position: fixed;
+        top: 5px;
+        margin-top: -10px;
+    }
+
+    #ancla2 {
+        display: none;
+    }
+
+    .btnRecibos {
+        background-image: linear-gradient(to bottom, #fff 0%, #FF6A6A 100%) !important;
+    }
+
+    .btnprocesado {
+        background-image: linear-gradient(to bottom, #fff 0%, #337ab7 100%) !important;
+    }
+
+    .btngeneral {
+        background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+    }
+
+    .btnDescuento {
+        background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+    }
+
+    .btnPercepciones {
+        background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important;
+    }
+
+    .btnBorderTotalCustom {
+        border-color: #cfdc00;
+        box-shadow: 0 0 5px rgba(207, 220, 0, 0.4);
+    }
+
+    .btnGuardarPersonalizados {
+        border-color: #cfdc00;
+        box-shadow: 0 0 5px rgba(207, 220, 0, 0.4);
+    }
+
+        .btnGuardarPersonalizados:hover {
+            border-color: #E74C3C;
+            box-shadow: 0 0 5px rgba(231, 76, 60, 0.4);
+        }
+</style>
+
+ 
+<div id="titulo">
+    <div class="main-content-title">
+        <h3 class="pull-left">Finiquito @empleado.Paterno @empleado.Materno @empleado.Nombres  @(autorizado == true ? "Autorizado" : "")  </h3><div id="autorizacionTitulo" style="display:none;"> <h3 class="pull-left">&nbsp; Autorizado</h3></div>
+
+    </div>
+</div>
+
+@using (Ajax.BeginForm("SaveCustomData", "Finiquito", new AjaxOptions { OnSuccess = "FormFinSuccess" }, new { @class = "tooltipForm", id = "finiquitoForm" }))
+{
+
+    <div id="pvistaParcial" style="height: 90vh;">
+        <div class="row">
+            <div class="panel with-nav-tabs panel-default">
+                <div class="panel-heading clearfix text-center" style="background-color: #FFF !important;">
+                    <div class="pull-left" style="margin-bottom:10px; margin-left:10px;">
+                        <a data-toggle="modal" data-target="#modal-detalle" class="btn btn-default btngeneral" href="#"><i class="fa fa-list-ol"></i> Detalles</a>
+                        <a class="btn btn-default btnDescuento" href="#"><i class="fa fa-minus"></i> Descuentos</a>
+                        <a class="btn btn-default btnPercepciones" href="#"><i class="fa fa-plus"></i> Comisiones</a>
+                        <a id="show" class="btn btn-default ocultar btngeneral" href="#"><i class="fa fa-usd"></i> Totales</a>
+                        @if (autorizado == true)
+                        {
+                            @*<a class="btn btn-default btnprocesado" onclick="finiquitoComplemento()" style = "pointer-events: none;cursor: default;opacity:0.5;" ><i class="fa fa-refresh"></i> Procesar</a>*@
+
+                        }
+                        else
+                        {
+                            <a class="btn btn-default btnprocesado" onclick="finiquitoComplemento()" id="btnProcesadoOcu" title="Ejecuta el proceso de Generar el finiquito/Liquidacion"><i class="fa fa-cogs fa-lg" aria-hidden="true"></i> Procesar</a>
+
+                            if (isArt174)
+                            {
+                                <input type="checkbox" id="chk174" name="chk174" class="  " checked="checked" title="Seleccionar si se requiere cálcular una liquidación"/>
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="chk174" name="chk174" class="  " title="Seleccionar si se requiere cálcular una liquidación" />
+                            }
+                            <label for="chk174" class=" " title="Obtiene isr/subsidio por medio del artículo 174">Art174</label>
+
+
+                        }
+
+
+                        @if (liquidacion)
+                        {
+                            <input type="checkbox" id="checkLiquidacion" class="" checked="checked" title="Seleccionar si se requiere cálcular una liquidación" />
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="checkLiquidacion" class=" " title="Seleccionar si se requiere cálcular una liquidación" />
+                        }
+
+                        <label for="checkLiquidacion" title="Seleccionar si se requiere cálcular una liquidación">Liquidación</label>
+
+                        @*<a class="btn btn-default btnRecibos" onclick="verReciboFiscal()" title="Generar recibo sin timbre"><i class="fa fa-download"></i> Recibo 3.2</a>*@
+                        <a class="btn btn-default btnRecibos" onclick="verReciboFiscal33()" title="Generar recibo sin timbre version 3.3"><i class="fa fa-download"></i> Recibo 3.3</a>
+                        <a class="btn btn-default btnRecibos" onclick="reciboFPDF()"><i class="fa fa-download"></i> Recibo F</a>
+                        <a class="btn btn-default btnRecibos" onclick="reciboCPDF()"><i class="fa fa-download"></i> Recibo C</a>
+                        <a data-toggle="modal" data-target="#modal-autorizar" class="btn btn-default btnAutorizar btngeneral" href="#"><i class="fa fa-thumbs-o-up "></i> Autorizar</a>
+                        @if (autorizado == true)
+                        {
+                            @*<a class="btn btn-default btnGuardarPersonalizados" style = "pointer-events: none;cursor: default;opacity:0.5;"><i class="glyphicon glyphicon-floppy-save"></i> Guardar Totales Personalizados Liq</a>*@
+
+                        }
+                        else
+                        {
+                            <a class="btn btn-default btnGuardarPersonalizados" id="btnGuardarPersonalizado" title="Genera la liquidación con los totales capturados manualmente"><i class="fa fa-cogs fa-lg" aria-hidden="true"></i> Totales Personalizados</a>
+                        }
+
+                    </div>
+
+
+                </div>
+                <div class="panel-body" style="height: 90vh;  overflow-y: scroll !important;">
+                    <input type="hidden" id="idFiniquito" value="@idFiniquito" name="idFiniquito" />
+                    <input type="hidden" id="idEmpleado" value="@empleado.idEmpleado" name="idEmpleado" />
+                    <input type="hidden" id="esLiquidacion" value="@(liquidacion == true ?"true":"false")" name="esLiquidacion" />
+                    <input type="hidden" id="esArt174" value="@(isArt174 == true ?"true":"false")" name="esArt174" />
+                    @if (Model != null)
+                    {
+                        <div class="form-horizontal ">
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">Datos Generales</div>
+                                        <div class="panel-body">
+
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label class="" for="fechaAltaF">Fecha IMSS</label>
+                                                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                        <div class="input-group-addon">F</div>
+                                                        <input type="date" id="fechaAltaF" name="fechaAltaF" value="@Model.FechaAlta.ToString("yyyy-MM-dd")" class="form-control " data-toggle="tooltip" title="Inicialmente se toma la Fecha Imss" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="" for="fechaBaja">Fecha Baja</label>
+                                                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                        <div class="input-group-addon">F</div>
+                                                        <input type="date" id="fechaBaja" name="fechaBaja" value="@Model.FechaBaja.ToString("yyyy-MM-dd")" class="form-control input-sm" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="" for="fechaReal">Fecha Real</label>
+                                                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                        <div class="input-group-addon">F</div>
+                                                        <input type="date" id="fechaReal" name="fechaReal" value="@finComp.FechaAlta.ToString("yyyy-MM-dd")" class="form-control input-sm" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="" for="diasEjercicio">Días Ejercicio</label>
+                                                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                        <div class="input-group-addon">#</div>
+                                                        <input type="text" id="diasEjercicio" name="diasEjercicio" value="@Model.DiasEjercicioFiscal" class="form-control input-sm" disabled />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label class="" for="sueldoDiario">SD</label>
+                                                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                        <div class="input-group-addon">$</div>
+                                                        <input type="text" id="sueldoDiario" name="sueldoDiario" value="@Model.SD" class="form-control input-sm" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="" for="sm">Salario minimo</label>
+                                                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                        <div class="input-group-addon">$</div>
+                                                        <input type="text" id="sm" name="sm" value="@Model.SalarioMinimo" class="form-control input-sm" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="" for="sueldoReal">S Real</label>
+                                                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                        <div class="input-group-addon">$</div>
+                                                        <input type="text" id="sueldoReal" name="sueldoReal" value="@finComp.SDReal" class="form-control input-sm" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="" for="sueldoReal">Tarifa</label>
+                                                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                        <div class="input-group-addon">T</div>
+
+                                                        @if (listaTarifas != null)
+                                                        {
+                                                            <select id="selectTarifa" name="selectTarifa" class="form-control">
+                                                                @foreach (var listItem in listaTarifas)
+                                                                {
+                                                                    if (listItem.Selected)
+                                                                    {
+                                                                        <option value="@listItem.Value" selected="selected">@listItem.Text</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@listItem.Value">@listItem.Text</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+
+                                        <div class="panel panel-danger">
+                                            <div class="panel-heading">Datos Fiscales</div>
+                                            <div class="panel-body">
+
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label class="" for="inlineFormInputGroup">Días Laborados</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">#</div>
+                                                            <input type="text" id="DiasLaborados" name="DiasLaborados" value="@Model.DiasLaborados" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="fechaAguinaldoF">Aguinaldo</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">F</div>
+                                                            <input type="date" id="fechaAguinaldoF" name="fechaAguinaldoF" value="@Model.FechaInicioAguinaldo.ToString("yyyy-MM-dd")" class="form-control input-sm" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="diasAguinaldoCalculo">Dias</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">#</div>
+                                                            <input type="text" id="diasAguinaldoCalculo" name="diasAguinaldoCalculo" value="@Model.DiasAguinaldoParaCalculo" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="fechaVacacionesF">Vacaciones</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">F</div>
+                                                            <input type="date" id="fechaVacacionesF" name="fechaVacacionesF" value="@Model.FechaInicioVacacion.ToString("yyyy-MM-dd")" class="form-control input-sm" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="diasVacacionesCalculo">Dias</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">#</div>
+                                                            <input type="text" id="diasVacacionesCalculo" name="diasVacacionesCalculo" value="@Model.DiasVacacionesParaCalculo" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="panel panel-danger">
+                                            <div class="panel-heading">Aguinaldo</div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label class="" for="diasAguinaldoF">Dias</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">D</div>
+                                                            <input type="text" id="diasAguinaldoF" name="diasAguinaldoF" value="@Model.AguinaldoCorrespondiente" class="form-control input-sm" title=" -1 para obtener los días automaticamente" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="proporcionalAguinaldo">Proporcional</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">D</div>
+                                                            <input type="text" id="proporcionalAguinaldo" name="proporcionalAguinaldo" value="@Model.ProporcionalAguinaldo" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="inlineFormInputGroup">Total</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">$</div>
+                                                            <input type="text" id="totalAguinaldo" name="totalAguinaldo" value="@Model.AGUINDALDO" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="panel panel-danger">
+                                            <div class="panel-heading">Vacaciones</div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label class="" for="diasVacacionesF">Dias</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">D</div>
+                                                            <input type="text" id="diasVacacionesF" name="diasVacacionesF" value="@Model.VacacionesCorrespondiente" class="form-control input-sm" title=" -1 para obtener los días automaticamente" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="proporcionalVacaciones">Proporcional</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">P</div>
+                                                            <input type="text" id="proporcionalVacaciones" name="proporcionalVacaciones" value="@Model.ProporcionalVacaciones" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="totalVacaciones">Total</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">$</div>
+                                                            <input type="text" id="totalVacaciones" name="totalVacaciones" value="@Model.VACACIONES" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="porcientoPrima">Prima</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">%</div>
+                                                            <input type="text" id="porcientoPrima" name="porcientoPrima" value="@Model.PrimaVacacional" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="totalPrimaVacacionesF">Total</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">$</div>
+                                                            <input type="text" id="totalPrimaVacacionesF" name="totalPrimaVacacionesF" value="@Model.PRIMA_VACACIONAL" class="form-control input-sm btnBorderTotalCustom" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="panel panel-danger">
+                                            <div class="panel-heading">Sueldo Pendiente</div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label class="" for="diasSueldoPendienteF">Dias Sueldo</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">D</div>
+                                                            <input type="text" id="diasSueldoPendienteF" name="diasSueldoPendienteF" value="@Model.DiasSueldoPendiente" class="form-control input-sm" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="diasVacacionesPendientesF">Dias Vacaciones</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">D</div>
+                                                            <input type="text" id="diasVacacionesPendientesF" name="diasVacacionesPendientesF" value="@Model.VacacionesPendientes   " class="form-control input-sm" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="primaVacacionalPendienteF">Prima Vacional</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">%</div>
+                                                            <input type="text" id="primaVacacionalPendienteF" name="primaVacacionalPendienteF" value="@Model.PrimaVacacionPendiente" class="form-control input-sm" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label class="" for="totalSueldoPendiente">Total</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">$</div>
+                                                            <input type="text" id="totalSueldoPendiente" name="totalSueldoPendiente" value="@Model.SUELDO" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="totalVacacionesPendientes">Total</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">$</div>
+                                                            <input type="text" id="totalVacacionesPendientes" name="totalVacacionesPendientes" value="@Model.VACACIONES_PENDIENTE" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="" for="totalPrimaVacacionalPendiente">Total</label>
+                                                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                            <div class="input-group-addon">$</div>
+                                                            <input type="text" id="totalPrimaVacacionalPendiente" name="totalPrimaVacacionalPendiente" value="@Model.PRIMA_VACACIONES_PENDIENTE" class="form-control input-sm" disabled />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-danger">
+                                            <div class="panel-heading"></div>
+                                            <div class="panel-body">
+                                                <div class="alert alert-info">
+                                                    <strong>@idFiniquito</strong> ...
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+
+
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        @if (finComp != null)
+                                        {
+
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading">Datos Complemento</div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="DiasLaborados">Dias Laborados</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">#</div>
+                                                                <input type="text" id="DiasLaborados" name="DiasLaborados" value="@finComp.DiasLaborados" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="fechaAguinaldo">Aguinaldo</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">F</div>
+                                                                <input type="date" id="fechaAguinaldo" name="fechaAguinaldo" value="@finComp.FechaInicioAguinaldo.ToString("yyyy-MM-dd")" class="form-control input-sm" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="diasAguinaldoCalculo">Dias</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">#</div>
+                                                                <input type="text" id="diasAguinaldoCalculo" name="diasAguinaldoCalculo" value="@finComp.DiasAguinaldoParaCalculo" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="fechaVacaciones">Vacaciones</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">F</div>
+                                                                <input type="date" id="fechaVacaciones" name="fechaVacaciones" value="@finComp.FechaInicioVacacion.ToString("yyyy-MM-dd")" class="form-control input-sm" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="diasVacacionesCalculo">Dias</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">#</div>
+                                                                <input type="text" id="diasVacacionesCalculo" name="diasVacacionesCalculo" value="@finComp.DiasVacacionesParaCalculo" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading">Aguinaldo</div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="diasAguinaldoC">Dias</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">#</div>
+                                                                <input type="text" id="diasAguinaldoC" name="diasAguinaldoC" value="@finComp.AguinaldoCorrespondiente" class="form-control input-sm" title=" -1 para obtener los días automaticamente" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="proporcionalAguinaldo">Proporcional</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">D</div>
+                                                                <input type="text" id="proporcionalAguinaldo" name="proporcionalAguinaldo" value="@finComp.ProporcionalAguinaldo" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalAguinaldo">Total</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalAguinaldo" name="totalAguinaldo" value="@finComp.AGUINALDO" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading">Vacaciones</div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="diasVacacionesC">Dias</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">#</div>
+                                                                <input type="text" id="diasVacacionesC" name="diasVacacionesC" value="@finComp.VacacionesCorrespondientes" class="form-control input-sm" title=" -1 para obtener los días automaticamente" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="proporcionalVacaciones">Proporcinal</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">P</div>
+                                                                <input type="text" id="proporcionalVacaciones" name="proporcionalVacaciones" value="@finComp.ProporcionalVacaciones" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalVacaciones">Total</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalVacaciones" name="totalVacaciones" value="@finComp.VACACIONES" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="porcentajePrima">Prima</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">%</div>
+                                                                <input type="text" id="porcentajePrima" name="porcentajePrima" value="@finComp.PrimaVacacional" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalPrimaVacacionesC">Total</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalPrimaVacacionesC" name="totalPrimaVacacionesC" value="@finComp.PRIMA_VACACIONAL" class="form-control input-sm btnBorderTotalCustom" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading">Sueldo Pendiente</div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="diasSueldoPendiente">Dias Sueldo</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">#</div>
+                                                                <input type="text" id="diasSueldoPendiente" name="diasSueldoPendiente" value="@finComp.SueldoPendiente" class="form-control input-sm" />
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="diasVacacionesPendientes">Dias Vacaciones</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">#</div>
+                                                                <input type="text" id="diasVacacionesPendientes" name="diasVacacionesPendientes" value="@finComp.VacacionesPendientes" class="form-control input-sm" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="primaVacacionalPendienteC">Prima Vacacional</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">%</div>
+                                                                <input type="text" id="primaVacacionalPendienteC" name="primaVacacionalPendienteC" value="@finComp.PrimaVacacionPendiente" class="form-control input-sm" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalSueldoPendiente">Total</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalSueldoPendiente" name="totalSueldoPendiente" value="@finComp.SUELDO" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalVacacionesPendientes">Total</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalVacacionesPendientes" name="totalVacacionesPendientes" value="@finComp.VACACIONES_PENDIENTE" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalPrimaVacacionalPendiente">Total</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalPrimaVacacionalPendiente" name="totalPrimaVacacionalPendiente" value="@finComp.PRIMA_VACACIONES_PENDIENTE" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                            @*Dias Laborados y Dias Ejercicio*@
+                                            @*Datos de Vacaciones*@
+                                            @*Datos Aguinaldo Totales*@
+                                            @*Datos Vacaciones*@
+                                            @*Datos Sueldo pendiente*@
+
+
+
+
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div id="SeccionIndermizacion" style="display: @(liquidacion == true ?"block": "none") ">
+                                        <div class="form-group">
+                                            <ul class="nav nav-tabs" style="text-align:center;">
+                                                <li class="active" id="Indemnizacion" style="display: @(liquidacion == true ?"block": "none") "><a href="#">DATOS INDEMMIZACIÓN </a></li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+
+                                            <div class="panel panel-danger">
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="mesesSalarioF">3 Meses Salario</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">D</div>
+                                                                <input type="text" id="mesesSalarioF" name="mesesSalarioF" value="@Model.L_3Meses_SueldoParaCalculo" class="form-control input-sm" title="-1 para obtener los dias automaticamente" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalTresMesesF">=</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalTresMesesF" name="totalTresMesesF" value="@Model.L_3MESES_SUELDO" class="form-control input-sm btnBorderTotalCustom" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="veinteXAF">20 Días X año </label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">#</div>
+                                                                <input type="text" id="veinteXAF" name="veinteXAF" value="@Model.Proporcional20DiasPorAño" class="form-control input-sm" />
+                                                            </div>
+
+
+
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalVeinteF">=</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalVeinteF" name="totalVeinteF" value="@Model.L_20DIAS_POR_AÑO" class="form-control input-sm btnBorderTotalCustom" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="fechaAlta">TOTAL</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="fechaAlta" name="fechaAlta" value="@(Model.L_3MESES_SUELDO + Model.L_20DIAS_POR_AÑO)" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+
+
+                                            @*---------------------------------------
+                                                ---------Prima Antigüedad-------------
+                                                --------------------------------------*@
+                                            <div class="panel panel-danger">
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="doceDiasPorA">12 días x año</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">D</div>
+                                                                <input type="text" id="doceDiasPorA" name="doceDiasPorA" value="12" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="proporcionalAntiguedad">Proporcional</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">D</div>
+                                                                <input type="text" id="proporcionalAntiguedad" name="proporcionalAntiguedad" value="@Model.ProporcionalPrimaAntiguedad" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalPrimaF">Total</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalPrimaF" name="totalPrimaF" value="@Model.PRIMA_ANTIGUEDAD" class="form-control input-sm btnBorderTotalCustom" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                            @*--------------------------------------------------
+                                                ----------------------ISR-------------------------
+                                                --------------------------------------------------*@
+                                            <div class="panel panel-danger">
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body">
+
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="ultimoSueldo">Ultimo Sueldo Mens</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="ultimoSueldo" name="ultimoSueldo" value="@Model.BaseGravableUltimoSueldo.ToCurrencyFormat()" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="isrUltimoSueldo">Isr</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="isrUltimoSueldo" name="isrUltimoSueldo" value="@Model.ISR_UltimoSueldo" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="tasaLiq">Tasa Liq</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">%</div>
+                                                                <input type="text" id="tasaLiq" name="tasaLiq" value="@(Model.TasaParaLiquidacion * 100)" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="iseLiq">Isr Liq</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="iseLiq" name="iseLiq" value="@Model.ISR_Liquidacion" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+
+                                                        </div>
+                                                        <div class="col-md-4">
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="panel panel-danger">
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body">
+                                                    <div class="alert alert-info">
+                                                        <strong>@idFiniquito</strong> ...
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                        <div class="col-md-6">
+
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="mesesSalarioC">3 Meses Salario</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">D</div>
+                                                                <input type="text" id="mesesSalarioC" name="mesesSalarioC" value="@finComp.L_3Meses_SueldoParaCalculo" class="form-control input-sm" title="-1 para obtener los dias automaticamente" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalTresMesesC">= </label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+
+                                                                <input type="text" id="totalTresMesesC" name="totalTresMesesC" value="@finComp.L_3MESES_SUELDO" class="form-control input-sm btnBorderTotalCustom" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="veinteXAC">20 días X Año</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">D</div>
+                                                                <input type="text" id="veinteXAC" name="veinteXAC" value="@finComp.Proporcional20DiasPorAño" class="form-control input-sm" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalVeinteC">=</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalVeinteC" name="totalVeinteC" value="@finComp.L_20DIAS_POR_AÑO" class="form-control input-sm btnBorderTotalCustom" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="fechaAlta">TOTAL</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="fechaAlta" name="fechaAlta" value="@(finComp.L_3MESES_SUELDO + finComp.L_20DIAS_POR_AÑO)" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="panel panel-success">
+                                                <div class="panel-heading"></div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="" for="inlineFormInputGroup">12 dias por año</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">#</div>
+                                                                <input type="text" id="fechaAlta" name="fechaAlta" value="12" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="inlineFormInputGroup">Proporcional</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">#</div>
+                                                                <input type="text" id="fechaAlta" name="fechaAlta" value="@finComp.ProporcionalPrimaAntiguedad" class="form-control input-sm" disabled />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="" for="totalPrimaC">Total</label>
+                                                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                                                <div class="input-group-addon">$</div>
+                                                                <input type="text" id="totalPrimaC" name="totalPrimaC" value="@finComp.PRIMA_ANTIGUEDAD" class="form-control input-sm btnBorderTotalCustom" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <strong>Info!</strong> Debe Procesar el finiquito para generar sus datos...
+                        </div>
+                    }
+                </div>
+
+
+            </div>
+
+            @if (Model != null)
+            {
+                <div id="barraStatica">
+                    @if (Model != null)
+                    {
+                        <div class="form-horizontal">
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-md-1">Subtotal </label>
+                                        <div class="col-md-2">
+                                            <input type="text" id="subtotal" name="subtotal" value="@Model.SubTotal_Finiquito.ToCurrencyFormat()" class="form-control input-sm" title="SubTotal del Finiquito" />
+                                        </div>
+
+                                        <label class="col-md-1">ISR</label>
+                                        <div class="col-md-2">
+                                            <input type="text" id="isr" name="isr" value="@Model.ISR_Finiquito.ToCurrencyFormat()" class="form-control input-sm" title="ISR Finiquito" />
+                                        </div>
+
+                                        <label class="col-md-1">Subsidio </label>
+                                        <div class="col-md-2">
+                                            <input type="text" id="subsidio" name="subsidio" value="@Model.Subsidio_Finiquito.ToCurrencyFormat()" class="form-control input-sm" title="Subsidio del Finiquito" />
+                                        </div>
+                                        <label class="col-md-1">TOTAL F:</label>
+                                        <div class="col-md-2">
+                                            <input type="text" id="totalFiniquito" name="totalFiniquito" value="@Model.Total_Finiquito.ToCurrencyFormat()" class="form-control  text-right" title="Total Finiquito" />
+                                        </div>
+                                    </div>
+                                    <div id="indermizacionTotales" style="display: @(liquidacion == true ? "block": "none") ">
+                                        <div class="form-group">
+                                            <label class="col-md-1" title="Liquidación">Subtotal L  </label>
+                                            <div class="col-md-2">
+                                                <input type="text" id="netoTotal" name="netoTotal" value="@Model.SubTotal_Liquidacion.ToCurrencyFormat()" class="form-control input-sm" title="SubTotal de Liquidacion" />
+                                            </div>
+
+                                            <label class="col-md-1">ISR Liq </label>
+                                            <div class="col-md-2">
+                                                <input type="text" id="netoTotal" name="netoTotal" value="@Model.ISR_Liquidacion.ToCurrencyFormat()" class="form-control input-sm" title="ISR Liquidación" />
+                                            </div>
+
+                                            <label class="col-md-1">Subsidio </label>
+                                            <div class="col-md-2">
+                                                <input type="text" id="subsidioliq" name="subsidioliq" value="@Model.Subsidio_Liquidacion.ToCurrencyFormat()" class="form-control input-sm" title="Subsidio Liquidacion" />
+                                            </div>
+
+                                            <label class="col-md-1">TOTAL L:</label>
+                                            <div class="col-md-2">
+                                                <input type="text" id="netoTotal" name="netoTotal" value="@Model.Total_Liquidacion.ToCurrencyFormat()" class="form-control  text-right" title="Total de la liquidación" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-10 text-right">- DEDUCCIONES:</label>
+                                        <div class="col-md-2">
+                                            <input type="text" id="totalDeducciones" name="totalDeducciones" value="@Model.TotalDeducciones.ToCurrencyFormat()" class="form-control  text-right" title="Total de las deducciones fiscales" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-10 text-right">TOTAL GENERAL $:</label>
+                                        <div class="col-md-2">
+                                            <input type="text" id="netoTotal" name="netoTotal" value="@Model.TOTAL_total.ToCurrencyFormat()" class="form-control text-right" style="font-weight: bold;" title="Total a pagar" />
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+
+
+
+
+                                <div id="indermizacionTotales2">
+
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+    </div>
+
+}
+
+@*<div id="dock-container">
+        <div id="dock">
+            <ul>
+                <li><span>Detalles</span><a   data-toggle="modal" data-target="#modal-detalle" href="#"><img src="~/Images/detallesFiniquito.png" /></a></li>
+                <li><span>Descuentos</span><a class="btnDescuento" href="#"><img src="~/Images/descuento.png" /></a></li>
+                <li><span>Totales</span><a id="show" href="#"><img src="~/Images/totales.png" /></a></li>
+             </ul>
+            <div class="base"></div>
+        </div>
+    </div>
+
+    <div id="ancla-container">
+        <div id="ancla">
+            <ul>
+                <li><span>Datos Finiquitos</span><a  href="#anclaFiscal"><img src="~/Images/seccion1.png" /></a></li>
+                <li><span>Datos Indemnización</span><a href="#SeccionIndermizacion"><img src="~/Images/seccion2.png" /></a></li>
+
+            </ul>
+            <div class="anclabase"></div>
+        </div>
+    </div>*@
+
+
+
+
+<div class="modal fade" id="modal-detalle" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Detalle Finiquito</h4>
+            </div>
+            <div class="modal-body">
+                <div class="bodyDetalles">
+                    @if (finDet != null)
+                    {
+                        <table id="detalleFiniquito" class="table table-condensed  table-striped display" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th id="click">ID Concepto</th>
+                                    <th>Descripción</th>
+                                    <th>Total</th>
+                                    <th>Exento</th>
+                                    <th>Gravado</th>
+                                    <th>ISN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var d in finDet)
+                                {
+                                    <tr>
+                                        <td>@d.IdConcepto</td>
+                                        <td>@d.Descripcion</td>
+                                        <td>@d.Total</td>
+                                        <td>@d.Exento</td>
+                                        <td>@d.Gravado</td>
+                                        <td>@d.ImpuestoSn</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-descuento" role="dialog">
+    <div class="modal-dialog descuento ">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Descuento Finiquito</h4>
+            </div>
+            <div class="modal-body">
+                <div id="Modaldescuentos">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-primary" onclick="Guardar();">Guardar Conceptos</a>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="modal-PercepcionesExtras" role="dialog">
+    <div class="modal-dialog descuento ">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Comisiones Finiquito</h4>
+            </div>
+            <div class="modal-body">
+                <div id="PercepcionesExtras"></div>
+
+
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-primary" onclick="GuardarPercepcionExtra();">Guardar Conceptos</a>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="modal-autorizar" role="dialog">
+    <div class="modal-dialog" style="width:600px !important; ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Factura Finiquito</h4>
+            </div>
+            <div class="modal-body">
+                <div id="ModalAutorizar"></div>
+
+
+            </div>
+            <div class="modal-footer">
+                @if (autorizado == false)
+                {
+                    <a href="#" class="btn btn-default" id="ImprimirFactura"><i class="fa fa-print"></i> Lista de Raya</a>
+                    <a href="#" class="btn btn-default" id="Dispersion"><i class="fa fa-print"></i> Dispersion</a>
+                    <a href="#" class="btn btn-default" id="GuardarFactura"><i class="fa fa-save"></i> Guardar Factura</a>
+                    <a href="#" class="btn btn-default brnAuorizando" id="botonAutorizar"><i class="fa fa-save "></i> Autorizar</a>
+
+                }
+                else
+                {
+                    <a href="#" class="btn btn-default" id="ImprimirFactura"><i class="fa fa-print"></i> Lista de Raya</a>
+                    <a href="#" class="btn btn-default" id="Dispersion"><i class="fa fa-print"></i> Dispersion</a>
+                    <a href="#" class="btn btn-default" style="pointer-events: none;cursor: default;opacity:0.5;" id="GuardarFactura"><i class="fa fa-save"></i> Guardar Factura</a>
+                    <a href="#" class="btn btn-danger" style="pointer-events: none;cursor: default;"><i class="fa fa-save"></i> Autorizado</a>
+
+                }
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script languague="javascript">
+
+    $(document).ready(function() {
+
+
+    });
+
+    var detalle;
+    var table;
+    var tableC;
+    var table2;
+    var table2C;
+    var desc;
+
+    $("input[type='text']").click(function () {
+        $(this).select();
+    });
+
+    $(".brnAuorizando").click(function() {
+
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: '/Finiquito/Autorizar/',
+            success: function (result) {
+
+                $('#noAutorizada').hide();
+                $('#siAutorizada').show();
+                $('#botonAutorizar').removeClass("btn-default");
+                $('#botonAutorizar').removeClass("brnAuorizando");
+                $('#botonAutorizar').addClass("btn-danger");
+                $('#botonAutorizar').text(" Autorizado");
+                document.getElementById('autorizacionTitulo').style.display = 'inline';
+                $("#GuardarFactura").css("opacity", 0.5);
+                $("#GuardarFactura").css("pointer-events","none");
+                $("#GuardarFactura").css("cursor", "default");
+                $("#btnProcesadoOcu").css("opacity", 0.5);
+                $("#btnProcesadoOcu").css("pointer-events","none");
+                $("#btnProcesadoOcu").css("cursor", "default");
+                $("#btnGuardarPersonalizado").css("opacity", 0.5);
+                $("#btnGuardarPersonalizado").css("pointer-events","none");
+                $("#btnGuardarPersonalizado").css("cursor", "default");
+
+            },
+            error: function (error) {
+                // si hay un error lanzara el mensaje de error
+
+            }
+        })
+    });
+
+
+    $("#show").click(function () {
+        if ($('#show').hasClass('ocultar')) {
+            $("#barraStatica").show();
+            $(this).removeClass('ocultar');
+        } else {
+            $("#barraStatica").hide();
+            $(this).addClass('ocultar');
+        }
+
+    });
+
+    $("#ImprimirFactura").click(function () {
+        var request = $.ajax({
+            url: "/Finiquito/imprimirReporte/",
+            method: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                waitingDialog.show('Generando Lista de raya......');
+
+            }
+        });
+        request.done(function (data) {
+            waitingDialog.hide();
+            window.open('/Finiquito/descargarArchivo?ruta=' + data, '_blank');
+        })
+    });
+
+    $("#Dispersion").click(function () {
+        var request = $.ajax({
+            url: "/Finiquito/crearDispersion/",
+            method: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                waitingDialog.show('Generando Dispercion......');
+
+            }
+        });
+        request.done(function (data) {
+
+            waitingDialog.hide();
+            window.open('/Finiquito/descargarArchivo?ruta=' + data, '_blank');
+        })
+    });
+
+    $("#modal-detalle").on("shown.bs.modal", function () {
+        detalle = $('#detalleFiniquito').DataTable({
+            "scrollY": "500px",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "bInfo": false
+        });
+    });
+
+    // tablas de descuento//
+    $("#modal-descuento").on("shown.bs.modal", function () {
+
+        table = $('#tbldescuentos').DataTable({
+            "scrollY": "350px",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "bInfo": false
+        });
+
+
+        tableC = $('#tbldescuentosC').DataTable({
+            "scrollY": "350px",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "bInfo": false
+        });
+
+
+
+
+    });
+
+    $("#modal-PercepcionesExtras").on("shown.bs.modal", function () {
+
+        table2 = $('#tblPercepcionesExtras').DataTable({
+            "scrollY": "350px",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "bInfo": false
+        });
+
+
+        table2C = $('#tblPercepcionesExtrasC').DataTable({
+            "scrollY": "350px",
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "bInfo": false
+        });
+
+
+
+
+    });
+    $("#checkLiquidacion").click(function () {
+
+        if ($("#checkLiquidacion").is(':checked')) {
+
+            $('#SeccionIndermizacion').show();
+            //$('#botonTotalIndemnizacion').show();
+            $('#indermizacionTotales').show();
+            //$('#indermizacionTotales2').show();
+            $('#indemnizacion').show();
+            //$('#ancla2').css("display", "inline");
+            $('#btnGuardarPersonalizado').show();
+        } else {
+
+            $('#SeccionIndermizacion').hide();
+            //$('#botonTotalIndemnizacion').hide();
+            $('#indermizacionTotales').hide();
+            //$('#indermizacionTotales2').hide();
+            $('#indemnizacion').hide();
+            //$('#ancla2').hide();
+            $('#btnGuardarPersonalizado').hide();
+        }
+    });
+
+    $("#modal-descuento").on('hidden.bs.modal', function (e) {
+        table.destroy();
+        tableC.destroy();
+
+    });
+    $("#modal-PercepcionesExtras").on('hidden.bs.modal', function (e) {
+        table2.destroy();
+        table2C.destroy();
+
+    });
+
+    $("#modal-detalle").on("hidden.bs.modal", function () {
+        detalle.destroy();
+    });
+
+    var i = 1;
+    var j = 1;
+
+    function showModalDescuentos(e) {
+
+        $("#modal-descuento").find(".modal-title").text($(e).text());
+        $("#modal-descuento").modal("show");
+        i = 0;
+        j = 0;
+    }
+
+
+    function finiquitoComplemento() {
+        var textConfirmación = "";
+        var calcularLiquidacion = false;
+        var esArt174 = false;
+
+        if ($("#chk174").is(':checked')) {
+            esArt174 = true;
+        }
+
+
+        if ($("#checkLiquidacion").is(':checked')) {
+            calcularLiquidacion = true;
+            textConfirmación = "Se va a realizar el cálculo del finiquito y liquidación.";
+        } else {
+            calcularLiquidacion = false;
+            textConfirmación = "Se va a realizar el cálculo del finiquito.";
+        }
+
+        utils.confirmDialog("¿ESTA USTED SEGURO DE CONTINUAR?",textConfirmación,"CONFIRMAR","CANCELAR",
+            function(confirm) {
+                if (confirm) {
+
+
+                    var arrayFiniquito = [];
+
+                    var fechaAguinaldoF = $('#fechaAguinaldoF').val();
+                    var fechaVacacionesF = $('#fechaVacacionesF').val();
+                    var diasSueldoPendienteF = $('#diasSueldoPendienteF').val();
+                    var diasVacacionesPendientesF = $('#diasVacacionesPendientesF').val();
+                    var mesesSalarioF = $('#mesesSalarioF').val();
+
+                    var fechaAguinaldoC = $('#fechaAguinaldo').val();
+                    var fechaVacacionesC = $('#fechaVacaciones').val();
+                    var diasSueldoPendienteC = $('#diasSueldoPendiente').val();
+                    var diasVacacionesPendientesC = $('#diasVacacionesPendientes').val();
+                    var mesesSalarioC = $('#mesesSalarioC').val();
+
+
+                    var idFiniquito = document.getElementById("idFiniquito").value;
+                    var idEmpleado = document.getElementById("idEmpleado").value;
+                    var fechaBajaF = $('#fechaBaja').val();
+                    var fechaAltaFi = $('#fechaAltaF').val();
+
+                    var veinteF = $('#veinteXAF').val();
+                    var veinteC = $('#veinteXAC').val();
+
+                    var vacCorrespondienteF = $('#diasVacacionesF').val();
+                    var vacCorrespondienteC = $('#diasVacacionesC').val();
+
+                    var porcentajePrimaPendienteF = $('#primaVacacionalPendienteF').val();
+                    var porcentajePrimaPendienteC = $('#primaVacacionalPendienteC').val();
+
+                    var tarifaF = $('#selectTarifa').val();
+
+                    var diasAguinaldoP_F =  $('#diasAguinaldoF').val();
+                    var diasAguinaldoP_C =  $('#diasAguinaldoC').val();
+
+                    //$("#pvistaParcial").load("/Finiquito/finiquito/?idEmpleado=" + idEmpleado + "&idFiniquito=" + idFiniquito);
+
+
+                    item = {};
+
+
+                    item['FechaAguinaldoF'] = fechaAguinaldoF;
+                    item['FechaVacacionesF'] = fechaVacacionesF;
+                    item['DiasSueldoPendientesF'] = parseFloat(diasSueldoPendienteF);
+                    item['DiasVacacionesPendientesF'] = diasVacacionesPendientesF;
+                    item['FechaAguinaldoC'] = fechaAguinaldoC;
+                    item['FechaVacacionesC'] = fechaVacacionesC;
+                    item['DiasSueldoPendientesC'] = parseFloat(diasSueldoPendienteC);
+                    item['DiasVacacionesPendientesC'] = parseFloat(diasVacacionesPendientesC);
+                    item['MesesSalarioC'] = parseFloat(mesesSalarioC);
+                    item['MesesSalarioF'] = parseFloat(mesesSalarioF);
+                    item['FechaBajaF'] = fechaBajaF;
+
+                    item['VeinteDiasPorAF'] = veinteF;
+                    item['VeinteDiasPorAC'] = veinteC;
+
+                    item['DiasVacCorrespondientesF'] = vacCorrespondienteF;
+                    item['DiasVacCorrespondientesC'] = vacCorrespondienteC;
+
+                    item['FechaAltaF'] = fechaAltaFi;
+
+                    item['PorcentajePimaVacPendienteF'] = porcentajePrimaPendienteF;
+                    item['PorcentajePimaVacPendienteC'] = porcentajePrimaPendienteC;
+                    item['TipoTarifa'] = tarifaF;
+
+                    item['DiasAguinaldoF'] = diasAguinaldoP_F;
+                    item['DiasAguinaldoC'] = diasAguinaldoP_C;
+
+                    arrayFiniquito.push(item);
+
+
+                    var request = $.ajax({
+                        url: "/Finiquito/finiquito/",
+                        method: "POST",
+                        data: {
+                            idEmpleado: idEmpleado,
+                            idFiniquito: idFiniquito,
+                            arrayF: item,
+                            calcularLiquidacion: calcularLiquidacion,
+                            paramArt174:esArt174
+                        }
+                    });
+                    request.done(function(data) {
+                        //alert("Entro");
+                        utils.loadMainPage("Finiquito", "Index", "#main-content", "false", null);
+
+                    });
+
+                }
+            });
+        //-> fin del metodo de procesado del finiquito
+    }
+
+    //Modal de Descuento
+
+    var btnDescuento = $('.btnDescuento');
+    var modalDescuentos = $('#modal-descuento');
+
+    btnDescuento.click(function () {
+        var idfini = document.getElementById("idFiniquito").value;
+        $.get("../../Finiquito/DescuentoFiscal?idFiniquito=" + idfini, function (data) {
+            $("#Modaldescuentos").html(data);
+            modalDescuentos.modal();
+        });
+
+    });
+
+    //PercepcionesExtras
+    var btnPercepciones = $('.btnPercepciones');
+    var PercepcionesExtras = $('#modal-PercepcionesExtras');
+
+    btnPercepciones.click(function () {
+        var idfini = document.getElementById("idFiniquito").value;
+        $.get("../../Finiquito/PercepcionesExtras?idFiniquito=" + idfini, function (data) {
+            $("#PercepcionesExtras").html(data);
+            PercepcionesExtras.modal();
+        });
+
+    });
+    ///MODAL DE AUTORIZAR
+    var btnAutorizar = $('.btnAutorizar');
+    var modalAutorizar = $('#modal-autorizar');
+    btnAutorizar.click(function () {
+        var idfini = document.getElementById("idFiniquito").value;
+        $.get("../../Finiquito/autorizarFiniquito?idFiniquito=", function (data) {
+            $("#ModalAutorizar").html(data);
+            modalAutorizar.modal();
+        });
+
+    });
+
+
+    //RECIBO FISCAL PDF
+    function reciboFPDF() {
+        var idFiniquito = document.getElementById("idFiniquito").value;
+        var liqRecibo = false;
+
+        if ($("#checkLiquidacion").is(':checked')) {
+            liqRecibo = true;
+        } else {
+            liqRecibo = false;
+        }
+
+        var form = document.createElement("form");
+        form.setAttribute("id", "formf");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/Finiquito/GetReciboFiscal");
+        form._submit_function_ = form.submit;
+
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "idFiniquito");
+        hiddenField.setAttribute("value", idFiniquito);
+        form.appendChild(hiddenField);
+
+        var hiddenLiqField = document.createElement("input");
+        hiddenLiqField.setAttribute("type", "hidden");
+        hiddenLiqField.setAttribute("name", "liquidacion");
+        hiddenLiqField.setAttribute("value", liqRecibo);
+        form.appendChild(hiddenLiqField);
+
+        document.body.appendChild(form);
+        form._submit_function_();
+
+    }
+
+    //RECIBO COMPLEMENTO PDF
+    function reciboCPDF() {
+        var idFiniquito = document.getElementById("idFiniquito").value;
+        var liqRecibo = false;
+
+        if ($("#checkLiquidacion").is(':checked')) {
+            liqRecibo = true;
+        } else {
+            liqRecibo = false;
+        }
+
+
+        var form = document.createElement("form");
+        form.setAttribute("id", "formc");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/Finiquito/GetReciboComplemento");
+        form._submit_function_ = form.submit;
+
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "idFiniquito");
+        hiddenField.setAttribute("value", idFiniquito);
+        form.appendChild(hiddenField);
+
+        var hiddenLiqField = document.createElement("input");
+        hiddenLiqField.setAttribute("type", "hidden");
+        hiddenLiqField.setAttribute("name", "liquidacion");
+        hiddenLiqField.setAttribute("value", liqRecibo);
+        form.appendChild(hiddenLiqField);
+
+        document.body.appendChild(form);
+        form._submit_function_();
+
+    }
+
+    //visualizar el recibo sin timbre
+    function verReciboFiscal() {
+        var idFiniquito = document.getElementById("idFiniquito").value;
+        var btnDowRecibos = $('.btnRecibos');
+
+        btnDowRecibos.addClass('disabled');
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/Finiquito/GetRecibos");
+
+        form._submit_function_ = form.submit;
+
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "idFiniquito");
+        hiddenField.setAttribute("value", idFiniquito);
+        form.appendChild(hiddenField);
+
+
+        document.body.appendChild(form);
+        form._submit_function_();
+        t = setTimeout(function() { btnDowRecibos.removeClass('disabled'); }, 5000);
+
+    }
+
+    //Version 3.3
+    function verReciboFiscal33() {
+        var idFiniquito = document.getElementById("idFiniquito").value;
+        var btnDowRecibos = $('.btnRecibos');
+
+        btnDowRecibos.addClass('disabled');
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/Finiquito/GetRecibos33");
+
+        form._submit_function_ = form.submit;
+
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "idFiniquito");
+        hiddenField.setAttribute("value", idFiniquito);
+        form.appendChild(hiddenField);
+
+
+        document.body.appendChild(form);
+        form._submit_function_();
+        t = setTimeout(function() { btnDowRecibos.removeClass('disabled'); }, 5000);
+
+    }
+
+
+
+    $("#GuardarFactura").click(function () {
+        var itemC = {};
+        itemC["IdFiniquito"] = @(idFiniquito);
+        itemC["C_Porcentaje_Servicio"] = $("#C_Porcentaje_Servicio").val();
+        itemC["C_Total_Servicio"] = $("#C_Total_Servicio").val();
+        itemC["C_Percepciones"] = $("#C_Percepciones").val();
+        itemC["C_Cuotas_IMSS_Infonavit"] = $("#C_Cuotas_IMSS_Infonavit").val();
+        itemC["C_Impuesto_Nomina"] = $("#C_Impuesto_Nomina").val();
+        itemC["C_Relativos"] = $("#C_Relativos").val();
+        itemC["C_Descuentos"] = $("#C_Descuentos").val();
+        itemC["C_Otros"] = $("#C_Otros").val();
+        itemC["C_Subtotal"] = $("#C_Subtotal").val();
+        itemC["C_Total_IVA"] = $("#C_Total_IVA").val();
+        itemC["C_Total_Complemento"] = $("#C_Total_Complemento").val();
+        itemC["IdEmpresa_C"] = $("#complemento-tab").data("idempresac");
+
+        console.log(itemC);
+        var request = $.ajax({
+            url: "/Finiquito/GuardarFactura/",
+            method: "POST",
+            data: {
+                factura: itemC
+
+            }, success: function (result) {
+                notification = utils.showMessage("Guardando Datos", "¡Datos guardados exitosamente!", 1000, "");
+
+            }
+
+        });
+    });
+
+
+    //Guardar totales personalizados
+    //Guardar los cambios a los totales
+    var $btnGuardar = $("#btnGuardarPersonalizado");
+
+    $btnGuardar.click(function () {
+
+        utils.confirmDialog("¿ESTA USTED SEGURO DE CONTINUAR?","SE GUARDARAN TOTALES PERSONALIZADOS","CONFIRMAR","CANCELAR",
+            function(confirm) {
+                if (confirm) {
+
+                    $("#finiquitoForm").submit();
+                }
+            });
+
+    });
+
+
+    function FormFinSuccess(response) {
+        utils.showMessage("FINIQUITO UPDATE", response.strMensaje, 10000);
+        utils.loadMainPage("Finiquito", "Index", "#main-content", "false", null);
+    }
+
+
+</script> 

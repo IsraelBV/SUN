@@ -1,0 +1,164 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@model List<Empleado>
+
+<div class="col-md-6 col-md-offset-4">
+
+</div>
+      
+<link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+<script src="~/Scripts/fileinput.min.js"></script>
+<script src="~/Scripts/locales/es.js"></script>
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <h3 style="color:#000 !important;">Lista de Empleados</h3>
+    </div>
+    <div class="panel-body">
+        <table class="display emp compact " id="dbanco">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Paterno</th>
+                    <th>Materno </th>
+
+                </tr>
+            </thead>
+            <tbody id="prueba">
+                @foreach (var e in Model)
+                {
+                    <tr>
+                        <th>@e.IdEmpleado</th>
+                        <th>@e.Nombres</th>
+                        <th>@e.APaterno</th>
+                        <th>@e.AMaterno</th>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+
+<div id="subirArchivo" class="modal fade">
+    <div class="modal-dialog" style="width:1100px; ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Detalles Nómina</h4>
+            </div>
+            <div class="modal-body">
+                <input id="input-700" name="file" type="file" multiple class="file-loading">
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var tab = $('#dbanco').DataTable({
+       dom: 'Bfrtip',
+        "scrollY": "300px",
+        "scrollCollapse": true,
+        "paging": false,
+        "searching": true,
+        "bInfo": false,
+        "columnDefs": [
+    { "width": "5%", "targets": 0 },
+    { "width": "30%", "targets": 1 },
+    { "width": "30%", "targets": 2 }
+        ],
+        buttons: [
+            {
+            className: 'btnAsistencia',
+            text: '<i class="fa fa-download"></i> Crear Plantilla',
+
+            action: function () {
+                var sucursal = $('select[id=sucursal]').val();
+              //  alert(sucursal);
+                //window.location = "/Incidencias/ImprimirPlantillaIncidencia/" ;
+                var request = $.ajax({
+                    url: "/CambiosDatosBancarios/crearLayout/",
+                    method: "POST",
+                    data: {
+                        idSucursal: sucursal
+                    },
+                    beforeSend: function () {
+                        waitingDialog.show('Generando Plantilla de Datos Bancarios......');
+
+                    }
+                });
+                request.done(function (data) {
+                    waitingDialog.hide();
+                    //utils.loadMainPage("Incidencias", "Index", "#main-content", "false", null);
+                    window.location = "/CambiosDatosBancarios/descargarPlantilla?ruta=" + data;
+                })
+
+            }
+            },
+            {
+                className: 'btnAsistencia',
+                text: '<i class="fa fa-upload"></i> Importar Plantilla',
+                action: function () {
+                    $('#subirArchivo').modal();
+                }
+            }
+        ],
+        select: {
+            style: 'single'
+        }
+    });
+
+        
+
+    $('#dbanco tbody').on('click', 'tr', function () {
+        var data = tab.row(this).data();
+        console.log(data[0]);
+
+        var IdEmpleado = data[0];
+        var request = $.ajax({
+            url: "/CambiosDatosBancarios/datosBancarios/",
+            //contentType: 'application/json; charset=utf-8',
+            //datatype: 'json',
+            method: "POST",
+            data:{
+                IdEmpleado : IdEmpleado
+            },
+            beforeSend: function () {
+                waitingDialog.show('Generando Reporte Nomina......');
+
+            }
+        });
+        request.done(function (data) {
+            waitingDialog.hide();
+            $('#datosb').html(data);
+
+   
+        });
+    });
+
+    });
+
+
+    $("#input-700").fileinput({
+        uploadUrl: "/CambiosDatosBancarios/UploadFile/", // server upload action
+        uploadAsync: true,
+        maxFileCount: 1,
+        language: "es",
+        browseClass: "btn btn-danger btn-block",
+        allowedFileExtensions: ["xls", "xlsx"],
+        msgInvalidFileExtension: 'El formato de "{name}" es incorrecto. Solo archivos "{extensions}" son admitidos.',
+        msgUploadEnd: 'El archivo fue cargado correctamente',
+        msgUploadBegin: 'Subiendo el archivo',
+    });
+
+
+    $("#subirArchivo").on("hidden.bs.modal", function () {
+        $("#datosb").empty();
+    });
+</script>

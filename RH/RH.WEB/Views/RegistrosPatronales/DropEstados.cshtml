@@ -1,0 +1,17 @@
+﻿@model IEnumerable<RH.Entidades.Estado>
+
+@{
+    var idE =ViewBag.IdEstadoSelect;
+}
+
+<select name="Estado" class="form-control" id="Estado">
+    @foreach (var item in Model)
+    {
+        <option value="@item.IdEstado" @if (item.IdEstado == idE)
+                                       {
+                                        <text> selected</text>
+                                       }>
+            @item.Descripcion
+        </option>
+    }
+</select>

@@ -1,0 +1,339 @@
+﻿@using Common.Utils;
+@model List<Nomina.BLL.DatosDeComplemento>
+@{ 
+    var idPeriodo = ViewBag.IdPeriodo;
+}
+<style>
+    .bd-callout {
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    margin-left: 0.25rem;
+    margin-right: 5.25rem;
+    border: 3px solid #eee;
+    border-left-width: .25rem;
+    border-radius: .25rem;
+    border-left-color: #d9534f;
+}
+
+.glyphicon {
+    font-size: 18px;
+}
+</style>
+<link href="~/Content/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+<script src="~/Scripts/fileinput.min.js"></script>
+<script src="~/Scripts/locales/es.js"></script>
+
+<div class="main-content-title">
+    <h4>Datos Percepciones de Complemento</h4>
+</div>
+<div class="main-content-body">
+<div class="col-md-12 bd-callout ">     
+   
+          
+        @if (idPeriodo != 0)
+        {
+            <div class="form-group col-md-3">
+               <div>                    
+                    <a class="btn  btn-primary " href="/Complemento/DownLayoutComplemento/@idPeriodo"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>  Descargar Layout Complemento </a>                 
+                </div>                    
+            </div>
+            <div class="form-group col-md-3">           
+                <div>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#LayoutModal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span>  Subir Layout Complemento </button>                
+                </div>
+            </div>
+
+
+            <div class="form-group col-md-3">
+                <div>
+                    <a class="btn  btn-warning " href="/Complemento/DownLayoutDetalle/@idPeriodo"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>  Descargar Layout Detalle </a>
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <div>
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#LayoutDetalleModal"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span>  Subir Layout Detalle </button>
+                </div>
+            </div>
+
+
+        }
+        else
+        {
+            <label class="btn btn-info">Seleccione un Periodo de Pago para continuar...</label>
+        }
+</div>
+
+<div class="col-md-12" >
+      @if (Model != null)
+      {
+        if (Model.Count > 0)
+        {
+            <table id="tblComplemento" class="table">
+                <thead>
+                    <tr class="info">
+                        <th>Clave</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Nombres</th> 
+                        <th>Concepto</th>                     
+                        <th class="text-right">Cantidad $</th>
+                        <th class="text-right">Cantidad Procesada$</th>
+                    
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr data-id-nomina="@item.IdNomina" data-id-empleado="@item.IdEmpleado">
+                            <td>@item.IdEmpleado</td>
+                            <td>@item.Paterno</td>
+                            <td>@item.Materno</td>
+                            <td>@item.Nombres</td>  
+                            <td>@item.Descripcion</td>                          
+                            <td class="text-right">@item.Cantidad</td>
+                            <td class="text-right">@item.Procesado</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                <strong>Info!</strong> No hay datos de complemento en este periodo...
+            </div>
+        }
+      }
+      else
+      {
+        <div class="alert alert-info">
+            <strong>Info!</strong> No hay datos de complemento en este periodo...
+        </div>
+      }
+         
+
+    </div>
+
+</div>
+
+  <!-- Modal -->
+<div class="modal fade" id="LayoutModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Subir Layout Complemento</h4>
+            </div>
+            <div class="modal-body">
+                <input id="input" name="file" type="file" multiple class="file-loading" data-show-preview="true" data-autoReplace="true">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+  <!-- Modal -->
+<div class="modal fade" id="LayoutDetalleModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Subir Layout Detalle Complemento</h4>
+            </div>
+            <div class="modal-body">
+                <input id="inputDetalle" name="file" type="file" multiple class="file-loading" data-show-preview="true" data-autoReplace="true">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+        var table = $("#tblComplemento").DataTable({
+            dom: 'Bfrtip',
+            scrollY: '60vh',
+            scrollCollapse: true,
+            paging: false,
+            searching: true,
+            "language": { "url": "../scripts/datatables-spanish.json" },
+            info: false,
+            select: { style: 'multi' },
+            "buttons": [
+                {
+                    className: 'seleccionarall',
+                    text: 'Selec Todos',
+                    action: function () {
+                        table.rows().select();
+                    }, key: { key: 'a' }
+                },
+                 {
+                     className: 'seleccionarcero',
+                     text: 'Deselc Todos',
+                     action: function () {
+                         table.rows().deselect();
+                     }
+                 },
+                   {
+                       className: 'btnRecibosComple',
+                       text: 'Recibos Comp',
+                       action: function () {
+                           getRecibosComp(false);
+                       }
+
+                   },
+                   {
+                       className: 'btnRecibosComple',
+                       text: 'Recibos Comp Detalles',
+                       action: function () {
+                           getRecibosCompDetalle();
+                       }
+
+                   }
+            ]
+
+        });
+
+
+
+        //-- funcion recibos - detalle
+        function getRecibosComp( incluirDetalle )
+        {
+            var btnDowRecibosComp = $('.btnRecibosComple');
+
+            var selected = $("#tblComplemento").find(".selected");
+            var nominas = [];
+
+
+            selected.each(function () {
+                var id = parseInt($(this).data("id-nomina"));
+                nominas.push(id);
+            });
+
+
+            if (nominas.length > 0) {
+                btnDowRecibosComp.addClass('disabled');
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "/ProcesoNomina/GetRecibosComplemento");
+
+                form._submit_function_ = form.submit;
+                for (var i = 0; i < nominas.length; i++) {
+                    var hiddenField = document.createElement("input");
+                    hiddenField.setAttribute("type", "hidden");
+                    hiddenField.setAttribute("name", "idNominas");
+                    hiddenField.setAttribute("value", nominas[i]);
+                    form.appendChild(hiddenField);
+                }
+
+                if (incluirDetalle) {
+                    var hiddenF = document.createElement("input");
+                    hiddenF.setAttribute("type", "hidden");
+                    hiddenF.setAttribute("name", "incluirDetalles");
+                    hiddenF.setAttribute("value", true);
+                    form.appendChild(hiddenF);
+                }
+
+                document.body.appendChild(form);
+                form._submit_function_();
+                t = setTimeout(function () { btnDowRecibosComp.removeClass('disabled'); }, 5000);
+
+            } else {
+                utils.showMessage("WAR", "Debe seleccionar los registros.", 3000);
+            }
+        }
+
+        function getRecibosCompDetalle() {
+            var btnDowRecibosComp = $('.btnRecibosComple');
+
+            var selected = $("#tblComplemento").find(".selected");
+            var empleados = [];
+
+
+            selected.each(function () {
+                var id = parseInt($(this).data("id-empleado"));
+                empleados.push(id);
+            });
+
+
+            if (empleados.length > 0) {
+                btnDowRecibosComp.addClass('disabled');
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "/Complemento/GetRecibosComplemento");
+
+                form._submit_function_ = form.submit;
+                for (var i = 0; i < empleados.length; i++) {
+                    var hiddenField = document.createElement("input");
+                    hiddenField.setAttribute("type", "hidden");
+                    hiddenField.setAttribute("name", "idEmpleados");
+                    hiddenField.setAttribute("value", empleados[i]);
+                    form.appendChild(hiddenField);
+                }
+
+                document.body.appendChild(form);
+                form._submit_function_();
+                t = setTimeout(function () { btnDowRecibosComp.removeClass('disabled'); }, 5000);
+
+            } else {
+                utils.showMessage("WAR", "Debe seleccionar los registros.", 3000);
+            }
+        }
+
+        //-->
+
+
+
+        //-->
+    });
+
+
+
+ $("#input").fileinput({
+     uploadUrl: "/Complemento/UploadFile/", // server upload action  browseIcon: '<i class="glyphicon glyphicon-picture"></i>',   browseLabel: " Buscar archivo",
+    uploadAsync: true,
+    maxFileCount: 1,
+    language: "es",
+    browseClass: "btn btn-danger btn-block",
+    allowedFileExtensions: ["xls", "xlsx"],
+    msgInvalidFileExtension: 'El formato de "{name}" es incorrecto. Solo archivos "{extensions}" son admitidos.',
+    msgUploadEnd: 'El archivo fue cargado correctamente',
+     msgUploadBegin:'Subiendo el archivo',
+ });
+
+ $('#LayoutModal').on('hidden.bs.modal', function (e) {
+     utils.loadMainPage("Complemento", "Index", "#main-content", "false", null);
+ });
+
+
+
+ $("#inputDetalle").fileinput({
+     uploadUrl: "/Complemento/UploadFileDetalle/", // server upload action  browseIcon: '<i class="glyphicon glyphicon-picture"></i>',   browseLabel: " Buscar archivo",
+     uploadAsync: true,
+     maxFileCount: 1,
+     language: "es",
+     browseClass: "btn btn-danger btn-block",
+     allowedFileExtensions: ["xls", "xlsx"],
+     msgInvalidFileExtension: 'El formato de "{name}" es incorrecto. Solo archivos "{extensions}" son admitidos.',
+     msgUploadEnd: 'El archivo fue cargado correctamente',
+     msgUploadBegin: 'Subiendo el archivo',
+ });
+
+ $('#LayoutDetalleModal').on('hidden.bs.modal', function (e) {
+     utils.loadMainPage("Complemento", "Index", "#main-content", "false", null);
+ });
+</script>

@@ -1,0 +1,266 @@
+﻿@using RH.Entidades
+@using RH.BLL
+@using Common.Enums
+@using Common.Helpers
+@model List<Inasistencias>
+@{
+    ViewBag.Title = "Detalle de Inasistencias";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    Empleado empleado = ViewBag.Empleado;
+    IncidenciasClass i = new IncidenciasClass();
+    var IdUsuario = SessionHelpers.GetIdUsuario();
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+
+
+<div class="panel with-nav-tabs panel-primary" id="panelEmpleados">
+    <div class="panel-heading clearfix text-center">
+        <div class="pull-left">
+            <h4 class="panel-title">Incidencias de @empleado.APaterno @empleado.AMaterno  @empleado.Nombres</h4>
+        </div>
+        <div class="pull-right">
+
+            <ul class="nav nav-tabs">
+                <li>
+                    <a class="btn btn-danger cancel hovercancelado" href="/CapturaInasistencias/Index">
+                        <i class="fa fa-undo"></i> Regresar
+                    </a>
+                </li>
+            </ul>
+                
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="button" class="btn col-lg-12 hovernuevo" data-toggle="collapse" data-target="#dvrh">Incidencias registradas por RH</button>
+            <div id="dvrh" class="collapse in well">
+                <hr />
+                
+                <table class="table table-hover col-md-12" id="tblDetalle">
+                    <thead>
+                        <tr>
+                            <th>Tipo Incidencia</th>
+                            <th class="tr-tab">Fecha</th>
+                            <th>Días</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Where(x => x.idPeriodo == 0 && x.xNomina == false))
+                        {
+                            var tipoInasistencia = i.GetIncidenciasById(item.IdTipoInasistencia);
+                            <tr data-idinasistencia="@item.IdInasistencia">
+                                <td>@tipoInasistencia.Descripcion</td>
+                                <td>
+                                    <span style="display: none;">@item.Fecha.ToString("yyyy/MM/dd")</span>
+                                    @item.Fecha.ToString("dd/MM/yyyy")
+
+                                    @if (item.FechaFin != null && item.FechaFin != item.Fecha)
+                                    {
+                                        <span style="display: none;">@item.FechaFin.Value.ToString("dd/MM/yyyy")</span>
+                                        <span>@item.FechaFin.Value.ToString("dd/MM/yyyy")</span>
+                                    }
+                                </td>
+                                <td>@item.Dias</td>
+                                <td class="text-right">
+                                    @if (SYA.BLL.ControlAcceso.ValidarEjecutarAccion(Modulos.RHInasistencias, AccionCrud.Eliminar, IdUsuario))
+                {
+                                    @*<button class="btn btn-danger btn-table btnDelete hovercancelado">Eliminar</button>*@
+                                       <button class="label label-primary btnDelete hovercancelado" 
+                                               data-toggle="confirmation" 
+                                               data-title="¿Realmente quieres eliminar la falta?" 
+                                               data-placement="bottom" 
+                                               data-singleton="true" 
+                                               data-popout="true"
+                                               data-btn-ok-label="Sí"
+                                               data-btn-ok-class="hovernuevo"
+                                               data-btn-cancel-label="No"
+                                               data-btn-cancel-class="hovercancelado">Eliminar</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <button type="button" class="btn hoversecundario col-md-12" data-toggle="collapse" data-target="#dvNom">Incidencias registradas desde Nómina</button>
+            <div id="dvNom" class="collapse well">
+                <hr />
+               
+                <table class="table table-hover table-striped col-md-12" id="tblDetalleNomina">
+                    <thead>
+                        <tr>
+                            <th>Tipo Incidencia</th>
+                            <th>Fecha</th>
+                            <th>Días</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Where(x => x.idPeriodo > 0 && x.xNomina == true))
+                        {
+                            var tipoInasistencia = i.GetIncidenciasById(item.IdTipoInasistencia);
+                            <tr data-idinasistencia="@item.IdInasistencia">
+                                <td>@tipoInasistencia.Descripcion</td>
+                                <td>
+                                    <span style="display: none;">@item.Fecha.ToString("yyyy/MM/dd")</span>
+                                    @item.Fecha.ToString("dd/MM/yyyy")
+
+                                    @if (item.FechaFin != null && item.FechaFin != item.Fecha)
+                                    {
+                                        <span style="display: none;">@item.FechaFin.Value.ToString("yyyy/MM/dd")</span>
+                                        <span>@item.FechaFin.Value.ToString("- dd/MM/yyyy")</span>
+                                    }
+                                </td>
+                                <td>@item.Dias</td>
+                                <td class="text-right">
+                                    @if (SYA.BLL.ControlAcceso.ValidarEjecutarAccion(Modulos.RHInasistencias, AccionCrud.Eliminar, IdUsuario))
+                                    {
+                                        @*<button class="btn btn-danger btn-table btnDelete">Cancelar</button>*@
+                                        <label class="label label-primary btnDelete hovercancelado" 
+                                               data-toggle="confirmation" 
+                                               data-title="¿Realmente quieres eliminar la falta?" 
+                                               data-placement="bottom" 
+                                               data-singleton="true" 
+                                               data-popout="true"
+                                               data-btn-ok-label="Sí"
+                                               data-btn-ok-class="hovernuevo"
+                                               data-btn-cancel-label="No"
+                                               data-btn-cancel-class="hovercancelado">Eliminar</label>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+   </div>
+</div>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.js"></script>
+    <script type="text/javascript" src="~/scripts/bootstrap-notify.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#tblDetalle").DataTable({
+                paging: false,
+                bInfo: false,
+                "searching": false,
+                scrollY: "250px",
+                order: [[1, "desc"]]
+
+            });
+
+            $("#tblDetalleNomina").DataTable({
+                paging: false,
+                bInfo: false,
+                "searching": false,
+                scrollY: "250px",
+                order: [[1, "desc"]]
+            });
+
+            $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+                $(".tr-tab").click();
+                $(".tr-tab").click();
+            });
+
+            //Permite usar las confirmaciones de bootstrap
+            $('[data-toggle=confirmation]').confirmation({
+                rootSelector: '[data-toggle=confirmation]',
+
+                onConfirm: function () {
+                    var $row = $(this).parent().parent();
+                    var IdInasistencia = $row.data("idinasistencia");
+                            $.ajax({
+                                url: "/CapturaInasistencias/Delete",
+                                method: "POST",
+                                data: {
+                                    id: IdInasistencia
+                                }
+                            }).done(function (data) {
+                                if (data) {
+                                    $row.hide();
+                                    $.notify({
+                                        title: "<b>¡Éxito!</b>",
+                                        message: "Se ha eliminado la inasistencia",
+                                    }, {
+                                        type: "success",
+                                        animate: {
+                                            enter: 'animated fadeInDown',
+                                            exit: 'animated fadeOutUp'
+                                        },
+                                        placement: { from: 'top', align: 'center' },
+                                        offset: 55, timer: 5000
+                                    });
+                                }
+                                else {
+                                    $.notify({
+                                        title: "<b>¡Error!</b>",
+                                        message: "Ha ocurrido un error inesperado. Por favor intenta de nuevo.",
+                                    }, {
+                                        type: "error",
+                                        animate: {
+                                            enter: 'animated fadeInDown',
+                                            exit: 'animated fadeOutUp'
+                                        },
+                                        placement: { from: 'top', align: 'center' },
+                                        offset: 55, timer: 5000
+                                    });
+                                }
+                            });
+                    }
+            });
+
+
+            $(".btnDelete1").click(function () {
+                var $row = $(this).parent().parent();
+                var IdInasistencia = $row.data("idinasistencia");
+
+                if (confirm("¿Seguro que deseas cancelar esta inasistencia?")) {
+                    $.ajax({
+                        url: "/CapturaInasistencias/Delete",
+                        method: "POST",
+                        data: {
+                            id: IdInasistencia
+                        }
+                    }).done(function (data) {
+                        if (data) {
+                            $row.hide();
+                            $.notify({
+                                title: "<b>¡Éxito!</b>",
+                                message: "Se ha cancelado la inasistencia",
+                            }, {
+                                type: "success",
+                                animate: {
+                                    enter: 'animated fadeInDown',
+                                    exit: 'animated fadeOutUp'
+                                },
+                                placement: { from: 'top', align: 'center' },
+                                offset: 55, timer: 5000
+                            });
+                        }
+                        else {
+                            $.notify({
+                                title: "<b>¡Error!</b>",
+                                message: "Ha ocurrido un error inesperado. Por favor intenta de nuevo.",
+                            }, {
+                                type: "error",
+                                animate: {
+                                    enter: 'animated fadeInDown',
+                                    exit: 'animated fadeOutUp'
+                                },
+                                placement: { from: 'top', align: 'center' },
+                                offset: 55, timer: 5000
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>

@@ -1,0 +1,63 @@
+﻿@using Common.Utils
+@model RH.Entidades.NOM_CalculoAnual
+
+<style>
+    div.container {
+        width: 100%;
+    }
+    .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
+        color: white;
+        background-color: #762a34;
+    }
+</style>
+
+@if (Model != null)
+{
+<div class="container">
+<ul class="nav nav-pills">
+        <li class="active"><a data-toggle="pill" href="#home"> Detalle Calculo Anual</a></li>       
+    </ul>
+
+    <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+            <table id="tblConcepto" class="table impuesto">
+                <thead><tr class="info"><th>Concepto</th><th>Valor</th><th></th><th></th><th></th><th></th><th></th></tr></thead>
+                <tbody>
+                    <tr><th>Base Gravable Anual</th><th>@Model.baseGravable.ToCurrencyFormat(2,false)</th><td colspan="5"></td></tr>
+                    <tr><th>Exento Anual</th><th>@Model.Exento.ToCurrencyFormat(2, false)</th><td colspan="5"></td></tr>                    
+                    <tr><th>Subsidio Causado</th><td >@Model.subCausado.ToCurrencyFormat(2, false)</td><td colspan="5"></td></tr>
+                    <tr><th>ISR Antes Subsidio</th><td >@Model.isrAntes.ToCurrencyFormat(2, false)</td><td colspan="5"></td></tr>
+                    <tr><th>ISR Pagado</th><td class="text-info">@Model.isrPagado.ToCurrencyFormat(2, false)</td><td colspan="5"></td></tr>
+                    <tr><th>ISR a Retener</th><td class="text-danger">@Model.isrRetener.ToCurrencyFormat(2, false)</td><td colspan="5"></td></tr>
+                    <tr><th>Saldo Favor</th><td class="text-success">@Model.saldoFavor.ToCurrencyFormat(2, false)</td><td colspan="5"></td></tr>                   
+                </tbody>
+            </table>
+        </div>  
+    </div>
+</div>
+
+}
+else
+{
+    <div class="alert alert-info">
+        <strong>Info!</strong> No se encontrarón datos de Impuestos para mostrar..
+    </div>
+}
+<script>
+
+    
+        //var table = $('table.impuesto').DataTable({
+        //    paging: false,
+        //    searching: false,
+        //    info: false,
+        //    ordering: false,
+            
+    
+            
+        //});
+
+        
+
+
+
+</script>

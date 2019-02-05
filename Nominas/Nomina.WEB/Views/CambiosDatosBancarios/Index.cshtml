@@ -1,0 +1,82 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@model List<CliSuc>
+
+
+
+
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <h3 style="color:#000 !important;">Datos Bancarios</h3>
+            <label style="color:#000 !important;">Clientes: </label>
+            <select style="color:#000 !important;"  id="sucursal">
+                <option style="color:#000 !important;" value="0">Seleccionar Empresa</option>
+
+                @foreach (var c in Model)
+                {
+                    <option style="color:#000 !important;" value="@c.IdSucursal">@c.NomCliente - @c.NomSucursal</option>
+                }
+
+            </select>
+
+
+
+
+    </div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="col-md-6" id="empleados">
+
+
+            </div>
+            <div class="col-md-6" id="datosb">
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+        <div class="col-md-12" style="align-items:center; margin :10px;">
+         
+
+        </div>
+
+     
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+        <script src="//cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
+        <script>
+
+
+
+            $("#sucursal").change(function () {
+                var sucursal = $('select[id=sucursal]').val();
+                var request = $.ajax({
+                    url: "/CambiosDatosBancarios/Empleados",
+                    method: "POST",
+                    data:
+                        {
+                            idSucursal: sucursal
+                        },
+                    beforeSend: function () {
+                        waitingDialog.show('Procesando...');
+                    }
+                });
+
+                request.done(function (data) {
+                    waitingDialog.hide();
+                    $('#empleados').html(data);
+                    $("#datosb").empty()
+                    
+
+                });
+
+            });
+        
+            
+
+        </script>

@@ -1,0 +1,200 @@
+﻿@using RH.BLL;
+@using RH.Entidades;
+@using Common.Helpers;
+@using Common.Enums;
+@using SYA.BLL;
+@model List<RegistroDatos>
+
+<div class="table table-responsive">
+    <table class="table table-condensed display table-striped" id="empInactivas" width="100%">
+        <thead>
+            <tr>
+                <th class="tr-tab">ID</th>
+                <th>Registro Patronal</th>
+                <th>Razón Social</th>
+                <th>RFC</th>
+                <th>Prima de Riesgo</th>
+                <th>Clase</th>
+
+                <th style="width:150px"></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model.Where(x => x.Status == false))
+            {
+                <tr>
+                    <td class="tdID2 td-tab">@a.IdRegistro</td>
+                    <td class="td-tab">@a.RegistroPatronal</td>
+                    <td class="tdRazonSocial2 td-tab">@a.RazonSocial</td>
+                    <td class="td-tab">@a.RFC</td>
+                    <td class="td-tab">@a.PrimaRiesgo</td>
+                    <td class="td-tab">@a.Clase</td>
+
+                    <td class="td-tab">
+                        @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHEmpresas, AccionCrud.Consultar, SessionHelpers.GetIdUsuario()))
+                        {
+                            <a class="btn btn-primary btn-sm btnGenerar2" href="#" data-toggle="tooltip" data-placement="left" title="Ver detalles de la Empresa">
+                                <i class="fa fa-info-circle fa-lg inf" aria-hidden="true"></i>
+                            </a>
+                        }
+
+                      
+                        @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHEmpresas, AccionCrud.Eliminar, SessionHelpers.GetIdUsuario()))
+                        {
+                            <a class="btn btn-success btn-sm btnRestaurar" href="#" data-toggle="tooltip" data-placement="left" title="Activar la Empresa">
+                                <i class="fa fa-reply"></i>
+                            </a>
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+
+
+
+
+    <div class="modal fade" id="modalGenerar2" role="dialog">
+
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" class="close">X</button>
+                    <h4 class="modal-title"><i class="fa fa-info-circle fa-lg inf" aria-hidden="true"></i> Detalles de : <small id="razonsocial3"> </small> </h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <div id="generar-container"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+@using (Html.BeginForm("ActivarEmpresa", "RegistrosPatronales", FormMethod.Post, new { id = "formulario" }))
+{
+    <div class="modal fade" id="modalREstaurar" role="dialog">
+
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" class="close">X</button>
+                    <h4 class="modal-title"><i class="fa fa-reply  fa-lg "></i> ¿Deseas reactivar a : <small id="razonsocial2"> </small> ? </h4>
+                    <input type="hidden" id="idempresa" name="idempresa" class="inputEmpresa" />
+                </div>
+
+                <div class="modal-body">
+
+                    <div id="restaurar-container"></div>
+
+                </div>
+                <div class="modal-footer">
+                    @*<a href="#" class="btn btn-info btnActivar" id="restaurar" data-dismiss="modal">Activar</a>*@
+                    <input type="submit" class="btn btn-info" value="Activar" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+
+
+    <script>
+        $(document).ready(function () {
+
+            
+            var btnGenerar2 = $(".btnGenerar2");
+            var btnRestaurar = $(".btnRestaurar");
+            var modalGenerar2 = $("#modalGenerar2");
+            var modalREstaurar = $("#modalREstaurar");
+            var btnActivar = $(".btnActivar");
+
+            $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+                $(".tr-tab").click();
+            })
+
+            btnGenerar2.click(function () {
+                var razonsocial = $(this).parent().parent().find(".tdRazonSocial2").html();
+                var idempresa = $(this).parent().parent().find(".tdID2").html();
+                $("#razonsocial3").html(razonsocial);
+
+
+                $.get("../../RegistrosPatronales/Detalles?id=" + idempresa, function (data) {
+                    $("#generar-container").html(data);
+                    modalGenerar2.modal();
+                });
+            });
+
+            btnRestaurar.click(function () {
+
+                var razonsocial = $(this).parent().parent().find(".tdRazonSocial2").html();
+                var idempresa = $(this).parent().parent().find(".tdID2").html();
+                $("#razonsocial2 ").html(razonsocial);
+                $("#idempresa ").html(idempresa);
+                document.getElementById('idempresa').value = idempresa;
+
+                $.get("../../RegistrosPatronales/DetallesEliminar?id=" + idempresa, function (data) {
+                    $("#restaurar-container").html(data);
+                    modalREstaurar.modal();
+                });
+            });
+
+            btnActivar.click(function () {
+                var idempresa = $(this).parent().parent().find(".inputEmpresa").html();
+                var char = document.getElementById('idempresa').value;
+                $.post("../../RegistrosPatronales/ActivarEmpresa?id=" + char);
+
+            });
+
+            $('table.displays').DataTable({
+
+                "lengthMenu": [[7], [7]],
+                "scrollY": "410px",
+                "scrollCollapse": true,
+                "paging": false,
+                "language": {
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ Empresas)",
+                    "sInfo": "Del _START_ al _END_ de un total de _TOTAL_ Empresas",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sLoadingRecords": "Cargando...",
+                    "sLengthMenu": "Mostrar _MENU_ Empresas",
+                    "sSearch": "Buscar:",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    }
+                }
+            });
+            $('[data-toggle="tooltip"]').tooltip();
+            //$('#restaurar').click(function () {
+            //    $('#inactivos').load('EmpresasInactivas', function () {
+          
+            //    });
+            //    $('#activos').load('EmpresasActivas', function () {
+                
+            //    });
+            //});
+
+
+        });
+
+
+
+
+    </script>

@@ -1,0 +1,35 @@
+﻿@model List<RH.BLL.DatosEmpleado>
+@if(Model.Count > 0)
+{
+    <thead>
+        <tr>
+            <th>Clave</th>
+            <th>Cliente</th>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.IdEmpleado</td>
+                <td>@item.Cliente</td>
+                <td>@item.Nombres @item.Paterno @item.Materno </td>
+                <td>@item.FechaMovimiento.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <input type="checkbox" name="seleccion" class="seleccion" value="@item.IdEmpleado" />
+                </td>
+            </tr>
+        }
+    </tbody>
+}
+else
+{
+    <thead>
+        <tr>
+            <th>¡No se encontraron resultados!</th>
+        </tr>
+    </thead>
+}

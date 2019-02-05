@@ -1,0 +1,197 @@
+﻿@using RH.BLL;
+@using RH.Entidades;
+@using Common.Helpers;
+@using Common.Enums;
+@using SYA.BLL;
+@model List<C_FactoresIntegracion>
+@{
+    ViewBag.Title = "Factores de Integracion";
+    ViewBag.Modulo = Modulos.RHFDI;
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    foreach (var b in Model)
+    {
+        decimal primvac = 100 * b.PrimaVacacional;
+    }
+
+}
+
+@*<link href="~/Content/buttons.css" rel="stylesheet" />
+<link href="~/Content/titulos.css" rel="stylesheet" />
+<link href="~/Content/tablas/diseño.css" rel="stylesheet" />
+<link href="~/Content/tablas/tamaño.css" rel="stylesheet" />*@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/u/bs/dt-1.10.12,se-1.2.0/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+
+<div class="panel with-nav-tabs panel-primary">
+    <div class="panel-heading clearfix text-center">
+        <div class="pull-left">
+            <h4 class="panel-title">Factores de Integración</h4>
+        </div>
+        <div class="pull-right">
+
+            <ul class="nav nav-tabs">
+                <li>
+                    @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHFDI, AccionCrud.Agregar, SessionHelpers.GetIdUsuario()))
+                    {
+                        <a class="btn btn-primary newFac boton1 hovernuevo" href="#" title="Editar">
+                            <i class="fa fa-plus"></i> Nuevo Factor de Integración
+                        </a>
+                    }
+                </li>
+
+             
+            </ul>
+        </div>
+        @*<input type="submit" class="btn btn-primary input-group-sm" value="Guardar" />  <a class="btn btn-danger" href="~/RegistrosPatronales/index">Cancelar</a>*@
+    </div>
+    <div class="panel-body" id="panBody">
+        <div class="table table-responsive">
+            <table class="table table-condensed table-hover table-striped" id="registros">
+                <thead>
+                    <tr>
+                        <th >Antigüedad</th>
+                        <th style="width:150px">Aguinaldo</th>
+                        <th style="width:150px">Vacaciones</th>
+                        <th style="width:150px">Prima Vacacional</th>
+                        <th style="width:150px">Factor</th>
+                        @*<th style="width:150px">Acciones</th>*@
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in Model)
+            {
+                decimal primvac = 100 * a.PrimaVacacional;
+
+                        <tr>
+                            <td>@a.Antiguedad</td>
+                            <td>@a.DiasAguinaldo</td>
+                            <td>@a.DiasVacaciones</td>
+                            <td>@primvac</td>
+                            <td>@a.Factor</td>
+                            @*<td class="text-center">
+
+
+                                @if (ControlAcceso.ValidarEjecutarAccion(Modulos.FactoresIntegracion, AccionCrud.Editar, SessionHelpers.GetIdUsuario()))
+                                {
+                                    <a class="btn btn-default fEdit" href="~/FactoresDeIntegracion/Editar/@a.IdFactor" title="Editar">
+                                        <i class="glyphicon glyphicon-pencil"></i>
+                                    </a>
+                                }
+
+
+                            </td>*@
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+        </div>
+    </div>
+
+@using (Html.BeginForm("NuevoFactor", "FactoresDeIntegracion", FormMethod.Post, new { id = "formulario", name = "formulario", @class = "tooltipForm" }))
+{
+    <div class="modal fade" id="modalNuevoFactor" role="dialog">
+    <div class="modal-dialog modal-lg" id="puestoModales">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" class="close">X</button>
+                <h4 class="modal-title">Nuevo Factor de Integracion  </h4>
+                <input type="hidden" id="idempresa" name="idempresa" class="inputEmpresa" />
+            </div>
+            <div class="modal-body">
+                <div id="nuevoFactor"></div>
+            </div>
+            <div class="modal-footer">
+
+                <input type="submit" class="btn btn-primary input-group-sm" id="guardar1" value="Guardar" />
+                <a class="btn btn-danger" data-dismiss="modal" href="">Cancelar</a>
+            </div>
+            </div>
+    </div>
+</div>
+}
+    
+
+    <script type="text/javascript" src="https://cdn.datatables.net/u/bs/dt-1.10.12,se-1.2.0/datatables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+        
+
+            var boton1 = $(".boton1");
+            var modalNuevoFactor = $("#modalNuevoFactor");
+            
+            var botonEditar = $(".botonEditar");
+            var modalNuevoFactor = $("#modalNuevoFactor");
+
+            boton1.click(function () {
+
+                $.get("../FactoresDeIntegracion/NuevoFactor", function (data) {
+                    $("#nuevoFactor").html(data);
+                    modalNuevoFactor.modal();
+                });
+            });
+
+     
+            boton1.click(function () {
+
+                $.get("../FactoresDeIntegracion/NuevoFactor", function (data) {
+                    $("#nuevoFactor").html(data);
+                    modalNuevoFactor.modal();
+                });
+            });
+
+
+
+            $('#registros').DataTable({
+                "bInfo" : false,
+                "scrollY": "410px",
+                "scrollCollapse": true,
+                "paging": false,
+                "language": {
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ Factores de Integración)",
+                    "sInfo": "Del _START_ al _END_ de un total de _TOTAL_ Factores de Integración ",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sLoadingRecords": "Cargando...",
+                    "sLengthMenu": "Mostrar _MENU_ Factores de Integración",
+                    "sSearch": "Buscar:",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    }
+                }
+            });
+        });
+
+         
+                //Función que realiza la suma
+
+
+                function Operacion() {
+                    var DiasVacaciones = document.formulario.DiasVacaciones.value;
+                    var DiasAguinaldo = document.formulario.DiasAguinaldo.value;
+                    var PrimaVacacional = document.formulario.PrimaVacacional.value;
+                    try {
+                        //Calculamos el número escrito:
+                        DiasVacaciones = (isNaN(parseInt(DiasVacaciones))) ? 0 : parseInt(DiasVacaciones);
+                        DiasAguinaldo = (isNaN(parseInt(DiasAguinaldo))) ? 0 : parseInt(DiasAguinaldo);
+                        PrimaVacacional = (isNaN(parseInt(PrimaVacacional))) ? 0 : parseInt(PrimaVacacional);
+                        PrimaVacacional = PrimaVacacional / 100;
+                        vacionesprima = PrimaVacacional * DiasVacaciones;
+                        resultvaca = vacionesprima / 365;
+
+                        DiasAguinaldo = DiasAguinaldo / 365;
+                        document.formulario.factor1.value = 1 + resultvaca + DiasAguinaldo;
+                        document.formulario.factor2.value = 1 + resultvaca + DiasAguinaldo;
+                    }
+                    //Si se produce un error no hacemos nada
+                    catch (e) { }
+                }
+
+    </script>

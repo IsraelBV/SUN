@@ -1,0 +1,199 @@
+﻿@using RH.BLL;
+@using Common.Helpers;
+@using Common.Enums;
+@using RH.Entidades;
+@using SYA.BLL;
+@model IEnumerable<Empleado>
+
+@{
+    ViewBag.Title = "Vacaciones";
+    ViewBag.Modulo = Modulos.RHVacaciones;
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    List<Plantilla> plantillas = ViewBag.Plantillas;
+}
+
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+
+
+@{ var usuario = SessionHelpers.GetIdUsuario(); }
+
+
+
+<div class="panel with-nav-tabs panel-primary" id="panelEmpleados">
+    <div class="panel-heading clearfix text-center">
+        <div class="pull-left">
+            <h4 class="panel-title">Vacaciones</h4>
+            <br />
+        </div>
+    </div>
+    <div class="panel-body" id="panBody">
+        <div class="tab-content">
+            <div class="table table-responsive">
+                <table class="table table-condensed table-hover table-striped" id="tblEmpleados">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre/s</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>CURP</th>
+                            <th>NSS</th>
+                            <th>Status</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var row in Model.Where(s => s.Status == true))
+            {
+                            <tr>
+                                <td class="tdIdEmpleado">@row.IdEmpleado</td>
+                                <td class="tdNombre">@row.Nombres</td>
+                                <td class="tdPaterno">@row.APaterno</td>
+                                <td class="tdMaterno">@row.AMaterno</td>
+                                <td>@row.CURP</td>
+                                <td>@row.NSS</td>
+                                <td>
+                                    @if (row.Status)
+                                    {
+                                        <input id="input-1" type="checkbox" checked disabled />
+                                    }
+                                    else
+                                    {
+                                        <input id="input-1" type="checkbox" disabled />
+                                    }
+                                </td>
+                                <td>
+                                    @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHEmpleados, AccionCrud.Agregar, usuario))
+                                    {
+                                        <a class="btn btn-info btn-sm vis" href="@Url.Action("VacacionesMenu", "Vacaciones", new { id = row.IdEmpleado })" title="Menú de Vacaciones">
+                                            <i class="fa fa-plane fa-lg" aria-hidden="true"></i>
+                                        </a>
+                                    }
+
+
+                                </td>
+                                <td>
+                                    @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHEmpleados, AccionCrud.Consultar, usuario))
+                                    {
+                                        <a class="btn btn-primary btn-sm btnGenerar " title="Historial">
+                                            <i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i>
+                                        </a>
+                                    }
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+        <div class="modal fade" id="modalGenerar" role="dialog">
+
+            <div class="modal-dialog  modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" data-dismiss="modal" class="close">X</button>
+                        <h4 class="modal-title"><i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i> Historial de Vacaciones de : <small id="_nombre"> </small> <small id="_paterno"> </small> <small id="_materno"> </small> </h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div id="periodo-container"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="btn-toolbar pull-right" role="toolbar">
+
+                            <div class="btn-group btn-toolbar-hidden" role="group" id="btn-toolbar-one">
+                                <select name="Plantilla" id="Plantilla" class="form-control">
+                                    @foreach (var item in plantillas)
+                                    {
+                                        <option value="@item.Id">@item.NombreArchivo</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <!-- Aparece cuando selecciona uno o varios registros -->
+                            <div class="btn-group btn-toolbar-hidden" role="group" id="btn-toolbar-many">
+
+                                <a class="btn btn-info" id="btnReporte" data-toggle="boton" data-placement="bottom" data-container="body" title="Reporte">
+                                    <span class="glyphicon glyphicon-file"></span>
+                                </a>
+                            </div>
+
+
+                        </div>
+                        <div class="clearfix"></div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/u/bs/dt-1.10.12,se-1.2.0/datatables.min.css" />
+        <script type="text/javascript" src="https://cdn.datatables.net/u/bs/dt-1.10.12,se-1.2.0/datatables.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+
+                var btngenerar = $(".btnGenerar");
+                var modalBaja = $("#modalGenerar");
+
+                btngenerar.click(function () {
+                    var idempleado = $(this).parent().parent().find(".tdIdEmpleado").html();
+                    var nombre = $(this).parent().parent().find(".tdNombre").html();
+                    var paterno = $(this).parent().parent().find(".tdPaterno").html();
+                    var materno = $(this).parent().parent().find(".tdMaterno").html();
+                    $("#idempleado").html(idempleado);
+                    $("#_nombre").html(nombre);
+                    $("#_paterno").html(paterno);
+                    $("#_materno").html(materno);
+
+                    $.get("../../Vacaciones/HistorialVacaciones?id=" + idempleado, function (data) {
+                        $("#periodo-container").html(data);
+                        modalBaja.modal();
+                    });
+
+                });
+
+
+
+                $("#tblEmpleados").DataTable({
+                    "lengthMenu": [[7, 15, 30], [7, 15, 30]],
+                    "language": {
+                        "sInfoFiltered": "(filtrado de un total de _MAX_ Empleados)",
+                        "sInfo": "Del _START_ al _END_ de un total de _TOTAL_ Empleados",
+                        "sZeroRecords": "No se encontraron resultados",
+                        "sEmptyTable": "Ningún dato disponible en esta tabla",
+                        "sLoadingRecords": "Cargando...",
+                        "sLengthMenu": "Mostrar _MENU_ Empleados",
+                        "sSearch": "Buscar:",
+                        "oPaginate": {
+                            "sFirst": "Primero",
+                            "sLast": "Último",
+                            "sNext": "Siguiente",
+                            "sPrevious": "Anterior"
+                        }
+
+                    },
+
+                    "aoColumnDefs": [
+             { "bSortable": false, "aTargets": [7, 8] },
+             { "bSearchable": false, "aTargets": [7, 8] }
+                    ]
+                });
+
+
+
+
+            });
+            $('[data-tooltip="tooltip"]').tooltip();
+        </script>
+   

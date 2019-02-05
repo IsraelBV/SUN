@@ -1,0 +1,64 @@
+﻿@model RH.Entidades.Plantilla
+@{
+    List<RH.Entidades.Cliente> listClientes = ViewBag.Clientes;
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">@Model.NombreArchivo</h4>
+</div>
+<div class="modal-body" id="plantEdit">
+
+    <input type="hidden" value="@Model.Clientes" id="ClientesOld" />
+
+    @using (Ajax.BeginForm("Edit", "Plantillas", new AjaxOptions { OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { id = "form-edit", @class = "form-horizontal" }))
+    {
+
+        <input type="hidden" value="@listClientes.Count" id="NumClientes" name="NumClientes" />
+        <input type="hidden" value="@Model.Id" name="Id" />
+
+        <div class="form-group">
+            <label for="Clientes">Clientes</label>
+            <select name="Clientes" id="clientecheck" class="clientecheck show-tick" multiple data-width="330px" data-actions-box="true" data-live-search="true" title="Selecciona la configuración" data-selected-text-format="count">
+                @foreach(var item in listClientes)
+                {
+                    <option value="@item.IdCliente" class="opciones">@item.Nombre</option>
+                }
+            </select>
+        </div>
+    }
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+    <button type="button" class="btn btn-primary" id="btnEditar">Guardar</button>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $(".clientecheck").selectpicker();
+
+        if ($("#ClientesOld").val() != "") {
+            if ($("#ClientesOld").val() == "*") {
+                $(".clientecheck").selectpicker("val", [0]);
+                $(".clientecheck").selectpicker("selectAll", false);
+                $('.clientecheck').selectpicker('updateButtonText');
+            }
+            else {
+                var ClientesOld = $("#ClientesOld").val();
+                console.log(ClientesOld);
+                var array = ClientesOld.split(',');
+                console.log(array);
+                $(".clientecheck").selectpicker("val", array);
+                $('.clientecheck').selectpicker('updateButtonText');
+            }
+        }
+
+        $("#btnEditar").click(function () {
+            $("#form-edit").submit();
+        });
+    });
+
+ 
+</script>

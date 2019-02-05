@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2" serie="A" folio="6565" fecha="2017-05-31T16:39:15" sello="B7vOMq4YR8K0L4wUp5zQGS2ognjczAP5Uf78Kukxm24uPmbVHGgQrtLIRDc4Zty/GvsVUuiwwfihIpXX7WDsqSdFA6kUTfUh3mPImb0FOOrVpxV/+KPry8tQxeiP+wD2zZtEmowZDN+PPsm6PYekUWV5CgL5dIJE+vWoxjXACUZqsNf14Oo6puwp6Y73S8+NZCiRGhQ7QEKwd3mFg9rUrpD0smxtspFNI6TiKxy96E33n7qyHHjBvbAG09sFy6ChGULc/1HBP/SOTJPKncg4u7eoHxER7ZmwyJ91gUjevUGgopmA9hpn9TkzIILwhrZIF87yfzd8ugfBeJSU6MU+WQ==" formaDePago="Pago en una sola exhibición" noCertificado="71515050400000010000" certificado="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" subTotal="1752.04" descuento="468.54" TipoCambio="1" Moneda="MXN" total="1283.50" tipoDeComprobante="egreso" metodoDePago="NA" LugarExpedicion="77533" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3">
+  <cfdi:Emisor rfc="LEP120827325" nombre="LEPENI SA DE CV">
+    <cfdi:RegimenFiscal Regimen="601" />
+  </cfdi:Emisor>
+  <cfdi:Receptor rfc="SAML840618L26" nombre="SABIDO MUKUL LORNA BETZABÉ" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto cantidad="1" unidad="ACT" descripcion="Pago de nómina" valorUnitario="1752.04" importe="1752.04" />
+  </cfdi:Conceptos>
+  <cfdi:Impuestos />
+  <cfdi:Complemento>
+    <nomina12:Nomina Version="1.2" TipoNomina="O" FechaPago="2017-05-16" FechaInicialPago="2017-05-16" FechaFinalPago="2017-05-31" NumDiasPagados="16" TotalPercepciones="1645.64" TotalDeducciones="468.54" TotalOtrosPagos="106.40" xmlns:nomina12="http://www.sat.gob.mx/nomina12">
+      <nomina12:Emisor RegistroPatronal="L0159625107" RfcPatronOrigen="LEP120827325" />
+      <nomina12:Receptor Curp="SAML840618MQRBKR07" NumSeguridadSocial="82028447991" FechaInicioRelLaboral="2011-09-16" Antigüedad="P297W" TipoContrato="01" TipoJornada="03" TipoRegimen="02" NumEmpleado="388" Departamento="CONTABILIDAD" Puesto="AUX DE CONTABILIDAD" RiesgoPuesto="1" PeriodicidadPago="04" Banco="072" CuentaBancaria="0457794822" SalarioBaseCotApor="89.01" SalarioDiarioIntegrado="89.01" ClaveEntFed="ROO" />
+      <nomina12:Percepciones TotalSueldos="1645.64" TotalGravado="1645.64" TotalExento="0.00">
+        <nomina12:Percepcion TipoPercepcion="049" Clave="040" Concepto="Premios por Asistencia" ImporteGravado="142.42" ImporteExento="0.00" />
+        <nomina12:Percepcion TipoPercepcion="010" Clave="008" Concepto="Premios por Puntualidad" ImporteGravado="142.42" ImporteExento="0.00" />
+        <nomina12:Percepcion TipoPercepcion="001" Clave="001" Concepto="Sueldos" ImporteGravado="1360.80" ImporteExento="0.00" />
+      </nomina12:Percepciones>
+      <nomina12:Deducciones TotalOtrasDeducciones="468.54">
+        <nomina12:Deduccion TipoDeduccion="001" Clave="042" Concepto="IMSS" Importe="33.82" />
+        <nomina12:Deduccion TipoDeduccion="010" Clave="051" Concepto="INFONAVIT" Importe="434.72" />
+      </nomina12:Deducciones>
+      <nomina12:OtrosPagos>
+        <nomina12:OtroPago TipoOtroPago="002" Clave="CACR" Concepto="Subsidio" Importe="106.40">
+          <nomina12:SubsidioAlEmpleo SubsidioCausado="200.70" />
+        </nomina12:OtroPago>
+      </nomina12:OtrosPagos>
+    </nomina12:Nomina>
+  <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/TimbreFiscalDigital/TimbreFiscalDigital.xsd" version="1.0" FechaTimbrado="2017-05-31T16:40:21" selloCFD="B7vOMq4YR8K0L4wUp5zQGS2ognjczAP5Uf78Kukxm24uPmbVHGgQrtLIRDc4Zty/GvsVUuiwwfihIpXX7WDsqSdFA6kUTfUh3mPImb0FOOrVpxV/+KPry8tQxeiP+wD2zZtEmowZDN+PPsm6PYekUWV5CgL5dIJE+vWoxjXACUZqsNf14Oo6puwp6Y73S8+NZCiRGhQ7QEKwd3mFg9rUrpD0smxtspFNI6TiKxy96E33n7qyHHjBvbAG09sFy6ChGULc/1HBP/SOTJPKncg4u7eoHxER7ZmwyJ91gUjevUGgopmA9hpn9TkzIILwhrZIF87yfzd8ugfBeJSU6MU+WQ==" noCertificadoSAT="00001000000405908583" selloSAT="Z5Xcm1lZWgE6wnVcNT4B92eGGTS+OWvgTl7EU/8f8aZ2ilAy9yPRtXlsBuyWWZFjcCEi6mbBDyY35xJ9+ugHOlisWycwEYGbkq/37pQ7Id6yWMmwds7wYVBYxSWg0b3NuEMx71YNzvbqHw5+J5cp8IakUmFVPQ626XNYW9BB7SEVlee56394kcoC7Cf8HKyGUHIHtiZZakP0SZZXv9kG4jpgHRUzu2U1fsg0Y+dGcehUE5c5LlZFQM2x6P3hvlFbk7EcTm1nKP0nphAi6HcoL2PP4/DfS0kZLjUNa0yJWUeb5orVeL8YCH876BbCSWgdF756FxfMmeuj6AqFTfRDJw==" UUID="3648D80C-CA25-4F3B-8B17-4EE0A9C0E953" />
+  </cfdi:Complemento>
+</cfdi:Comprobante>

@@ -1,0 +1,81 @@
+﻿@model List<RH.Entidades.Kardex>
+@using Common.Utils;
+@using Common.Enums;
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped" id="tblKardex" width="100%">
+        <thead>
+            <tr>
+                <th class="hidden">Id</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Valor Anterior</th>
+                <th>Valor Nuevo</th>
+                <th>Fecha Inicio</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var vn = new string[2];
+                if (item.ValorNuevo != null)
+                {  vn = item.ValorNuevo.Split('-'); }
+                <tr>
+                    <td class="hidden">
+                        @item.IdKardex
+                    </td>
+                    <td>
+                        @item.Fecha.ToString("dd-MM-yyyy hh:mm")
+                    </td>
+
+                    <td>
+                        @Utils.GetNameOfEnum(typeof(TipoKardex), item.Tipo)
+                    </td>
+
+                    <td>
+                        @item.ValorAnterior
+                    </td>
+
+                    <td>
+                        @if (vn.Length >= 1)
+                        { @vn[0] }
+                    </td>
+                    <td>
+                        @if (vn.Length>1)
+                        { @vn[1] }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    var $table = $("#tblKardex");
+    $table.DataTable({
+        "lengthMenu": [[7, 15, 30], [7, 15, 30]],
+        "language": {
+            "sInfoFiltered": "(filtrado de un total de _MAX_ Registros)",
+
+            "sZeroRecords": "No se encontraron resultados",
+            "sInfo": "Del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "No se encontraron registros",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sLoadingRecords": "Cargando...",
+            "sLengthMenu": "Mostrar _MENU_ Registros",
+            "sSearch": "Buscar:",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            }
+        },
+        "responsive": true,
+        "dom": "Bfrtip",
+        "buttons": [
+            "pdf", "copy"
+        ],
+        "order": [[0, 'desc']],
+    });
+</script>

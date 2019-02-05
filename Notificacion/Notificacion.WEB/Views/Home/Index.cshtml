@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "Notificaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/content/notificaciones/modalNotif.css" rel="stylesheet" />
+<link href="~/content/notificaciones/notifications.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="~/content/paginator.css" />
+
+<div id="content">
+    <div id="notifications-section" class="col s12">
+        @{ Html.RenderAction("Notifications", "Home", new { numDays = 0 }); }
+    </div>
+    <div class="progress hide">
+        <div class="indeterminate"></div>
+    </div>
+
+    <a id="back-to-top" title="Back to top">&uarr;</a>
+
+</div>
+<div id="notification-details" class="modal">
+    <div class="modal-content">
+        <div id="modal-top">
+            <div id="modal-title">
+                <button id="btnClose" class="modal-close btn-flat" aria-hidden="true">&times;</button>
+                <h6 id="modal-notification-title" class="truncate modal-notification-content"></h6>
+            </div>
+            <div id="modal-body">
+                <div id="notification-content" class="content-expanded"></div>
+                <div id="notification-action-comment">
+                    <span id="btnComments" title="Mostrar Comentarios"><i class="material-icons">comment</i></span>
+                    <span id="btnCommentsh" title="Ocultar Comentarios" hidden><i class="material-icons">speaker_notes_off</i></span>
+                </div>
+                <div id="notification-comments" class="comments-hidden"></div>
+            </div>
+        </div>
+        <div id="modal-footer">
+            <div id="comments-footer">
+                @using (Ajax.BeginForm("AddComment", "Home", new AjaxOptions { OnSuccess = "CommentSuccess", OnFailure = "CommentFailure", OnBegin = "CommentBegin" }, new { id = "NewCommentForm" }))
+                {
+                    <input type="hidden" id="modal-notification-id" name="IdNotificacion" />
+                    <input type="text" id="new-comment-text" name="Comentario" placeholder="Agregar un comentario" length="100" autocomplete="off" />
+                    <div id="panelButtons">
+                        <button type="submit" class="panelButton" id="btnComment" title="Enviar Comentario" disabled><i class="material-icons">send</i></button>
+                        <!-- Botones de Favoritos -->
+                        <button type="button" id="btnFavorite" class="panelButton modal-favorite-buttons" title="Añadir a Favoritos"><i class="material-icons">star_border</i></button>
+                        <button type="button" id="btnUnfavorite" class="panelButton modal-favorite-buttons" title="Eliminar de Favoritos"><i class="material-icons">star</i></button>
+
+                        <!-- Botones de Status -->
+                        <button type="button" class="panelButton modal-status-buttons" id="btnReopen" title="Reabrir"><i class="material-icons">drafts</i></button>
+                        <button type="button" class="panelButton modal-status-buttons" id="btnAtendida" title="Marcar como Atendida"><i class="material-icons">work</i></button>
+
+                        <button type="button" class="panelButton" id="btnPrint" title="Imprimir"><i class="material-icons">print</i></button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/home.js"></script>
+<script src="~/Scripts/datepicker-es.js"></script>

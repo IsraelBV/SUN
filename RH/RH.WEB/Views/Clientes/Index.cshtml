@@ -1,0 +1,162 @@
+﻿@using RH.BLL
+@using Common.Helpers;
+@using Common.Enums;
+@using SYA.BLL;
+@model IEnumerable<RH.Entidades.Cliente>
+
+@{
+    ViewBag.Title = "Clientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<link href="~/Content/PanelWithTabs2.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.css" />
+@*<div class="panel-heading" id="titulo">
+    <h2>Clientes</h2>
+
+    @if (ControlAcceso.ValidarEjecutarAccion(Modulos.Clientes, AccionCrud.Agregar, SessionHelpers.GetIdUsuario()))
+    {
+        <a class="btn btn-primary newDep" href="/Clientes/CrearVP" data-ajax-update="#divContenido" data-ajax-mode="replace" data-ajax="true" data-toggle="modal" data-target="#ventanaModal"><i class="fa fa-plus"></i> Nuevo</a>
+    }
+    <hr />
+    <br />
+
+</div>*@
+<div class="panel with-nav-tabs panel-primary" id="panelEmpleados">
+    <div class="panel-heading clearfix text-center">
+        <div class="pull-left">
+            <h4 class="panel-title">Clientes</h4>
+        </div>
+        <div class="pull-right">
+
+            <ul class="nav nav-tabs">
+                <li>
+                @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHClientes, AccionCrud.Agregar, SessionHelpers.GetIdUsuario()))
+                {
+                    <a class="btn btn-primary newDep hovernuevo" href="/Clientes/CrearVP" data-ajax-update="#divContenido" data-ajax-mode="replace" data-ajax="true" data-toggle="modal" data-target="#ventanaModal" data-tooltip="tooltip" data-placement="left" title="Permite crear un Cliente"><i class="fa fa-plus"></i> Crear Nuevo Cliente</a>
+                }
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body" id="panBody">
+        <div class="table table-responsive">
+            <table class="table table-condensed display table-striped ">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IdCliente)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nombre)
+                        </th>
+                        <th class="text-center">
+                            Listado de Sucursales
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+            {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdCliente)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nombre)
+                            </td>
+                            <td class="text-center">
+                                @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHClientes, AccionCrud.Consultar, SessionHelpers.GetIdUsuario()))
+                {
+                                    <a href="/Clientes/IndexSucursales?IdCliente=@item.IdCliente" class="btn btn-primary btn-sm suc"  data-tooltip="tooltip" data-placement="left" title="Permite ver el listado de Sucursales del cliente @item.Nombre">Ver sucursales</a>
+                                }
+                            </td>
+                            <td class="text-center">
+                               
+                                @*@if (ControlAcceso.ValidarEjecutarAccion(Modulos.Clientes, AccionCrud.Consultar, SessionHelpers.GetIdUsuario()))
+                {
+                                    <a href="/Clientes/DetalleVP?IdCliente=@item.IdCliente" class="btn btn-default clientDetail" data-ajax-update="#divContenido" data-ajax-mode="replace" data-ajax="true" data-toggle="modal" data-target="#ventanaModal"><i class="fa fa-info-circle fa-lg"></i></a>
+                                }*@
+                                @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHClientes, AccionCrud.Editar, SessionHelpers.GetIdUsuario()))
+                {
+                                    <a href="/Clientes/EditarVP?IdCliente=@item.IdCliente" class="btn btn-default btn-sm clientEdit" data-ajax-update="#divContenido" data-ajax-mode="replace" data-ajax="true" data-toggle="modal" data-target="#ventanaModal" data-tooltip="tooltip" data-placement="left" title="Permite cambiar el nombre al cliente"><i class="glyphicon glyphicon-pencil"></i></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+   
+
+    <!-- Modal -->
+    <div id="ventanaModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Empresa Cliente</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="divContenido">
+                        <img src="~/Images/animatedEllipse.gif" alt="" />
+                        <p>Cargando ...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.js"></script>
+    <script>
+        $('table.display').DataTable({
+
+            "bLengthChange": false,
+            "lengthMenu": [[7], [7]],
+            "scrollY": "410px",
+            "scrollCollapse": true,
+            "paging": false,
+            "language": {
+                "sInfoFiltered": "(filtrado de un total de _MAX_ Clientes)",
+                "sInfo": "Del _START_ al _END_ de un total de _TOTAL_ Clientes",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sLoadingRecords": "Cargando...",
+                "sLengthMenu": "Mostrar _MENU_ Sucursales",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                }
+            }
+        });
+        $('[data-tooltip="tooltip"]').tooltip();
+
+    </script>
+    <script>
+
+
+
+        $("#ventanaModal").on('hidden.bs.modal', function (e) {
+
+            $('.modal-content').html("  <div id=\"divContenido\">  <p>Cargando ...</p>  <img alt=\"\" src=\"/Images/animatedEllipse.gif\">  </div>  ");
+        });
+
+
+    </script>
+

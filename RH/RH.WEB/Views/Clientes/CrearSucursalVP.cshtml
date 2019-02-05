@@ -1,0 +1,194 @@
+﻿@using Common.Helpers
+@using RH.BLL
+@using RH.Entidades;
+@model RH.Entidades.Sucursal
+
+@{
+
+    var selectListZonas = ViewBag.SelectListZonas;
+    var selectListEstados = ViewBag.SelectListEstados;
+    var listaRP = ViewBag.ListRP as List<ClienteEmpresas>;
+    var slRp = ViewBag.SelectListFis_Asim as List<Empresa>;
+
+    var EmpCom = ViewBag.SelectListComp_Sind as List<Empresa>;
+    var slDepto = ViewBag.SelectListDepto as List<Departamento>;
+
+    var clienteId =  ViewBag.EmpresaId;
+}
+<style>
+  .modal-dialog {
+        width: 1100px !important;
+    }
+
+    select.selectpicker {
+        display: block !important;
+        float: left;
+        overflow: hidden;
+        height: 34px;
+        width: 0;
+        border: 0;
+        padding: 0;
+        box-shadow: none;
+        color: white;
+    }
+</style>
+
+<link href="~/Content/tablas/tamaño.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-select.css" rel="stylesheet" type="text/css" />
+<!-- CSS para el tooltip validator -->
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+<div id="divContenido2">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><i class="fa fa-plus"></i> Nueva Sucursal</h4>
+    </div>
+
+    @using (Html.BeginForm("CrearSucursalVP", "Clientes", FormMethod.Post, new { id = "SucursalFrm", @class = "tooltipForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="panel panel-default" id="create">
+            <input type="hidden" id="IdCliente" name="IdCliente" value="@clienteId" />
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="col-md-6 col-xs-12">
+                        <div class="form-group">
+                            <label class="col-md-4 "> Estado </label>
+                            <div class="col-md-8">
+                                @HtmlLocalHelper.ComboBox(selectListEstados, "IdEstado", htmlAttributes: new Dictionary<string, object>() { { "data-rule-required", true }@*, { "tabIndex", 1 }*@ })
+</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 "> Nombre de la Sucursal </label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="Ciudad" id="Ciudad"
+                                       data-rule-required="true"
+                                       data-rule-maxlength="50"
+                                       data-rule-minlength="3" 
+                                       @*tabindex="2"*@
+                                       />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 "> Zona Salario </label>
+                            <div class="col-md-8">
+                                @HtmlLocalHelper.ComboBox(selectListZonas, "IdZonaSalario", htmlAttributes: new Dictionary<string, object>() { { "data-rule-required", true }@*, { "tabIndex", 3 }*@ })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <div class="form-group">
+                            <label class="col-md-4">Empresas Fiscales</label>
+                            <div class="col-md-8">
+
+                                <select class="form-control selectpicker show-tick" @*tabindex="4"*@ name="itemsRP" multiple id="itemsRP" data-width="330px" data-actions-box="true" data-live-search="true" title="Selecciona la configuración" data-selected-text-format="count">
+                                    @if (slRp != null)
+                                    {
+                                        foreach (var item in slRp)
+                                        {
+                                            <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4">Empresas Complementos</label>
+                            <div class="col-md-8">
+                                <select id="itemsCom" name="itemsCom" class="selectpicker show-tick" @*tabindex="5"*@ multiple data-width="330px" data-actions-box="true" data-live-search="true" title="Selecciona la configuración" data-selected-text-format="count">
+
+                                    @if (EmpCom != null)
+                                    {
+                                        foreach (var item in EmpCom)
+                                        {
+                                            <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                                        }
+                                    }
+
+                                </select>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4">Empresas Sindicato</label>
+                            <div class="col-md-8">
+                                <select id="itemsSin" name="itemsSin" class="selectpicker show-tick" @*tabindex="6"*@ multiple data-width="330px" data-actions-box="true" data-live-search="true" title="Selecciona la configuración" data-selected-text-format="count">
+
+                                    @if (EmpCom != null)
+                                    {
+                                        foreach (var item in EmpCom)
+                                        {
+                                            <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                                        }
+                                    }
+
+                                </select>
+
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4">Empresa Asimilado</label>
+                            <div class="col-md-8">
+                                <select id="itemsAsim" name="itemsAsim" class="selectpicker show-tick" @*tabindex="7"*@ multiple data-width="330px" data-actions-box="true" data-live-search="true" title="Selecciona la configuración" data-selected-text-format="count">
+
+                                    @if (slRp != null)
+                                    {
+                                        foreach (var item in slRp)
+                                        {
+                                            <option value="@item.IdEmpresa">@item.RazonSocial</option>
+                                        }
+                                    }
+
+                                </select>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                        
+                    </div>
+               
+                    
+
+
+
+              
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="submit" id="idGuardar" class="btn btn-primary input-group-sm" value="Guardar" />
+             <button type="button" class="btn btn-danger" @*tabindex="9"*@ data-dismiss="modal">Cancelar</button>
+        </div>
+    }
+
+    <script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+    <script src="~/Scripts/validator/messages_es.js"></script>
+    <script src="~/Scripts/validator/TooltipValidator.js"></script>
+    <script src="~/Scripts/bootstrap-multiselect.js"></script>
+    <script src="~/Scripts/bootstrap-select.min.js"></script>
+    <script src="~/Scripts/i18n/defaults-es_CL.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            var orderCount = 0;
+      
+            $(".selectpicker").selectpicker();
+
+
+        });
+
+
+    </script>
+
+</div>

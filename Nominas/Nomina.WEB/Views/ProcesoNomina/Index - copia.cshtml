@@ -1,0 +1,586 @@
+﻿@using System.Linq
+@using Common.Utils;
+@model System.Collections.Generic.List<Nomina.BLL.ProcesadoModelo2>
+@{
+    var registros = Model.Count();
+    var seleccionados = Model.Where(x => x.Seleccionado == true).Count();
+    var procesando = ViewBag.Procesando;
+    var autorizado = ViewBag.Autorizado;
+    var tableSelect = procesando ? "table-disabled" : "table-multiselect";
+    bool modoComplemento = ViewBag.Complemento;
+
+    var primero = Model.FirstOrDefault();
+    int columnsHiddens = 0;
+    int indxConcepto = 5;
+    int[] visibles = ViewBag.visible;
+    int[] ocultos = ViewBag.oculto;
+}
+
+<style>
+        .tooltip {
+            background-color: #000;
+            border: 1px solid #fff;
+            padding: 10px 15px;
+            width: 200px;
+            display: none;
+            color: #fff;
+            text-align: left;
+            font-size: 12px;
+            /* outline radius for mozilla/firefox only */
+            -moz-box-shadow: 0 0 10px #000;
+            -webkit-box-shadow: 0 0 10px #000;
+        }
+
+
+        /*Lista */
+
+        #listadoConceptos {
+            counter-reset: li;
+            list-style: none;
+            *list-style: decimal;
+            font: 15px 'trebuchet MS', 'lucida sans';
+            padding: 0;
+            margin-bottom: 4em;
+            text-shadow: 0 1px 0 rgba(255,255,255,.5);
+        }
+
+            #listadoConceptos ol {
+                margin: 0 0 0 2em;
+            }
+
+            #listadoConceptos li {
+                position: relative;
+                display: block;
+                padding: .4em .4em .4em .8em;
+                *padding: .4em;
+                margin: .5em 0 .5em 2.5em;
+                color: #fff;
+                text-decoration: none;
+                transition: all .3s ease-out;
+            }
+
+                /*#listadoConceptos li:hover{
+        background: #762a34;
+    }*/
+
+                #listadoConceptos li:before {
+                    content: counter(li);
+                    counter-increment: li;
+                    position: absolute;
+                    left: -2.5em;
+                    top: 50%;
+                    margin-top: -1em;
+                    background: #762a34;
+                    height: 2em;
+                    width: 2em;
+                    line-height: 2em;
+                    text-align: center;
+                    font-weight: bold;
+                }
+
+                #listadoConceptos li:after {
+                    position: absolute;
+                    content: '';
+                    border: .5em solid transparent;
+                    left: -1em;
+                    top: 50%;
+                    margin-top: -.5em;
+                    transition: all .3s ease-out;
+                }
+
+                #listadoConceptos li:hover:after {
+                    left: -.5em;
+                    border-left-color: #762a34;
+                }
+                .warning {
+    background-color: #A9BCF5 !important;
+}
+                table{
+                    margin: 10px;
+                }
+                    a.dt-button.seleccionarall {
+                    background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important
+                }
+                    a.dt-button.seleccionarcero{
+                    background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important
+                }
+                     a.dt-button.btnDetalles{
+                    background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important
+                }
+                      a.dt-button.btnConceptos{
+                    background-image: linear-gradient(to bottom, #fff 0%, #BDBDBD 100%) !important
+                }
+                      a.dt-button.btnRecibos{
+                    background-image: linear-gradient(to bottom, #fff 0%, #FF6A6A 100%) !important
+                }
+    a.dt-button.btnprocesado {
+        background-image: linear-gradient(to bottom, #fff 0%, #337ab7 100%) !important;
+    }
+              #titulo{
+              position: fixed;
+              top:5px;
+              margin-top:-10px;
+              color: #fff;  
+             
+            }
+</style>
+
+<div id="titulo">
+    <div class="main-content-title">
+        <h4 class="pull-left">Procesar Nómina</h4>
+        @if (procesando)
+        {
+            <a title="PROCESANDO SU NÓMINA, POR FAVOR ESPERE... " disabled>
+                <span class='glyphicon glyphicon-hourglass fa-spin'></span> PROCESANDO...
+            </a>
+        }
+        else if (autorizado)
+        {
+            <a title="NÓMINA AUTORIZADA " disabled>
+                <span class='glyphicon glyphicon-lock'></span> NÓMINA AUTORIZADA
+            </a>
+        }
+     
+
+    </div>
+</div>    
+<div class="module" id="proceso-nomina">
+    @*<div class="main-content-title">
+        <h4 class="pull-left">Procesar Nómina</h4>
+        @if (procesando)
+        {
+            <a title="PROCESANDO SU NÓMINA, POR FAVOR ESPERE..." disabled>
+                <span class='glyphicon glyphicon-hourglass fa-spin'></span> PROCESANDO...
+            </a>
+        }
+        else if (autorizado)
+        {
+            <a title="NÓMINA AUTORIZADA" disabled>
+                <span class='glyphicon glyphicon-lock'></span> NÓMINA AUTORIZADA
+            </a>
+        }
+        else
+        {
+            <a class="btnProcesar" title="PROCESAR NÓMINA">
+                <span class="glyphicon glyphicon-saved"></span> PROCESAR
+            </a>
+        }
+     
+        <a class="btnReciboNomina" title="DESCARGAR RECIBO DE NÓMINA">
+            <span class="glyphicon glyphicon-save-file"></span> RECIBO
+        </a>
+
+    </div>*@
+    <div class="main-content-body" style="padding: 5px;">
+    <div class="table-panel">
+            @*<a id="selTodos" class="label label-primary" title="Seleccionar todos los registros"><span class="glyphicon glyphicon-unchecked"></span> Sel Todos</a>*@
+        
+        </div>
+
+        <table class="display nowrap  compact"  id="table-proceso-nomina" @*style="margin-left: 2px;"*@ width="100%">
+            <thead>
+                <tr>
+                
+                    <th>ID</th>
+                    <th>Empleado</th>
+                    <th class="text-right">Percepciones</th>
+                    <th class="text-right">Deducciones</th>
+               @if ((int)Session["activarComplemento"] == 1)
+               {
+                <th class="text-right">Complemento</th>
+               }
+             
+                
+                 @if (primero != null)
+                {
+                    foreach (var itemConcepto in primero.Conceptos)
+                    {
+                        <th>@itemConcepto.NombreConcepto</th>
+                    }
+                    columnsHiddens = primero.Conceptos.Count;
+                }
+                <th class="text-right">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var nomina in Model)
+            {
+                var procesado = nomina.Seleccionado ? 1 : 0;
+                <tr id="@nomina.IdEmpleado" class="" data-id-empleado="@nomina.IdEmpleado" data-id-nomina="@nomina.IdNomina" data-procesado="@procesado" data-sbcotizacion="@nomina.Sbc" data-tipotarifa="@nomina.TipoTarifa">
+                    <td> @nomina.IdEmpleado</td>
+                    <th>@nomina.Paterno @nomina.Materno @nomina.Nombres</th>
+                    <td class="text-right">@nomina.Percepciones.ToCurrencyFormat(false)</td>
+                    <td class="text-right">@nomina.Deducciones.ToCurrencyFormat(false)</td>
+                    @if ((int)Session["activarComplemento"] == 1)
+                    {
+                        <td class="text-right">@nomina.TotalComplemento.ToCurrencyFormat(false)</td>
+                    }
+
+                    @foreach (var itemTotalConcepto in nomina.Conceptos)
+                    {
+                        <td class="text-right">@itemTotalConcepto.TotalConcepto.ToCurrencyFormat(false)</td>
+                    }
+                    <th class="text-right">@nomina.TotalNomina.ToCurrencyFormat(false)</th>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="main-content-footer">
+        <div class="col-md-12">
+            <div class="col-md-2">
+                <label for="totPercepciones" class="control-label">Percepciones</label>
+                <input type="text" id="totPercepciones" name="totPercepciones" class="form-control" value="@ViewBag.totalP" readonly/>
+            </div>
+            <div class="col-md-2">
+                <label for="totDeducciones" class="control-label">Deducciones</label>
+                <input type="text" id="totDeducciones" name="totDeducciones" class="form-control" value="@ViewBag.totalD" readonly/>
+            </div>
+            <div class="col-md-2">
+                <label for="totNominas" class="control-label">Total Nominas</label>
+                <input type="text" id="totNominas" name="totNominas" class="form-control" value="@ViewBag.totalN" readonly/>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div id="conceptosModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width:1000px">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Conceptos</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="row">                     
+                        <ol style="margin-left:15px;" id="listadoConceptos">
+                            @if (primero != null)
+                            {
+                                foreach (var itemConcepto in primero.Conceptos)
+                                {
+
+                                    if (indxConcepto < 15)
+                                    {
+                                        if (visibles.Contains(itemConcepto.IdConcepto))
+                                        {
+                                            <div class="col-md-6">
+                                                <li><a class="toggle-vis btn btn-primary btn-sm" data-id="@itemConcepto.IdConcepto" data-column="@indxConcepto">@itemConcepto.NombreConcepto</a></li>
+                                            </div>
+                                            indxConcepto++;
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-6">
+                                                <li><a class="toggle-vis btn btn-default btn-sm" data-id="@itemConcepto.IdConcepto" data-column="@indxConcepto">@itemConcepto.NombreConcepto</a></li>
+                                            </div>
+                                            indxConcepto++;
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        if (visibles.Contains(itemConcepto.IdConcepto))
+                                        {
+                                            <div class="col-md-6">
+                                                <li><a class="toggle-vis btn btn-primary btn-sm" data-id="@itemConcepto.IdConcepto" data-column="@indxConcepto">@itemConcepto.NombreConcepto</a></li>
+                                            </div>
+                                            indxConcepto++;
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-6">
+                                                <li><a class="toggle-vis btn btn-default btn-sm" data-id="@itemConcepto.IdConcepto" data-column="@indxConcepto">@itemConcepto.NombreConcepto</a></li>
+                                            </div>
+                                            indxConcepto++;
+                                        }
+                                    }
+                                }
+                            }
+                        </ol>      
+                     </div>
+                </div>
+
+                
+
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardar" data-dismiss="modal">Guardar Configuracion</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="detallesNomina" class="modal fade">
+    <div class="modal-dialog" style="width:1100px; ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Detalles Nomina</h4>
+            </div>
+            <div class="modal-body" >
+               <div id="detallenom"></div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        var table = $("#table-proceso-nomina").DataTable({
+            dom: 'Bfrtip',
+            scrollY: '450px',
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            "language": { "url": "../scripts/datatables-spanish.json" },  
+            info: false,
+            select:{
+                style: 'multi'
+            },
+            "fixedColumns": {
+                leftColumns: 2,
+                rightColumns: 1
+
+            },
+            "buttons": [
+            {
+                className : 'seleccionarall',
+                text: 'Seleccionar: Todos',
+                action: function () {
+                    table.rows().select();
+                   
+                },key: {
+                    key: 'a',
+                    
+                }
+            },
+            {
+                className: 'seleccionarcero',
+                text: 'Seleccionar: Ninguno',
+                action: function () {
+                    table.rows().deselect();
+                }
+            },
+             {
+                 className: 'btnDetalles',
+                 text: 'Detalle Nomina',
+                 action: function () {
+                     var selected = $("#table-proceso-nomina").find(".selected");
+                     var IdNomina = parseInt(selected.data("id-nomina"));
+                     var modalDetalle = $("#detallesNomina");
+                     $.get("../../ProcesoNomina/detallePrincipal?id=" + IdNomina, function (data) {
+                         $("#detallenom").html(data);
+                         modalDetalle.modal();
+                     });
+                 },
+                 key: {
+                     key:'d', 
+                     
+                 }
+             },
+             {
+                 className: 'btnConceptos',
+                 text: 'Conceptos',
+                 action: function () {
+                    
+                     var modalDetalle = $("#conceptosModal");
+                    
+                         modalDetalle.modal();
+                   
+                 },
+                 key: {
+                     key:'d',
+                     
+                 }
+             },
+                {
+                    className: 'btnRecibos',
+                    text: 'Ver recibos',
+                    action: function () {
+                        var selected = $("#table-proceso-nomina").find(".selected");
+                        var nominas = [];
+
+
+                        selected.each(function () {
+                            var id = parseInt($(this).data("id-nomina"));
+                            nominas.push(id);
+                        });
+
+
+                        if (nominas.length > 0) {
+                            var form = document.createElement("form");
+                            form.setAttribute("method", "post");
+                            form.setAttribute("action", "/ProcesoNomina/GetRecibos");
+
+                            form._submit_function_ = form.submit;
+                            for (var i = 0; i < nominas.length; i++) {
+                                var hiddenField = document.createElement("input");
+                                hiddenField.setAttribute("type", "hidden");
+                                hiddenField.setAttribute("name", "idNominas");
+                                hiddenField.setAttribute("value", nominas[i]);
+                                form.appendChild(hiddenField);
+                            }
+                            document.body.appendChild(form);
+                            form._submit_function_();
+
+                        } 
+                    },
+                
+                },
+                   {
+                       className : 'btnprocesado',
+                       text: 'Procesar Nominas',
+                       action: function () {
+                           var btnProcesarN = $(this);
+                           console.log(btnProcesarN);
+                           var btnProcesar = $('.btnprocesado');
+                           console.log(btnProcesar);
+
+                           var selected = $("#table-proceso-nomina").find(".selected");
+                           if (selected.length > 0) {
+                               utils.confirmDialog("¿DESEA CONTINUAR?", "Se procesarán " + selected.length + " nóminas", "CONFIRMAR", "CANCELAR", function(response) {
+                                   if (response) {
+                                       var empleados = [];
+                                       selected.each(function() {
+                                           var id = parseInt($(this).data("id-empleado"));
+                                           empleados.push(id);
+                                       });
+                                       var request = $.ajax({
+                                           url: "/ProcesoNomina/ProcesarNominas/",
+                                           method: "POST",
+                                           data: {
+                                               empleados: empleados
+                                           },
+                                           beforeSend: function() {
+                                               btnProcesar.addClass('disabled');
+                                               $("#table-proceso-nomina").switchClass("table-multiselect", "table-disabled");
+                                               btnProcesar.html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> PROCESANDO...");
+                                               btnProcesar.attr("title", "PROCESANDO SU NÓMINA, POR FAVOR ESPERE...");
+                                           }
+                                       });
+                                       request.done(function(result) {
+                                           if (result.nominas !== 0) {
+                                               utils.showMessage("PROCESAMIENTO COMPLETADO", result.nominas + " " + result.status, 10000);
+                                           } else {
+                                               utils.showMessage("Procesado", result.status, 10200,"danger");
+                                           }
+
+                                           btnProcesar.removeClass('disabled');
+                                           utils.LoadActivePage();
+                                       });
+                                   }
+                               });
+                           } else {
+                               utils.showMessage("WAR", "Debe seleccionar los registros a procesar.", 8000);
+                           }
+                       },
+                       key: {
+                           
+                     
+                       }
+                   },
+            ],
+          "columnDefs": [
+         @{
+             int i = 5;
+             if (primero != null)
+             {
+                 foreach (var concepto in primero.Conceptos)
+                 {
+                     if (visibles.Contains(concepto.IdConcepto))
+                     {
+                         <text>{ "targets": [</text>
+                         @i
+                         <text>], "visible": true, "searchable": false },</text>
+                     }
+                     else if (ocultos.Contains(concepto.IdConcepto))
+                     {
+                         <text>{"targets": [</text>
+                         @i
+                         <text>],"visible": false,"searchable": false},</text>
+                     }
+                     i++;
+                 }
+             }
+         }
+        ]
+        });
+        table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+            @{
+                <text>var cell = table.cell({ row: rowIdx, column:</text>
+                @indxConcepto;
+                   <text>}).node();
+            $(cell).addClass('warning'); </text>
+            }
+
+        });
+
+        $("#guardar").click(function () {
+            var arrayV = [];
+
+            var arrayO = [];
+            $('ol li').each(function (indice, elemento) {
+                if ($(this).find('.btn-primary').attr('data-id')) {
+                    var visibles = $(this).find('.btn-primary').attr('data-id');
+                    arrayV.push(visibles);
+                } else if ($(this).find('.btn-default').attr('data-id')) {
+                    var ocultos = $(this).find('.btn-default').attr('data-id');
+                    arrayO.push(ocultos);
+                }
+
+            })
+            console.log("visibles " + arrayV + " ocultos " + arrayO);
+
+            var request = $.ajax({
+                url: "/ProcesoNomina/GuardarConceptosVO/",
+                method: "POST",
+                data: {
+                    visibles: arrayV,
+                    ocultos: arrayO
+
+                }, success: function (result) {
+                    notification = utils.showMessage("Guardando Datos", "¡Datos guardados exitosamente!", 1000, "");
+                    //utils.loadMainPage("EmpleadoComplemento", "Index", "#main-content", "false", null);
+                }
+
+            });
+        });
+
+            //Evento para Mostra-Ocultar columnas de conceptos
+            $('a.toggle-vis').on('click', function (e) {
+                e.preventDefault();
+
+                // Get the column API object
+                var column = table.column($(this).attr('data-column'));
+
+                // Toggle the visibility
+                column.visible(!column.visible());
+
+                //add-remove class
+                if ($(this).hasClass("btn-primary")) {
+
+                    $(this).removeClass("btn-primary").addClass("btn-default");
+
+                } else {
+                    $(this).removeClass("bnt-default").addClass("btn-primary");
+                }
+
+            });
+
+
+
+        });
+
+</script>

@@ -1,0 +1,19 @@
+﻿/*Fondo*/
+body{
+    background-image: url(../Images/logoSun.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #FCFCFC;
+}
+h1{
+    text-align:center;
+    font-size:45px;
+    margin-top:50px;
+    color:#2c3e50;
+}
+
+.subh1{
+    font-size:40px;
+}

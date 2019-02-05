@@ -1,0 +1,83 @@
+﻿
+@using Nomina.BLL
+@using RH.Entidades
+@model List<EmpleadoNomina>
+@{
+
+}
+<style>
+    /*.nav-tabs {
+
+        background-color: #762a34;
+
+    }*/
+    /*.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+        background-color: #762a34;
+    }*/
+    .dt-buttons {
+        padding-top: 10px;
+    }
+</style>
+
+
+<table id="rfcInvalido" class="display compact" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Paterno</th>
+            <th>Materno</th>
+            <th>Nombre(s)</th>
+            <th>RFC</th>
+
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>ID</th>
+            <th>Paterno</th>
+            <th>Materno</th>
+            <th>Nombre(s)</th>
+            <th>RFC</th>
+
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var a in Model)
+            {
+            <tr data-idempleado="@a.idempleado">
+                <td>@a.idempleado</td>
+                <td>@a.Paterno</td>
+                <td>@a.Materno</td>
+                <td>@a.Nombres</td>
+                <td>@a.RFC</td>
+
+
+
+
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        if ($.fn.dataTable.isDataTable('#rfcInvalido')) {
+            var rfcInvalido = $('#rfcInvalido').DataTable();
+            rfcInvalido.destroy();
+        }
+        else {
+            var rfcInvalido = $('#rfcInvalido').DataTable({
+                "scrollY": "200px",
+                "scrollCollapse": true,
+                "paging": false,
+                });
+        }
+        });
+
+
+</script>

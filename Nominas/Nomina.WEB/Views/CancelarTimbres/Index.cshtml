@@ -1,0 +1,142 @@
+﻿@using Common.Helpers;
+@using Common.Utils
+@using Common.Enums;
+@using DocumentFormat.OpenXml.Drawing.Diagrams
+@using RH.BLL;
+@using RH.Entidades.GlobalModel;
+@model IEnumerable<Nomina.BLL.DatosEmision>
+@{
+    var listaEjercicios = ViewBag.ListaEjercicios as List<SelectListItem>;
+    var listaPeriodos = ViewBag.PeriodosPagos;
+}
+<style>
+    .bd-callout {
+        padding: 1.25rem;
+        margin-top: 1.25rem;
+        margin-bottom: 1.25rem;
+        margin-left: 0.25rem;
+        margin-right: 5.25rem;
+        border: 1px solid #eee;
+        border-left-width: .25rem;
+        border-radius: .25rem;
+        border-left-color: #d9534f;
+    }
+
+    .glyphicon {
+        font-size: 18px;
+    }
+
+    #titulo {
+        position: fixed;
+        top: 5px;
+        margin-top: -10px;
+        color: #fff;
+    }
+
+    .badge-danger {
+        background-color: orangered;
+    }
+</style>
+
+<div id="titulo">
+    <div class="main-content-title">
+        <h4 class="pull-left">Cancelar Recibos cfdi</h4>
+    </div>
+</div>
+<div class="main-content-body " style="padding: 5px;" id="generar-cfdis">
+    <div class="col-md-12">
+        <div class="col-md-3">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>Ejercicio: </label>
+                    @if (listaEjercicios != null)
+                    {
+                        <select id="selectEjercicio" class="form-control">
+                            @foreach (var listItem in listaEjercicios)
+                            {
+                                <option value="@listItem.Value">@listItem.Text</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>Periodos: </label>
+                    <select id="selectPeriodos" class="form-control">
+                        <option value="0">Seleccione un ejercicio...</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="ejercicio">
+                <div class="form-group">
+                    <label>*</label>
+                    <input type="button" id="btnBuscar" name="btnBuscar" value="Buscar Recibos" class="form-control input-sm btn btn-primary" />
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <div>
+        <div id="contenidoTimbrado"></div>
+    </div>
+
+</div>
+<script>
+    $('#selectEjercicio').on('change', function () {
+
+        var request = $.ajax({
+            url: "/CancelarTimbres/GetPeriodos/",
+            method: "POST",
+            data: {
+                id: this.value
+            },
+            beforeSend: function () {
+
+            }
+        });
+
+        request.done(function (data) {
+            //console.log(data);
+            var selValue = 0;
+            data = $.map(data, function (item, a) {
+                //if (item.Selected) {
+                //    selValue = item.Value;
+                //}
+                //return "<option value=\"" + item.Value + "\" " + (item.Selected ? "selected" : "") + ">" + item.Text + "</option>";
+                return "<option value=\"" + item.Value + "\"   >" + item.Value + ' : ' + item.Text + "</option>";
+            });
+
+            $('#selectPeriodos').html(data.join(""));
+            //   $('#selectPeriodos').val(selValue);
+
+        });
+    });
+
+    $('#btnBuscar').on('click', function () {
+
+        var per = $('#selectPeriodos').val();
+
+        if (per == null) {
+            utils.showMessage("Debe seleccionar un Periodo", "... ", 1000);
+            $('#selectPeriodos').focus();
+        } else  {
+            $("#contenidoTimbrado").load("/CancelarTimbres/GetTimbrados/?id=" + per);
+        }
+
+
+    });
+
+    var seleccionados = [];
+
+
+
+</script>

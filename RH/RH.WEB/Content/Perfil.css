@@ -1,0 +1,147 @@
+﻿/*Perfil*/
+
+/*Etiquetas*/
+
+#picLabel{
+    margin-left:31%;
+}
+
+#foto img{
+    width:70%;
+    border:2px solid #979797;
+    margin-left:45px;
+    border-radius:5px;
+    
+}
+
+#foto img:hover{
+
+    background: rgba(0, 0, 0, .2);
+}
+
+#prox{
+    display:none;
+}
+
+.InputUpload{
+    display:block;
+    margin-left:13%;
+    margin-top:2%;
+}
+
+#_idu{
+    font-size:24px;
+    margin-top:60px;
+}
+
+#_username{
+    font-size:24px;
+    margin-top:24px;
+}
+
+#_name{
+    font-size:24px;
+    margin-top:24px;
+}
+
+#_ap{
+    font-size:24px;
+    margin-top:20px;
+}
+
+#_am{
+    font-size:24px;
+    margin-top:24px;
+}
+
+#_email{
+    font-size:24px;
+    margin-top:20px;
+}
+
+/*Información*/
+#idu{
+    font-size:24px;
+    margin-top:60px;
+    border:2px solid #979797;
+    border-radius:5px;
+}
+
+#username{
+    font-size:24px;
+    margin-top:20px;
+    border:2px solid #979797;
+    border-radius:5px;
+}
+
+#name{
+    font-size:24px;
+    margin-top:20px;
+    border:2px solid #979797;
+    border-radius:5px;
+}
+
+#ap{
+    font-size:24px;
+    margin-top:20px;
+    border:2px solid #979797;
+    border-radius:5px;
+}
+
+#am{
+    font-size:24px;
+    margin-top:20px;
+    border:2px solid #979797;
+    border-radius:5px;
+}
+
+#email{
+    font-size:24px;
+    margin-top:20px;
+    border:2px solid #979797;
+    border-radius:5px;
+}
+
+p{
+    margin:0;
+}
+
+
+
+/*Estilos títulos generales: Título - Botones de encabezado - Separador*/
+#titulo{
+    width:100%;
+    padding:0;
+}
+
+#titulo h2{
+    position:absolute;
+    float:left;
+    margin-top:45px;
+    margin-bottom:10px;
+}
+
+#titulo a{
+    position:relative;
+    float:left;
+    margin-top:40px;
+}
+
+hr{
+    width:100%;
+    position:relative;
+    top:10px;
+    border:1px solid #255480;
+    margin-top:0px;
+
+}
+
+.modal-body{
+    margin-top:4%;
+    margin-bottom:4%;
+    padding:0;
+}
+
+.modal-footer{
+    margin-top:3%;
+}

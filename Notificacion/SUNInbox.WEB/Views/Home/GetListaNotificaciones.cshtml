@@ -1,0 +1,48 @@
+﻿@model List<Notificacion.BLL.NotificacionDatos>
+@using Common.Helpers;
+
+<!-- Datos para el paginador -->
+<input type="hidden" class="numPagina" value="@ViewBag.PaginaActiva" />
+<input type="hidden" class="totalPaginas" value="@ViewBag.NumPaginas" />
+<input type="hidden" class="totalRegistros" value="@ViewBag.TotalRecords" />
+<input type="hidden" class="primerRegistro" value="@ViewBag.FirstRecord" />
+<input type="hidden" class="ultimoRegistro" value="@ViewBag.LastRecord" />
+<!-- Fin datos para el paginador -->
+<!-- Lista de Notificaciones -->
+@if (Model != null)
+{
+foreach (var item in Model)
+ {
+     var status = item.Status == 1 ? "new" : "";
+     var favorita = item.Favorita ? 1 : 0;
+     <div class="notification @status" data-status="@item.Status" data-id-notificacion="@item.IdNotificacion" data-favorita="@favorita">
+         <div class="notification-selector">
+             <button class="btn-transparent btn-selector">
+                 <span class="glyphicon glyphicon-unchecked"></span>
+             </button>
+         </div>
+         <div class="notification-body">
+             <div class="notification-remitent truncate">@item.Usuario</div>
+             <div class="notification-title truncate">@item.TipoDescripcion - @item.Titulo</div>
+             <div class="notification-client truncate">@item.IdNotificacion - @item.Cliente</div>
+             @* edw <div class="notification-client truncate">@item.EmpresaCliente - @item.Cliente</div>*@
+         </div>
+         <div class="notification-extra">
+             <div class="date">
+                 @NotificationHelpers.getFechaDeNotificacion(item.Fecha)
+             </div>
+         </div>
+     </div>
+    }
+
+
+    <!-- Fin Lista de Notificaciones -->
+
+    if (Model.Count > 10)
+    {
+        <div class="buttonToTop">
+            <h4><span class="glyphicon glyphicon-arrow-up"></span> Regresar <span class="glyphicon glyphicon-arrow-up"></span></h4>
+        </div>
+    }
+}
+

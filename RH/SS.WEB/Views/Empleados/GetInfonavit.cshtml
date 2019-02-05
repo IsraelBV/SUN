@@ -1,0 +1,122 @@
+﻿@model RH.BLL.CalculoInfonavit
+@using Common.Utils;
+@{
+    string[] tipoCreditos = { "Cuota Fija", "Porcentaje", "V.S.M.", "V.S.M (UMA)" };
+    var fechaSuspension = Model.FechaSuspension.ToStringOrEmptyDate<DateTime>("yyyy-MM-dd");
+}
+
+@using (Ajax.BeginForm("UpdateInfonavit", "Empleados", new AjaxOptions { OnSuccess = "InfonavitFormSuccess", OnFailure = "OnFailure", OnBegin = "$('#modal-detalle-infonavit').modal('hide');" }, new { @class = "tooltipForm frmInfonavit", id = "infonavit-detail" }))
+{
+    <input type="hidden" value="@Model.IdEmpleadoContrato" name="IdEmpleadoContrato" />
+    <input type="hidden" value="@Model.IdInfonavit" name="IdInfonavit" />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="NumCredito" class="control-label">Número de Crédito</label>
+                <input type="number" name="NumCredito" class="form-control NumCredito" value="@Model.NumCredito" disabled
+                       data-rule-required="true"
+                       data-rule-digit="true"
+                       data-rule-maxlength="10"
+                       data-rule-minlength="10" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="TipoCredito" class="control-label">Tipo de Crédito</label>
+                <select name="TipoCredito" class="form-control TipoCredito" disabled data-rule-required="true">
+                    @for (int i = 1; i < tipoCreditos.Length + 1; i++)
+                    {
+                        string selected = i == Model.TipoCredito ? "selected" : "";
+                    <option value="@i" @selected>@tipoCreditos[i - 1]</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Cantidad" class="control-label">Factor de Descuento</label>
+                <input type="number" step="any" class="form-control FactorDescuento" name="FactorDescuento" value="@Model.FactorDescuento" disabled data-rule-required="true" />
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="fecha-inicio" class="control-label">Fecha de Inicio</label>
+                <input type="date" name="FechaInicio" class="form-control FechaInicio" value="@Model.FechaInicio.ToString("yyyy-MM-dd")" disabled data-rule-required="true" data-rule-date="true" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DescuentoDiario" class="control-label">Descuento Diario</label>
+                <input type="number" step="any" class="form-control DescuentoDiario" name="DescuentoDiario" disabled readonly data-rule-required="true" value="@Model.DescuentoDiario.TruncateDecimal(4)" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DescuentoBimestral" class="control-label">Descuento Bimestral</label>
+                <input type="number" step="any" class="form-control DescuentoBimestral" name="DescuentoBimestral" disabled readonly data-rule-required="true" value="@Model.DescuentoBimestral" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Bimestre" class="control-label">Bimestre Aplicado</label>
+                <input type="text" class="form-control BimestreAplicado" name="BimestreAplicado" value="@Model.BimestreAplicado" disabled readonly />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DiasBimestre" class="control-label">Dias del Bimestre</label>
+                <input type="number" step="any" class="form-control DiasBimestre" name="DiasBimestre" value="@Model.DiasBimestre" disabled readonly />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="FechaSuspension" class="control-label">Fecha de Suspensión</label>
+                <input type="date" name="FechaSuspension" value="@fechaSuspension"  class="form-control"  disabled />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                @if (Model.Status)
+                {
+                    <label for="Status" class="control-label ">Estatus : Activo </label>
+                    <input type="checkbox" name="Status" id="Status"  checked value="TRUE" class="form-control" disabled  />
+                }
+                else
+                {
+                    <label for="Status" class="control-label ">Estatus : Inactivo </label>
+                    <input type="checkbox" name="Status" id="Status" class="form-control" disabled  />
+                }
+            </div>
+            <input type="hidden" value="@Model.Salario" id="Salario" name="Salario" />
+        </div>
+    </div>
+}
+
+<script>
+
+
+    $("#Status").click(function () {
+   
+        if ($("#Status").is(':checked')) {
+            $("#Status").attr('checked', true);
+            $("#Status").val('TRUE');
+        } else {
+            $("#Status").attr('checked', false);
+            $("#Status").val('FALSE');
+        }
+    });
+
+
+</script>

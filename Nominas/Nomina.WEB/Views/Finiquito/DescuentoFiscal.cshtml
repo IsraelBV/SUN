@@ -1,0 +1,261 @@
+﻿@using Nomina.BLL
+@using RH.Entidades
+@model  List<NOM_Finiquito_Descuento_Adicional>
+@*<a href="#" onclick="AgregarCampos();">Agregar Campos</a>*@
+@{ 
+    int countF = 1;
+    int countC = 1;
+    var concep = ViewBag.conceptos as List<C_NOM_Conceptos>;
+    var idFiniquito = ViewBag.idFiniquito;
+}
+
+
+<div class="form-horizontal" >
+    <input type="hidden" id="idFiniquito" name="idFiniquito" value="@idFiniquito" />
+    
+    <div class="col-md-12">
+        <div class="col-md-2">
+            <div class="form-group" style="text-align:center;">
+                <a href="#" class="btn btn-primary " style="margin-top:20px;"id="addrow">Nuevo Elemento </a>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <select  style="margin-top:20px;" id="selectConceptos" class="form-control">
+                    @foreach (var c in concep)
+                    {
+                        <option value="@c.IdConcepto">@c.DescripcionCorta</option>
+                    }
+                    
+                </select>
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <a href="#" class="btn btn-default " style="margin-top:20px;" id="removerow"> Eliminar Descuento</a>
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <a href="#" class="btn btn-primary " style="margin-top:20px;" id="addrowComplemento" > Nuevo Elemento</a>
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <select style="margin-top:20px;" id="selectConceptosC" class="form-control">
+                    @foreach (var c in concep)
+                    {
+                        <option value="@c.IdConcepto">@c.DescripcionCorta</option>
+                    }
+
+                </select>
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <a href="#" class="btn btn-default " style="margin-top:20px;" id="removerowC">Eliminar Descuento</a>
+            </div>
+
+        </div>
+        <div class="col-md-6" >
+            <div >
+                <table class="table table-bordered display"  width="100%" id="tbldescuentos">
+                    <thead>
+                        <tr>
+                            <td>Id</td>
+                            <td>Descripción</td>
+                            <th>Descuento x Fiscal</th>
+                        </tr>
+                        
+                    </thead>
+                    <tbody id="fiscal">
+                        @if (Model != null)
+                        {
+
+                            foreach (var ff in Model.Where(x => x.IsComplemento == false))
+                            {
+                             <tr data-idtr="@countF">
+                                 <td><label id="IdConcepto@(countF)" name="IdConcepto@(countF)">@ff.IdConcepto</label></td>
+                                 <td><input type="text"  class="form-control" id="descripcion@(countF)" name="descripcion@(countF)" value="@ff.Descripcion" /></td>
+                                 <td><input type="text" class="form-control" id="descuento@(countF)" name="descuento@(countF)" value="@ff.TotalDescuento" /></td>
+                              </tr>
+                                countF++;
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                <input type="hidden" id="contador" value="@countF" />
+
+            </div>
+
+        </div>
+        <div class="col-md-6">
+
+            <div id="complemento">
+                <table class=" table table-bordered display" cellspacing="0" width="100%" id="tbldescuentosC">
+                    <thead>
+                        <tr>
+                            <td>Id</td>
+                            <td>Descripción</td>
+                            <th>Descuento x Complemento</th>
+                        </tr>
+
+                    </thead>
+                    <tbody id="complementobody">
+                        @if (Model != null)
+                        {
+
+                            foreach (var ff in Model.Where(x => x.IsComplemento == true))
+                            {
+                                <tr data-idtrc="@countC">
+                                    <td><label id="IdConceptoC@(countC)" name="IdConceptoC@(countC)" >@ff.IdConcepto</label></td>
+                                    <td><input type="text" class="form-control" id="descripcionC@(countC)" name="descripcionC@(countC)" value="@ff.Descripcion" /></td>
+                                    <td><input type="text" class="form-control" id="descuentoC@(countC)" name="descuentoC@(countC)" value="@ff.TotalDescuento" /></td>
+                                </tr>
+                                countC++;
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                <input type="hidden" id="contadorC" value="@countC" />
+
+            </div>
+        </div>
+
+
+    </div>
+    
+    
+<script>
+
+
+
+    var counter = $("#contador").val();
+    var counterC = $("#contadorC").val();
+
+    $('#tbldescuentos tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $('#removerow').on('click', function () {
+        table.row('.selected').remove().draw(false);
+    });
+
+    $('#tbldescuentosC tbody').on('click', 'tr', function () {
+        $(this).toggleClass('selected');
+    });
+
+    $('#removerowC').on('click', function () {
+        tableC.row('.selected').remove().draw(false);
+    });
+
+    $('#addrow').on('click', function () {
+        var idConcepto = $("#selectConceptos").val();
+        var nombreConcepto = $("#selectConceptos option:selected").html();
+
+
+        i = table.row.add([
+            '<label id="IdConcepto' + counter + '" name="IdConcepto' + counter + '" >' + idConcepto + '</label>',
+            '<input type="text" class="form-control" id="descripcion' + counter + '" name="descripcion' + counter + '" value="' + nombreConcepto + '"/>',
+            '<input type="text" class= "form-control" id="descuento' + counter + '" name="descuento' + counter + '" autofocus/>'
+
+        ]).draw(false);
+        table.rows(i).nodes().to$().attr("data-idtr", counter);
+        counter++;
+    });
+
+    $('#addrowComplemento').on('click', function () {
+        var idConcepto = $("#selectConceptosC").val();
+        var nombreConcepto = $("#selectConceptosC option:selected").html();
+        var a = $('#descuentoC' + (counterC - 1)).blur();
+
+        var i = tableC.row.add([
+
+            '<label id="IdConceptoC' + counterC + '" name="IdConceptoC' + counterC + '" >' + idConcepto + '</label>',
+            '<input type="text" class="form-control" id="descripcionC' + counterC + '" name="descripcionC' + counterC + '" value="' + nombreConcepto + '"/>',
+            '<input type="text" class= "form-control" id="descuentoC' + counterC + '" name="descuentoC' + counterC + '"/>'
+
+        ]).draw(false);
+
+        $('#descuentoC' + counterC).focus();
+        tableC.rows(i).nodes().to$().attr("data-idtrc", counterC);
+        //tableC.rows(i).nodes().to$().attr("class", "fondo");
+        counterC++;
+    });
+
+
+
+
+
+
+    function Guardar() {
+        var arrayDescuentos = [];
+        var arrayDescuentosC = [];
+
+
+        $('#tbldescuentos tbody tr').each(function () {
+
+            item = {};
+            idDescripcion = $(this).data('idtr');
+            item['IdConcepto'] = $("#IdConcepto" + idDescripcion).html();
+            item['Descripcion'] = $("#descripcion" + idDescripcion).val();
+            item['TotalDescuento'] = $("#descuento" + idDescripcion).val();
+            item['IsComplemento'] = false;
+            arrayDescuentos.push(item);
+        });
+
+        $('#tbldescuentosC tbody tr').each(function () {
+
+            itemC = {};
+            idDescripcion = $(this).data('idtrc');
+            itemC['IdConcepto'] = $("#IdConceptoC" + idDescripcion).html();
+            itemC['Descripcion'] = $("#descripcionC" + idDescripcion).val();
+            itemC['TotalDescuento'] = $("#descuentoC" + idDescripcion).val();
+            itemC['IsComplemento'] = true;
+            arrayDescuentosC.push(itemC);
+        });
+
+       
+
+
+        var dataAccion = { arrayDes: arrayDescuentos, arrayDesC: arrayDescuentosC };
+
+        var notification;
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(dataAccion),
+            contentType: 'application/json',
+            url: '/finiquito/GuardarDescuentos/',
+            success: function (result) {
+                notification = utils.showMessage("Guardando Datos", "¡Datos guardados exitosamente!", 1000, "");
+
+            },
+            error: function (error) {
+                // si hay un error lanzara el mensaje de error
+
+            }
+        }).done(function (result) {
+
+        });
+
+    }
+
+
+</script>
+<br/>
+<br />
+    ...
+</div>
+

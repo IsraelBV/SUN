@@ -1,0 +1,379 @@
+﻿@using Nomina.BLL
+@using System.Linq
+
+@model List<EmpleadoComplemento>
+
+@{
+    EmpleadoComplemento encabezados = null;
+    if (Model.Count > 0)
+    {
+         encabezados = Model[0];
+    }
+
+    int count = 2;
+    int[] visibles = ViewBag.visible;
+    int[] ocultos = ViewBag.oculto;
+
+}
+
+<style>
+    .tooltip {
+        background-color: #000;
+        border: 1px solid #fff;
+        padding: 10px 15px;
+        width: 200px;
+        display: none;
+        color: #fff;
+        text-align: left;
+        font-size: 12px;
+        /* outline radius for mozilla/firefox only */
+        -moz-box-shadow: 0 0 10px #000;
+        -webkit-box-shadow: 0 0 10px #000;
+    }
+
+
+    /*Lista */
+
+ #listadoConceptos {
+    counter-reset: li; 
+    list-style: none; 
+    *list-style: decimal; 
+    font: 15px 'trebuchet MS', 'lucida sans';
+    padding: 0;
+    margin-bottom: 4em;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+
+#listadoConceptos ol {
+    margin: 0 0 0 2em; 
+}
+
+#listadoConceptos li{
+    position: relative;
+    display: block;
+    padding: .4em .4em .4em .8em;
+    *padding: .4em;
+    margin: .5em 0 .5em 2.5em;
+    
+    color: #fff;
+    text-decoration: none;
+    transition: all .3s ease-out;   
+}
+
+/*#listadoConceptos li:hover{
+    background: #762a34;
+}*/   
+
+#listadoConceptos li:before{
+    content: counter(li);
+    counter-increment: li;
+    position: absolute; 
+    left: -2.5em;
+    top: 50%;
+    margin-top: -1em;
+    background: #762a34;
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    text-align: center;
+    font-weight: bold;
+}
+
+#listadoConceptos li:after{
+    position: absolute; 
+    content: '';
+    border: .5em solid transparent;
+    left: -1em;
+    top: 50%;
+    margin-top: -.5em;
+    transition: all .3s ease-out;               
+}
+
+#listadoConceptos li:hover:after{
+    left: -.5em;
+    border-left-color: #762a34;             
+}
+
+</style>
+<div class="main-content-title">
+    <h4>Empleado Complemento</h4>
+    <div class="pull-right" style="margin:10px;">
+        <a class="btn btn-primary" data-toggle="modal" data-target="#conceptosModal"><span class="glyphicon glyphicon-th-list"></span> Conceptos</a>
+    </div>
+</div>
+<div class="main-content-body">
+    <div class="col-md-12" >
+      
+        <div id="inputs">
+
+
+            <table class="display nowrap compact" id="tblComplemento" width="100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Empleado</th>
+                        @if (encabezados != null)
+                        {
+                            foreach (var nombres in encabezados.listaconceptos)
+                             {
+                                 <th>@nombres.Descricipcion</th>
+                             }
+                        }
+                    </tr>
+                </thead>
+               
+                <tbody id="conceptoCantidad">
+                    @foreach (var empleado in Model)
+                    {
+                        <tr >
+                            <td class="idEmpleado">@empleado.IdEmpleadoComplemento</td>
+                            <td>@empleado.Paterno @empleado.Materno @empleado.Nombres</td>
+                            @foreach (var concp in empleado.listaconceptos)
+                            {
+                                <td id="@concp.idConcepto" align="center">
+                                    
+                                    <div id="cuadro">
+                                        @if (concp.asignado == true)
+                                        {
+                                            if (concp.conFormula == true)
+                                            {
+                                                <label id="cantidad" class="cantidad" style="display:block">@concp.cantidad</label>
+                                            }
+                                            else
+                                            {
+                                                <label><i  data-toggle="tooltip" title="No tiene Formula Asignada" class="fa fa-ban"></i></label>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            <label style="color:#DF0101 ;"><i  data-toggle="tooltip" title="No tiene asignado concepto"  class="fa fa-ban"></i></label>
+                                        }
+                                    </div>
+                                </td>
+                            }
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+
+</div>
+
+<div id="conceptosModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Mostrar/Ocultar Conceptos</h4>
+            </div>
+            <div class="modal-body">
+                <div id="conceptosOpciones">
+                    <ol style="margin-left: 15px;" id="listadoConceptos">
+                        @if (encabezados != null)
+                        {
+                            foreach (var nombres in encabezados.listaconceptos)
+                             {
+                                 if (visibles.Contains(nombres.idConcepto))
+                                 {
+
+                                     <li><a class="toggle-vis btn btn-primary btn-sm listadoConceptos" id="@nombres.idConcepto" data-id="@nombres.idConcepto" data-column="@count">@nombres.Descricipcion</a></li>
+                                 }
+                                 else if (ocultos.Contains(nombres.idConcepto))
+                                 {
+                                     <li><a class="toggle-vis btn btn-default listadoConceptos" id="@nombres.idConcepto" data-id="@nombres.idConcepto" data-column="@count">@nombres.Descricipcion</a></li>
+                                 }
+                                 else
+                                 {
+                                     <li><a class="toggle-vis btn btn-primary listadoConceptos" id="@nombres.idConcepto" data-id="@nombres.idConcepto" data-column="@count">@nombres.Descricipcion</a></li>
+                                 }
+
+                                 count++;
+                             }
+                        }
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-default" id="guardar" data-dismiss="modal">Guardar Configuración</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var table = $('#tblComplemento').DataTable({
+            "scrollY": "550px",
+            //"colReorder": true,
+            //"stateSave":  true,
+            "scrollCollapse": true,
+            "paging": false,
+            "searching": false,
+            "bInfo": false,
+            "scrollX": true,
+            "fixedColumns": {
+                leftColumns: 2
+            },
+            "select": true,
+            "columnDefs": [
+         @{
+             int i = 2;
+             if (encabezados != null)
+             {
+                 foreach (var concepto in encabezados.listaconceptos)
+                 {
+                     if (visibles.Contains(concepto.idConcepto))
+                     {
+                         <text>{ "targets": [</text>
+                         @i
+                         <text>], "visible": true, "searchable": false },</text>
+                     }
+                     else if (ocultos.Contains(concepto.idConcepto))
+                     {
+                         <text>{"targets": [</text>
+                         @i
+                         <text>],"visible": false,"searchable": false},</text>
+                     }
+                     i++;
+                 }
+
+             }
+
+
+         }
+        ]
+        });
+
+        $('a.toggle-vis').on('click', function (e) {
+            e.preventDefault();
+
+            // Get the column API object
+            var column = table.column($(this).attr('data-column'));
+
+            // Toggle the visibility
+            column.visible(!column.visible());
+            //add-remove class
+            if ($(this).hasClass("btn-primary")) {
+
+                $(this).removeClass("btn-primary").addClass("btn-default");
+
+            } else {
+                $(this).removeClass("btn-default").addClass("btn-primary");
+            }
+        });
+
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+    });
+
+
+    $("#guardar").click(function () {
+        var arrayV = [];
+
+        var arrayO = [];
+        $('ol li').each(function (indice, elemento) {
+            if ($(this).find('.btn-primary').attr('data-id')) {
+                var visibles = $(this).find('.btn-primary').attr('data-id');
+                arrayV.push(visibles);
+            } else if ($(this).find('.btn-default').attr('data-id')) {
+                var ocultos = $(this).find('.btn-default').attr('data-id');
+                arrayO.push(ocultos);
+            }
+
+        })
+        console.log("visibles " + arrayV + " ocultos " + arrayO);
+
+        var request = $.ajax({
+            url: "/EmpleadoComplemento/GuardarConceptosVO/",
+            method: "POST",
+            data: {
+                visibles: arrayV,
+                ocultos: arrayO
+
+            }, success: function (result) {
+                notification = utils.showMessage("Guardando Datos", "¡Datos guardados exitosamente!", 1000, "");
+                //utils.loadMainPage("EmpleadoComplemento", "Index", "#main-content", "false", null);
+            }
+
+        });
+    });
+
+    ////////////////////
+
+    $(".cantidad").click(function (f) {
+        $("#conceptoCantidad").find(':input[type=text]').each(function () {
+            $(this).next('#cantidad').css("display", "block");
+            $(this).remove();
+
+        });
+        var textoactual = $(this).text();
+        if (textoactual == '0') {
+            var input = "<input type='text'id='p' maxlength='10' class='input-group-sm' value =''/>"//agregamos el el cuadro de texto
+        } else {
+            var input = "<input type='text'id='p' maxlength='10'  class='input-group-sm' value ='" + textoactual + "'/>"//agregamos el el cuadro de texto
+        }
+        // $(this).empty();
+        $(this).css("display", "none");//oculta el label
+        $(this).parent("#cuadro").prepend(input);
+       
+        $(this).parent("#cuadro").find('#p').select();
+
+        var idempleado = $(this).parent("#cuadro").parent().parent().find(".idEmpleado").html();
+        var idconcepto = $(this).parent("#cuadro").parent().attr('id');
+      
+        var inp = $("#p")//obtenemos el selector
+        inp.keydown(function (e) {//evento
+            var code = e.keyCode;//obtenemos el codigo del enter
+            if (code == 13) {   
+                var textonuevo = $(this).val();
+                if (textonuevo == '') {//si el texto esta vacio le inserta "..."
+                    textonuevo = '0';
+                }
+                $(this).next("#cantidad").text(textonuevo)
+                $(this).next('#cantidad').css("display", "block");
+                //$("#00").css("display", "block");
+
+
+                var request = $.ajax({
+                    url: "/EmpleadoComplemento/guardarComplemento/",
+                    method: "POST",
+                    data: {
+                        IdEmpleado: idempleado,
+                        IdConcepto: idconcepto,
+                        Cantidad: textonuevo
+                    }, success: function (result) {
+                        notification = utils.showMessage("Cantidad guardada con exito", "¡Datos guardados exitosamente!", 1000, "");                
+                    }
+                });
+                $(this).remove();//quitamos el cuadro
+            } else if (code == 9 || code == 27) {
+                $(this).next("#cantidad").text(textoactual)
+                $(this).next('#cantidad').css("display", "block");
+                $(this).remove();//quitamos el cuadro
+            }
+        });
+    });
+
+    function nextRow(element)
+    {
+        $(element).closest('tr').next('tr');
+
+
+
+    }
+
+
+
+
+
+
+</script>

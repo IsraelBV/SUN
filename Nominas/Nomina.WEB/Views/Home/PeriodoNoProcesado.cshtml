@@ -1,0 +1,12 @@
+﻿<div class="error-page">
+    <div class="error-page-content">
+        <div class="error-title">
+        </div>
+        <div class="error-description">
+            <h1>¡Oops!</h1>
+            <p>El periodo al que intentas acceder aún no está procesado. Debe procesar el periodo para poder continuar.</p>
+            <a data-controller=@(ViewBag.Finiquito ? "Finiquito" : "ProcesoNomina")  data-action="" data-target="#main-content" data-tables="true" class="btn btn-default btn-ajax">@(ViewBag.Finiquito ? "PROCESAR FINIQUITO" : "PROCESAR NÓMINA")</a>
+        </div>
+    </div>
+</div>
+

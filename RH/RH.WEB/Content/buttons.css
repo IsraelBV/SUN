@@ -1,0 +1,334 @@
+﻿.btn-group-justified{
+    width:100%;
+    margin:0px;
+}
+
+.botones{
+    width:8%;
+}
+
+.boton2{
+    font-size:15px;
+}
+
+.boton3{
+    font-size:15px;
+}
+
+/*Perfil*/
+.upload{
+    margin-left:5%;
+    border-radius: 5px;
+    margin-top:5%;
+}
+
+.upCancel{
+    margin-left:13%;
+    border-radius: 5px;
+    margin-top:5%;
+}
+
+/*Préstamos*/
+.btnDetalle{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:21px;
+}
+
+.btn-historial{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:21px;
+}
+
+.back{
+    left:81%;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.new{
+    left:82%;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+/*Factores de Integración*/
+.newFac{
+    left:91%;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.fEdit{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+.fDelete{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+/*Botones de Incapacidades/Details*/
+#newIncap{
+    left:85%;
+    font-size:14px;
+}
+
+.cancel{
+    left:84%;
+}
+
+#IncapInfo{
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    font-size:15px;
+}
+
+#IncapEdit{
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    font-size:15px;
+}
+
+/*Boton new departamentos*/
+.newDep{
+    left:89%;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.pst{
+    width:100px;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    margin-right:15%;
+}
+
+.pst span{
+    color:#CBCBCB;
+    font-size:13px;
+}
+
+.boton1{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+    margin-right:15%;
+}
+
+.boton2{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+/*Botones de Puestos*/
+.newPuesto{
+    left:84%;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.cancel{
+     padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.cancel1{
+    left:83%;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.boton3{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+/*Boton nueva incidencia*/
+.newInc{
+    left:90%;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+/*Empresas*/
+.newEmp{
+    left:88%;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+/*Empresas Activas*/
+.btnGenerar{
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    font-size:15px;
+}
+
+.empEdit{
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    font-size:15px;
+}
+
+.btnEliminar{
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    font-size:15px;
+}
+
+/*Empresas Inactivas*/
+.btnGenerar2{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+/*Vacaciones*/
+.vis{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+.btnGenerar{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+/*Clientes*/
+.suc{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.clientEdit{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+.clientDetail{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+/*Sucursales*/
+.newSuc{
+    left:83%;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.backClient{
+    left:82%;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
+
+.editSuc{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+.detailSuc{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+/*Plantillas*/
+.plantillaDown{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:17px;
+}
+
+.plantillaDel{
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}
+
+.plantillaConf {
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    font-size:15px;
+}

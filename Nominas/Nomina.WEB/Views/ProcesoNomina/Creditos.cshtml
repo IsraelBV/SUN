@@ -1,0 +1,146 @@
+﻿@using Nomina.BLL;
+@using Common.Helpers;
+@using Common.Utils;
+@model List<EmpleadoCredito>
+
+
+<div class="row>">
+    <div class="col-md-12">
+        <table class="table" id="tblCreditos" style="width: 100%;">
+            <thead>
+            <tr class="info">
+                <th>Id</th>
+                <th class="text-right">Paterno</th>
+                <th class="text-right">Materno</th>
+                <th class="text-right">Nombres</th>
+                <th class="text-right">Dias a Descontar</th>
+                <th class="text-right">Inicio Credito</th>
+                <th class="text-right">Fin Credito</th>
+            </tr>
+            </thead>
+            <tbody id="bodyTable">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th>@item.IdEmpleado  </th>
+                    <td class="data-number text-right">@item.Paterno</td>
+                    <td class="data-number text-right">@item.Materno</td>
+                    <td class="data-number text-right">@item.Nombre</td>
+                    <th class="data-number text-right">
+                        <div id="dvDias">
+                            <span id="lblDias" data-idep="@item.IdEmpleadoPeriodo" class="classDias label label-danger" title="-1 para valor default">@(item.DiasADescontar < 0 ? "Auto" : item.DiasADescontar.ToString())</span>
+                        </div>
+                    </th>
+                    <th class="data-number text-right">@item.FechaInicio.ToShortDateString()</th>
+                    <th class="data-number text-right">@item.FechaSuspension</th>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+            $(document).ready(function () {
+                var table = $("#tblCreditos").DataTable({
+                  scrollY: '350px',
+                  searching: false,
+                    paging: false,
+                    select:true,
+                    info: false,
+                    ordering: true
+                });
+                //-->
+            });
+
+            $('.classDias').click(function(e) {
+                
+                //Obtenemos el id Empleado Periodo que será el que se envia por ajax
+                var idEmpleadoPeriodo = $(this).data('idep');
+
+                //Busca en el cuerpo de la tabla - todos los input
+                $("#bodyTable").find(':input[type=text]').each(function () {
+                    $(this).next('#lblDias').css("display", "block");
+                    $(this).remove();
+                });
+
+                //Obtenemos el texto actual y lo guardamos en una variable
+                var textoactual = $(this).text();
+                
+              
+                //Se crea el input
+               var input = "<input type='text' id='diasCredito' maxlength='20'  class='input-group-sm' value ='" +textoactual +"'/>";
+                    
+                //Oculta el Label
+               $(this).css("display", "none");
+                //Muestra el input
+               $(this).parent("#dvDias").prepend(input);
+
+                //Posiciona en el input agregado
+               var inputDias = $("#diasCredito");
+               inputDias.focus();
+               inputDias.select();
+
+                //asocia el event al input
+               inputDias.keydown(function (e) { //evento
+
+                   var code = e.keyCode;//obtenemos el codigo del enter
+                   if (code === 13) {//Pulso la Tecla Enter
+
+                       var txtDias = $(this).val();
+
+                       //Validar txtDias que sea numerico
+
+                       if ($.isNumeric(txtDias)) {
+
+                           //Enviamos los datos por Ajax
+                           var request = $.ajax({
+                               url: "/ProcesoNomina/GuardarDiasCredito/",
+                               method: "POST",
+                               data: {
+                                   idEmpPeriodo: idEmpleadoPeriodo,
+                                   diasCredito: txtDias
+                               }
+                           });
+
+                           request.done(function(result) {
+                               utils.showMessage("OK - Guardado", "El dato se guardo correctamente", 1500, "info");
+                           });
+
+                           request.fail(function (result) {
+                               utils.showMessage("WAR - No se guardo ", "Solo se aceptan numeros enteros", 1500, "danger");
+                           });
+
+
+                       } else {
+
+                           if (txtDias === "") {
+                               txtDias = textoactual;
+                           }
+
+                           utils.showMessage("WAR - No se guardo el dato", "Solo se aceptan numeros enteros", 1500, "danger");
+                       }
+
+                       //colocamos el texto nuevo en el label
+                       $(this).next("#lblDias").text(txtDias);
+                       $(this).next('#lblDias').css("display", "block");
+
+                       //Remover el cuadro de texto
+                       $(this).remove();//quitamos el cuadro
+
+                   }
+                   else if (code === 9 || code === 27) {
+                       $(this).next("#lblDias").text(textoactual);
+                       $(this).next('#lblDias').css("display", "block");
+                       $(this).remove();//quitamos el cuadro
+                   }
+
+
+                });
+
+
+            });
+
+</script>

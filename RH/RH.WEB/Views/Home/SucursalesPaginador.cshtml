@@ -1,0 +1,58 @@
+﻿@model List<RH.BLL.SucursalDatos>
+
+@if (Model != null)
+{
+    int contador = 1;
+    int idxLeft = 0;
+    int idxRight = 0;
+    int idx = 0;
+    int idxh = 0;
+
+    var divR = Model.Count() % 2;
+
+    var medio = (Model.Count() / 2) + divR;
+
+    foreach (var itemI in Model)
+    {
+        string clase = "col-md-5 col-sm-12 col-xs-12 elementoLista";
+        if (contador % 2 == 0)
+        {
+            clase = "col-md-5 col-md-offset-1 col-sm-12 col-xs-12 elementoLista";
+            idx = idxh;
+        }
+        else
+        {
+            if (contador > 1)
+            {
+                idx = idxh + medio;
+            }
+        }
+
+        var item = Model[idx];
+
+        <a href="@Url.Action("Index", "Sucursal", new { id = item.IdSucursal })">
+            <div class="@clase">
+                <div class="cajaLista col-md-3 col-sm-2 col-xs-2">
+                    <h1>@item.IdSucursal s</h1>
+                </div>
+                <div class="contenidoLista col-md-9 col-sm-10 col-xs-10">
+                    <h4>
+                        @item.Nombre<br />
+                        <small>@item.Ciudad</small>
+                    </h4>
+                </div>
+            </div>
+        </a>
+
+        contador++;
+
+        if (contador % 2 > 0)
+        {
+            if (contador > 1)
+            {
+                idxh++;
+            }
+        }
+
+    }
+}

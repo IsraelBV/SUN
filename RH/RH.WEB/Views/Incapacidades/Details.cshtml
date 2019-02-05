@@ -1,0 +1,148 @@
+﻿@using RH.BLL;
+@using Common.Helpers;
+@using Common.Enums;
+@using SYA.BLL;
+@model List<RH.Entidades.Incapacidades>
+@{
+    ViewBag.Title = "Incapacidades";
+    ViewBag.EXTRA = "Detalles";
+    var id = ViewBag.idEmpleado;
+    var nomEmp = ViewBag.nombEmp;
+    var apEmp = ViewBag.apEmp;
+    var amEmp = ViewBag.amEmp;
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+}
+
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/Content/PanelWithTabs2.css" />
+
+@{ var idUsuario = SessionHelpers.GetIdUsuario(); }
+
+<div class="panel with-nav-tabs panel-primary" id="panelEmpleados">
+    <div class="panel-heading clearfix text-center">
+        <div class="pull-left">
+            <h4 class="panel-title">Incapacidades de @nomEmp @apEmp @amEmp</h4>
+        </div>
+        <div class="pull-right">
+            @* ul es el que hace el marcado o llamado de una lista *@
+            <ul class="nav nav-tabs">
+                @* li son los elementos de cada lista *@
+                <li>
+                    @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHIncapacidades, AccionCrud.Agregar, SessionHelpers.GetIdUsuario()))
+                    {
+                        <a class="btn btn-primary boton1 hovernuevo" id="newIncap" href="/Incapacidades/viewCreate?id=@id" data-ajax-update="#incaEdit" data-ajax-mode="replace" data-ajax="true" data-toggle="modal" data-target="#modaledit" data-tooltip="tooltip" data-placement="left">
+                            <i class="fa fa-plus"></i> Nueva Incapacidad
+                        </a>
+
+                    }
+                    else
+                    {
+                        <a class="btn btn-danger" href="/Incapacidades/Index">Volver</a>
+                    }
+                     
+                </li>
+                <li>
+                    <a class="btn btn-danger cancel hovercancelado" href="/Incapacidades/Index">
+                        <i class="fa fa-undo"></i> Regresar
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        
+        
+    </div>
+    <div class="panel-body" id="panBody">
+        <div class="tab-content">
+            <div class="table table-responsive">
+                <table class="table table-condensed table-hover table-striped" id="details">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Folio</th>
+                            <th>Tipo</th>
+                            <th>Clase</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Count > 0)
+            {
+                foreach (var i in Model)
+                {
+                                <tr>
+                                    <td class="tdId">@i.Id</td>
+                                    <td>@i.Folio</td>
+                                    <td>@i.Tipo</td>
+                                    <td>@i.Clase</td>
+                                    <td>@i.FechaInicio.ToString("dd/MM/yyyy")</td>
+                                    <td>@i.FechaFin.ToString("dd/MM/yyyy")</td>
+                                    <td class="botones" width="120px">
+                                        @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHIncapacidades, AccionCrud.Consultar, idUsuario))
+                                        {
+                                            <a class="btn btn-primary btn-sm boton3" href="#" title="Detalles" id="IncapInfo">
+                                                <i class="fa fa-info-circle fa-lg inf" aria-hidden="true"></i>
+                                            </a>
+                                        }
+
+                                        @if (ControlAcceso.ValidarEjecutarAccion(Modulos.RHIncapacidades, AccionCrud.Editar, idUsuario))
+                                        {
+                                            <a class="btn btn-default boton2 btn-sm" href="#" title="Editar" id="IncapEdit">
+                                                <i class="glyphicon glyphicon-pencil ed" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    @* Modal Edit *@
+    <div class="modal fade" id="modaledit" role="dialog">
+        <div class="modal-dialog modal-lg" id="incModals">
+            <div class="modal-content">
+                <div id="incaEdit"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#details').DataTable({
+                "scrollY": "440px",
+                "scrollCollapse": true,
+                "paging": false,
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "zeroRecords": "Sin registros - Busca de nuevo",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "Sin registros disponibles",
+                    "infoFiltered": "(Filtrado desde _MAX_ records totales)",
+                    "sSearch": "Buscar:",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                }
+            });
+
+        });
+        $('[data-tooltip="tooltip"]').tooltip();
+    </script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,r-2.0.2/datatables.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/IncaEdit.js"></script>

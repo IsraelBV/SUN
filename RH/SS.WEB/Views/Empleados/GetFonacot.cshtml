@@ -1,0 +1,99 @@
+﻿@model List<RH.Entidades.Empleado_Fonacot>
+
+@if(Model.Count > 0)
+{
+    <table class="table table-responsive table-hover table-striped table-condensed">
+        <thead>
+            <tr>
+                <th># Credito</th>
+                <th>Monto Inicial</th>
+                <th>Retención</th>
+                <th>Plazos</th>
+                <th>Saldo</th>
+                <th>Fecha de Inicio</th>
+                <th>Vigente</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var row in Model)
+            {
+                <tr>
+                    <td>@row.NumCredito</td>
+                    <td>@row.MontoInicial</td>
+                    <td>@row.Retencion</td>
+                    <td>@row.Plazos</td>
+                    <td>@row.Saldo</td>
+                    <td>@row.FechaInicioDescuento.ToString("dd/MM/yyyy")</td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => row.Status)</td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class="modal fade" id="fonacot-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Agregar Crédito FONACOT</h4>
+            </div>
+            <div class="modal-body">
+                @using(Ajax.BeginForm("CreateFonacot", "Empleados", new AjaxOptions { OnBegin = "OnBegin", OnFailure = "OnFailure", OnSuccess = "FonacotFormSuccess" }, new { @class = "form-horizontal tooltipForm", id = "form-fonacot" } ))
+                {
+                    <div class="col-md-12">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="NumCredito" class="control-label">Número de Crédito</label>
+                                <input type="text" name="NumCredito" id="NumCredito" class="form-control" 
+                                       data-rule-maxlength="20"
+                                       data-rule-required="true" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="MontoInicial" class="control-label">Monto Inicial</label>
+                                <input type="number" step="any" name="MontoInicial" id="MontoInicial" class="form-control" 
+                                       data-rule-required="true"
+                                       />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Retencion" class="control-label">Retención</label>
+                                <input type="number" step="any" name="Retencion" id="Retencion" class="form-control" 
+                                       data-rule-required="true"
+                                       
+                                       />
+                            </div>
+
+                        </div>
+                        <div class="col-md-5 col-md-offset-2">
+                            <div class="form-group">
+                                <label for="FechaInicio" class="control-label">Fecha de Inicio</label>
+                                <input type="date" name="FechaInicioDescuento" id="FechaInicioDescuento" class="form-control" 
+                                       data-rule-date="true"
+                                       data-rule-required="true" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Plazo" class="control-label">Plazos</label>
+                                <input type="number" name="Plazos" id="Plazos" class="form-control" 
+                                       data-rule-required="true"
+                                       />
+                            </div>
+                            
+                            <input type="hidden" value="@ViewBag.IdEmpleadoContrato" name="IdEmpleadoContrato" />
+
+                        </div>
+                    </div>
+                }
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnAgregarFonacot">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>

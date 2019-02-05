@@ -1,0 +1,278 @@
+﻿@using Common.Helpers
+@using RH.BLL
+@using SYA.BLL
+@{
+    var usuario = @ControlAcceso.GetUsuarioEnSession();
+}
+<!DOCTYPE html>
+<html>
+<!--
+ad88888ba   88        88  888b      88  88888888ba   88        88
+d8"     "8b  88        88  8888b     88  88      "8b  88        88
+Y8,          88        88  88 `8b    88  88      ,8P  88        88
+`Y8aaaaa,    88        88  88  `8b   88  88aaaaaa8P'  88aaaaaaaa88
+`"""""8b,  88        88  88   `8b  88  88""""88'    88""""""""88
+`8b  88        88  88    `8b 88  88    `8b    88        88
+Y8a     a8P  Y8a.    .a8P  88     `8888  88     `8b   88        88
+"Y88888P"    `"Y8888Y"'   88      `888  88      `8b  88        88
+-->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alianza</title>
+    <!-- jQuery -->
+    <script src="~/Scripts/jquery-3.1.0.min.js"></script>
+
+    <!-- Bootstrap Core  -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <!-- Awesome fonts -->
+    @*<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-hQpvDQiCJaD2H465dQfA717v7lu5qHWtDbWNPvaTJ0ID5xnPUlVXnKzq7b8YUkbN" crossorigin="anonymous">*@
+
+    <link href="~/Content/CSSLocal/461/font-awesome.min.css" rel="stylesheet" integrity="sha384-hQpvDQiCJaD2H465dQfA717v7lu5qHWtDbWNPvaTJ0ID5xnPUlVXnKzq7b8YUkbN" crossorigin="anonymous"/>
+
+    <!-- Normalizador CSS-->
+    <link rel="stylesheet" href="~/Content/normalize.css" />
+
+    <link rel="icon" href="" />
+    <link rel="stylesheet" href="~/Content/_Layout.css"/>
+</head>
+<body>
+@if (SessionHelpers.IsAutenticado())
+{
+    <nav class="navbar navbar-default navbar-fixed-top menuprincipal" role="navigation">
+    <div class="container-fluid">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-principal">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a href="@Url.Action("Index", "Home")" class="navbar-brand" id="aIndex"><i class="fa fa-sun-o fa-lg"></i> SUNRH</a>
+    </div>
+
+    <div id="menuModular" class="collapse in">
+        <ul class="nav navbar-nav modularNav">
+            <li>
+                <a href="/RegistrosPatronales/Index" class="ul-li-catalogos"><i class="fa fa-industry"></i> Empresas</a>
+            </li>
+
+            <li>
+                <a href="/Clientes/Index" class="ul-li-catalogos"><i class="fa fa-briefcase"></i> Clientes</a>
+            </li>
+        </ul>
+    </div>
+    <ul class="nav navbar-nav" id="breadcrumb">
+        <ol class="breadcrumb list-inline">
+
+            @if (ViewBag.Extra != null)
+            {
+                if (ViewBag.Title == "Inicio")
+                {
+                    <li class="liBreadcrumbSucursal"><a href="">@ViewBag.Title</a></li>
+                }
+                else
+                {
+                    <li class="liBreadcrumbSucursal"><a href="">@ViewBag.Title</a></li>
+                    <li class="active">@ViewBag.Extra</li>
+                }
+
+            }
+            else
+            {
+                if (ViewBag.Title == "Inicio")
+                {
+                    <li class="liBreadcrumbSucursal"><a href="">@ViewBag.Title</a></li>
+                }
+                else
+                {
+                    <li class="active">@ViewBag.Title</li>
+                }
+            }
+
+        </ol>
+    </ul>
+
+
+
+    <div class="collapse navbar-collapse" id="menu-principal">
+        <ul class="nav navbar-nav navbar-right top-nav">
+            <li class="dropdown liMenu">
+                <a href="#" class="dropdown-toggle iconoMenu" data-toggle="dropdown"><i class="fa fa-user fa-lg iconoMenu"></i> @usuario.Nombres @usuario.ApPaterno <i class="caret iconoMenu"></i></a>
+                <ul class="dropdown-menu" id="usAnimated">
+                    <li>
+                        <a href="~/Usuarios/Index">
+                            <div>
+                                <i class="fa fa-user" aria-hidden="true"></i> Perfil
+                            </div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="~/Acceso/LogOut">
+                            <div>
+                                <i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="dropdown liMenu">
+                <a href="#" class="dropdown-toggle iconoMenu" data-toggle="dropdown"><i class="fa fa-bell fa-lg iconoMenu"></i> <b class="caret iconoMenu"></b></a>
+                <ul class="dropdown-menu dropdown-alerts">
+                    <li>
+                        <p style="text-align:center"><strong> Próximamente </strong> </p>
+                        <p> <img id="imagen" src="~/Images/noti.png" /> </p>
+                        <p style="text-align:center"><strong>Programadores Trabajando</strong></p>
+                    </li>
+                    @*<!--Alta-->
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-user-plus fa-fw altas"></i> Alta
+                                        <span class="pull-right text-muted small">4 pendientes</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+
+                            <!--Baja-->
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-user-times fa-fw bajas"></i> Baja
+                                        <span class="pull-right text-muted small">2 pendientes</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+
+                            <!--Vacaciones-->
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-plane fa-fw vaca"></i> Vacaciones
+                                        <span class="pull-right text-muted small">5 pendientes</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+
+                            <!--IMSS-->
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-plus-square fa-fw ims"></i> IMSS
+                                        <span class="pull-right text-muted small">1 pendiente</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+
+                            <!--Incapacidad-->
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-wheelchair fa-fw inca"></i> Incapacidad
+                                        <span class="pull-right text-muted small">8 pendientes</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+
+                            <!--Préstamos-->
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-money fa-fw prest"></i> Préstamos
+                                        <span class="pull-right text-muted small">2 pendientes</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+
+                            <!--Incidentes-->
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-exclamation-triangle fa-fw incid"></i> Incidencias
+                                        <span class="pull-right text-muted small">3 pendientes</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+
+                            <!--Permisos-->
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-thumbs-o-up fa-fw permi"></i> Permisos
+                                        <span class="pull-right text-muted small">6 pendientes</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+
+                            <!--Bancos-->
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-university fa-fw banks"></i> Bancos
+                                        <span class="pull-right text-muted small">2 pendientes</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+
+                            <!--Departamentos-->
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-building fa-fw depas"></i> Departamentos
+                                        <span class="pull-right text-muted small">1 pendiente</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+
+                            <!--Todas las alertas-->
+                            <li>
+                                <a class="text-center" href="#">
+                                    <strong>Ver todas las alertas</strong>
+                                    <i class="fa fa-hand-o-right"></i>
+                                </a>
+                            </li>*@
+                </ul>
+            </li>
+        </ul>
+    </div>
+    </div>
+    </nav>
+    
+    <div style="padding: 30px;"></div>
+
+    <div class="clearfix"></div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+}
+</body>
+</html>
+<script>
+    function initControls() {
+        window.location.hash = "red";
+        window.location.hash = "Red"; //chrome
+        window.onhashchange = function () { window.location.hash = "red"; }
+    }
+
+
+
+    $(document).ready(function () {
+      
+        initControls();
+    });
+</script>

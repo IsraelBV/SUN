@@ -1,0 +1,141 @@
+﻿@using RH.Entidades
+@model List<Empresa>
+
+<h1>Reporte Alertas Globales <span><i class="fa fa-bell-o" aria-hidden="true"></i> </span></h1>
+<div class="jumbotron">
+
+    <div class="row">
+        <form class="form">
+            <div class="col-md-12">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Empresa: </label>
+                        <select id="empresa" class="form-control">
+                            <option value="0">Seleccione Empresa</option>
+                            @foreach (var e in Model.OrderBy(x => x.RazonSocial))
+                            {
+                                <option value="@e.IdEmpresa">@e.RazonSocial</option>
+                            }
+
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Tipo de Movimiento: </label>
+                        <select id="tipo" class="form-control">
+                            <option value=" 0 ">Seleccion un Tipo</option>
+                            <option value="1">Altas</option>
+                            <option value="2">Bajas</option>
+                            <option value="5">Reingreso</option>
+                            <option value="3">Cambio de Salario</option>
+                            <option value="4">Cambio Empresa Fiscal</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Fecha Inicial: </label>
+                        <input class="form-control" type="date" id="fechaInicio" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Fecha Final: </label>
+                        <input class="form-control" type="date" id="fechaFin" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label>. </label>
+                    <div class="form-group">
+                        <a class="btn btn-primary " id="descargarAlertas">Generar Reporte </a>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
+
+
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+    $("#descargarAlertas").click(function () {
+        var sendData = true;
+        var empresa = $("#empresa option:selected").val();
+        var nombreEmpresa = $("#empresa option:selected").text();
+        
+        var tipo = $('select[id=tipo]').val();
+        var fechaInicio = $("#fechaInicio").val();
+        var fechaFin = $("#fechaFin").val();
+        var tipoAlerta = $('select[id=tipo]').val();
+
+
+        if (fechaFin === "") {
+            sendData = false;
+            utils.showMessage("WAR ", "Establesca la fecha fin", 4000, "danger");
+            $('#fechaFin').focus();
+        }
+
+        if (fechaInicio === "") {
+            sendData = false;
+            utils.showMessage("WAR ", "Establesca la fecha inicio", 4000, "danger");
+            $('#fechaInicio').focus();
+        }
+
+        if (empresa <= 0) {
+            sendData = false;
+            utils.showMessage("WAR ", "Seleccione una empresa", 4000, "danger");
+            $('#selectEmpresas').focus();
+        }
+
+        if (tipo <= 0) {
+            sendData = false;
+            utils.showMessage("WAR ", "Seleccione un Tipo de Alerta", 4000, "danger");
+            $('#selectEmpresas').focus();
+        }
+        if (sendData) {
+             $.ajax({
+                url: "/Reportes/ReporteAlertas/",
+                method: "POST",                
+                data: {
+                    NombreEmpresa: nombreEmpresa,
+                    fechaI: fechaInicio,
+                    fechaF: fechaFin,
+                    tipoAlerta: tipoAlerta,
+                    idEmpresa: empresa
+                },
+                beforeSend: function () {
+                    waitingDialog.show('Procesando...');
+                },
+                success: function (result) {
+                    if (result == "Nada") {
+                        utils.showMessage("WAR ", "No se encontro información", 4000, "danger");
+                    } else {
+                        window.location = result;
+                    }
+                },
+                error: function (data) {
+                    alert(data.error);
+                },
+                complete: function (result) {
+                    waitingDialog.hide();
+                }
+            });
+        }
+
+    });   
+    });
+
+ 
+</script>
+
+<script type="text/javascript" src="~/scripts/bootstrap-notify.min.js"></script>

@@ -1,0 +1,126 @@
+﻿    .panel-body {
+        background-color: #F6F0F1;
+        overflow-y:scroll !important;
+        height: 570px;
+    }
+
+    .panel-heading {
+   background-color: #fff !important;
+    }
+
+    .panel-footer {
+        background-color: #762a34 !important;
+        color: white;
+        height: 100px;
+    }
+    .modal-footer{
+         background-color: #762a34 !important;
+        color: white;
+    }
+
+    .panel-title {
+        font-size: 25px !important;
+    }
+
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        background-color: #762a34 !important;
+        color: white;
+    }
+
+    .nav-tabs {
+        border-bottom: 4px solid #762a34;
+    }
+
+    .well {
+        background-color: #D8D8D8;
+    }
+            #barraStatica{
+  position: fixed;
+  bottom:0;
+  width: calc(100% - 70px);
+  height:100px;
+  background-color:#762a34;
+  color:white;
+  padding:10px;
+  
+    margin-right: auto;
+    margin-bottom: 10px;
+    display: none;
+}
+                .bodyDetalles{
+        height:320px;
+    }
+    .fondo{
+      background-color: #D8D8D8 !important ;
+    }
+
+
+    #SeccionIndermizacion{
+        display:none;
+    }
+    #indermizacionTotales{
+        /*display:block;*/
+    }
+     #indermizacionTotales2{
+        display:block;
+    }
+     #ancla2{
+         display:none;
+     }
+
+     #indemnizacion{
+position: fixed;
+right:0;
+top:0;
+width: 100px;
+height:15px;
+display:none;
+color:white;
+padding:10px;
+margin-left: 15px;
+margin-right: 110px;
+margin-top: 350px;
+   
+}
+    .indemnizacion:hover{
+        color: white;
+    }
+    #finiSeccion{
+position: fixed;
+right:0;
+top:0;
+width: 100px;
+height:15px;
+
+color:white;
+padding:10px;
+margin-left: 15px;
+margin-right: 75px;
+margin-top: 310px;
+   
+}
+    .finiSeccion:hover{
+        color: white;
+    }
+
+#detallesFiscales{
+position: fixed;
+right:0;
+top:0;
+width: 100px;
+height:15px;
+  
+color:white;
+padding:10px;
+margin-left: 15px;
+margin-right: 240px;
+margin-top: 110px;
+   
+}
+.detallesFiscales:hover{
+color: white;
+}
+
+
+
+

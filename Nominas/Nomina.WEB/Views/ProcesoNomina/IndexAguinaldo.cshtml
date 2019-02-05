@@ -1,0 +1,745 @@
+﻿@using System.Linq
+@using Common.Utils;
+@using RH.Entidades.GlobalModel;
+@model System.Collections.Generic.List<Nomina.BLL.AguinaldoModelo>
+@{
+
+    //var registros = Model.Count();
+
+    var procesando = ViewBag.Procesando;
+    var autorizado = ViewBag.Autorizado;
+    //var tableSelect = procesando ? "table-disabled" : "table-multiselect";
+    //bool modoComplemento = ViewBag.Complemento;
+
+
+    int columnsHiddens = 0;
+    int indxConcepto = 5;
+    int[] visibles = ViewBag.visible;
+    int[] ocultos = ViewBag.oculto;
+    int numRegistro = 1;
+    bool SoloComplemento = false;
+    List<NotificationSummary> summary = null;
+    int contentSumary = 0;
+    if (Model != null)
+    {
+        SoloComplemento = ViewBag.SoloComplemento;
+        summary = ViewBag.Summary;
+        contentSumary = summary.Count;
+    }
+    int indexInput = 0;
+    string idInput = "";
+}
+
+@if (Model != null)
+{
+
+    <style>
+        .faltasC {
+            width: 60px;
+        }
+
+        #titulo {
+            position: fixed;
+            top: 5px;
+            margin-top: -10px;
+            color: #fff;
+        }
+
+        .badge-danger {
+            background-color: orangered;
+        }
+           a.dt-button.btnprocesadoA {
+            background-image: linear-gradient(to bottom, #fff 0%, #337ab7 100%) !important;
+        }
+                  a.dt-button.btnprocesado {
+            background-image: linear-gradient(to bottom, #fff 0%, #228b22 100%) !important;
+        }
+    </style>
+
+    <div id="titulo">
+        <div class="main-content-title">
+            <h4 class="pull-left">Procesar Aguinaldo</h4>
+            @if (procesando)
+            {
+                <a title="PROCESANDO SU NÓMINA, POR FAVOR ESPERE... " disabled>
+                    <span class='glyphicon glyphicon-hourglass fa-spin'></span> PROCESANDO...
+                </a>
+            }
+            else if (autorizado)
+            {
+                <a title="NÓMINA AUTORIZADA " disabled>
+                    <span class='glyphicon glyphicon-lock'></span> NÓMINA AUTORIZADA
+                </a>
+            }
+
+
+        </div>
+    </div>
+
+    <div class="module" id="proceso-aguinaldo">
+        <div class="main-content-body" style="padding: 5px;">
+            <div class="table-panel">
+                @*<a id="selTodos" class="label label-primary" title="Seleccionar todos los registros"><span class="glyphicon glyphicon-unchecked"></span> Sel Todos</a>*@
+
+            </div>
+            @if (Model.Count > 0)
+            {
+                <table class="display nowrap  compact procesoAguinaldo" id="table-proceso-nomina" width="100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Empleado</th>
+                            <th class="text-right">Fecha Inicio</th>
+                            <th class="text-right">Fecha Fin</th>
+                            <th class="text-right" title="Días Trabajados">Trabajados</th>
+                            <th class="text-right">Proporcion</th>
+                            <th class="text-right" title="Faltas procesadas">Faltas</th>
+                            <th class="text-right" title="Faltas Personalizadas - las faltas que aqui se capturen se tomarán para el cálculo ">Faltas P</th>
+                            <th class="text-right" title="Cálcular Pension Alimenticia">Pension A <input type="checkbox" id="selectAllpa" name="selectAllpa" class="cbx3" title="Seleccionar/Deseleccionar todos" /></th>
+                            <th class="text-right">Pension A</th>
+                            <th class="text-right">Aguinaldo</th>
+                            <th class="text-right">Isr</th>
+                            <th class="text-right">Saldo Favor</th>
+
+                            @if ((int)Session["activarComplemento"] == 1)
+                            {
+                                <th class="text-right">Complemento</th>
+                            }
+                            <th class="text-right">Neto</th>
+                            <th class="text-right">Factor</th>
+                            <th class="text-right">Total</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var itemModel in Model)
+                    {
+                        idInput = $"f{indexInput}";
+
+                            <tr id="@itemModel.IdEmpleado" class="" data-id-empleado="@itemModel.IdEmpleado" data-id-aguinaldo="@itemModel.IdAguinaldo" data-id-nomina="@itemModel.IdNomina">
+                                <td> @numRegistro</td>
+                                <th title="IdEmpleado:@itemModel.IdEmpleado">@itemModel.Paterno @itemModel.Materno @itemModel.Nombres</th>
+                                <td class="text-center">@itemModel.FechaInicio.ToString("d")</td>
+                                <td class="text-center">@itemModel.FechaFin.ToString("d")</td>
+                                <td class="text-center">@itemModel.DiasTrabajados</td>
+                                <td class="text-center">@itemModel.Proporcion</td>
+                                <td class="text-center">@itemModel.TotalFaltas</td>
+                                <td class="text-right">
+                                    <input type="text" id="@idInput" data-index-faltas="@indexInput" class="faltasC !important" value="@itemModel.FaltasPersonalizadas" title="las faltas que aqui se capturen se tomarán para el cálculo " />
+                                </td>
+                                @if (itemModel.GenerarPension)
+                                {
+                                    <td class="text-center"><input type="checkbox" class="cbxPaClass" id="gpa" name="gpa" checked="checked" /></td>
+                                }
+                                else
+                                {
+                                    <td class="text-center"><input type="checkbox" class="cbxPaClass" id="gpa" name="gpa" /></td>
+                                }
+
+                                <td class="text-right">@itemModel.PensionAlimenticia</td>
+                                <td class="text-right">@itemModel.Aguinaldo</td>
+                                <td class="text-right">@itemModel.Isr</td>
+                                <td class="text-right">@itemModel.SaldoAnual</td>
+                                @if ((int)Session["activarComplemento"] == 1)
+                                {
+                                    <td class="text-right">@itemModel.Complemento</td>
+                                }
+                                <td class="text-right">@itemModel.Neto</td>
+                                <td class=" text-center">@itemModel.Factor</td>
+                                <th class="text-right">@itemModel.Total</th>
+                            </tr>
+                            numRegistro++;
+                            indexInput++;
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                if (SoloComplemento)
+                {
+                    <div class="alert alert-info">
+                        <strong>Info!</strong> Debe subir los datos de complemento, en el módulo "Nomina > Complemento"
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <strong>Info!</strong> No se encontrarón datos para mostrar..
+                    </div>
+                }
+
+            }
+        </div>
+        <div class="main-content-footer divTotales">
+            <div class="col-md-12">
+                <div class="col-md-2">
+                    <label for="totNominas" class="control-label">Total Nóminas</label>
+                    <input type="text" id="totNominas" name="totNominas" class="form-control" value="@ViewBag.totalN" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label for="totNominas" class="control-label">Salario minimo</label>
+                    <input type="text" id="totNominas" name="totNominas" class="form-control" value="@ViewBag.SMGV" readonly />
+                </div>
+                <div class="col-md-2">
+                    <label for="totNominas" class="control-label">UMA</label>
+                    <input type="text" id="totNominas" name="totNominas" class="form-control" value="@ViewBag.UMA" readonly />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detallesNomina" class="modal fade">
+        <div class="modal-dialog" style="width: 800px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Detalles Aguinaldo</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="detallenom" style="height: 560px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="summaryModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Summary Aguinaldo</h4>
+                </div>
+                <div class="modal-body">
+                    @if (summary.Any())
+                    {
+                        foreach (var itemS in summary)
+                        {
+                            <div class="alert alert-info">
+                                <strong>ID: @itemS.Reg</strong> @itemS.Msg1
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <strong>Info!</strong> Muestra información del procesado actual.
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function() {
+
+            var activaIcon = 0;
+            activaIcon = @contentSumary;
+
+            var textSum = "Summary";
+            if (activaIcon > 0) {
+                textSum = "<span class='badge badge-danger'>" + activaIcon + "</span> Summary";
+            } else {
+                textSum = "<span class='badge'>" + activaIcon + "</span>  Summary";
+            }
+
+
+            var table = $("table.procesoAguinaldo").DataTable({
+                dom: 'Bfrtip',
+                scrollY: '70vh',
+                scrollX: true,
+                scrollCollapse: true,
+                ordering: true,
+                paging: false,
+                "language": { "url": "../scripts/datatables-spanish.json" },
+                info: false,
+                select: { style: 'multi' },
+                "fixedColumns": {
+                    leftColumns: 2,
+                    rightColumns: 1
+
+                },
+                "buttons": [
+                    {
+                        className: 'seleccionarall',
+                        text: '<i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i> Todos',
+                        titleAttr: 'Seleccionar todos los registros',
+                        action: function() {
+                            table.rows().select();
+
+
+                        },
+                        key: { key: 'a' }
+                    },
+                    {
+                        className: 'seleccionarcero',
+                        text: '<i class="fa fa-square-o fa-lg" aria-hidden="true"></i> Ninguno',
+                        titleAttr: 'Deselecciona todos los registros',
+                        action: function() {
+                            table.rows().deselect();
+                        }
+                    },
+                    {
+                        className: 'btnDetalles',
+                        text: '<i class="fa fa-info-circle fa-lg" aria-hidden="true"></i> Ver Detalle',
+                        titleAttr: 'Muestra el detalle del aguinaldo',
+                        action: function() {
+                            var selected = $("#table-proceso-nomina").find(".selected");
+                            if (selected.length === 1) {
+                                var IdAguinaldo = parseInt(selected.data("id-aguinaldo"));
+                                var modalDetalle = $("#detallesNomina");
+                                $.get("../../ProcesoNomina/DetalleAguinaldo?id=" + IdAguinaldo,
+                                    function(data) {
+                                        $("#detallenom").html(data);
+                                        modalDetalle.modal();
+                                    });
+                            } else if (selected.length === 0) {
+                                utils.showMessage("Detalle de Aguinaldo",
+                                    "Seleccione una registro para ver su detalle",
+                                    10000);
+                            } else if (selected.length > 0) {
+                                utils.showMessage("Detalle de Aguinaldo",
+                                    "Dele seleccionar solo un registro para ver su detalle",
+                                    10000);
+                            }
+
+                        },
+                        key: {
+                            key: 'd',
+
+                        }
+                    },
+                    {
+                        className: 'btnRecibos',
+                        text: '<i class="fa fa-download fa-lg" aria-hidden="true"></i> Recibos',
+                        titleAttr: 'Descarga el recibo fiscal en pdf',
+                        action: function() {
+                            var btnDowRecibos = $('.btnRecibos');
+                            var selected = $("#table-proceso-nomina").find(".selected");
+                            var nominas = [];
+
+                            selected.each(function() {
+                                var id = parseInt($(this).data("id-nomina"));
+                                nominas.push(id);
+                            });
+
+
+                            if (nominas.length > 0) {
+                                btnDowRecibos.addClass('disabled');
+                                var form = document.createElement("form");
+                                form.setAttribute("method", "post");
+                                form.setAttribute("action", "/ProcesoNomina/GetRecibos");
+
+                                form._submit_function_ = form.submit;
+                                for (var i = 0; i < nominas.length; i++) {
+                                    var hiddenField = document.createElement("input");
+                                    hiddenField.setAttribute("type", "hidden");
+                                    hiddenField.setAttribute("name", "idNominas");
+                                    hiddenField.setAttribute("value", nominas[i]);
+                                    form.appendChild(hiddenField);
+                                }
+
+                                document.body.appendChild(form);
+                                form._submit_function_();
+                                var t = setTimeout(function() { btnDowRecibos.removeClass('disabled'); }, 5000);
+
+                            } else {
+                                utils.showMessage("WAR", "Debe seleccionar los registros.", 3000);
+                            }
+                        }
+                    },
+                    {
+                        className: 'btnRecibos',
+                        text: '<i class="fa fa-download fa-lg" aria-hidden="true"></i> Recibos 3.3',
+                        titleAttr: 'Descarga el recibo fiscal version 3.3 en pdf',
+                        action: function() {
+                            var btnDowRecibos = $('.btnRecibos');
+                            var selected = $("#table-proceso-nomina").find(".selected");
+                            var nominas = [];
+
+                            selected.each(function() {
+                                var id = parseInt($(this).data("id-nomina"));
+                                nominas.push(id);
+                            });
+
+
+                            if (nominas.length > 0) {
+                                btnDowRecibos.addClass('disabled');
+                                var form = document.createElement("form");
+                                form.setAttribute("method", "post");
+                                form.setAttribute("action", "/ProcesoNomina/GetRecibos33");
+
+                                form._submit_function_ = form.submit;
+                                for (var i = 0; i < nominas.length; i++) {
+                                    var hiddenField = document.createElement("input");
+                                    hiddenField.setAttribute("type", "hidden");
+                                    hiddenField.setAttribute("name", "idNominas");
+                                    hiddenField.setAttribute("value", nominas[i]);
+                                    form.appendChild(hiddenField);
+                                }
+
+                                document.body.appendChild(form);
+                                form._submit_function_();
+                                var t = setTimeout(function() { btnDowRecibos.removeClass('disabled'); }, 5000);
+
+                            } else {
+                                utils.showMessage("WAR", "Debe seleccionar los registros.", 3000);
+                            }
+                        }
+                    },
+                    {
+                        className: 'btnRecibosComple',
+                        text: '<i class="fa fa-download fa-lg" aria-hidden="true"></i> Recibos C',
+                        titleAttr: 'Descarga el recibo de complemento en pdf',
+                        action: function() {
+                            var btnDowRecibosComp = $('.btnRecibosComple');
+
+                            var selected = $("#table-proceso-nomina").find(".selected");
+                            var nominas = [];
+
+
+                            selected.each(function() {
+                                var id = parseInt($(this).data("id-nomina"));
+
+                                //var valor = $(this).find(':input[type=text]').val();
+
+                                //console.log(id);
+                                //console.log(valor);
+
+                                nominas.push(id);
+                            });
+
+
+                            if (nominas.length > 0) {
+                                btnDowRecibosComp.addClass('disabled');
+                                var form = document.createElement("form");
+                                form.setAttribute("method", "post");
+                                form.setAttribute("action", "/ProcesoNomina/GetRecibosComplemento");
+
+                                form._submit_function_ = form.submit;
+                                for (var i = 0; i < nominas.length; i++) {
+                                    var hiddenField = document.createElement("input");
+                                    hiddenField.setAttribute("type", "hidden");
+                                    hiddenField.setAttribute("name", "idNominas");
+                                    hiddenField.setAttribute("value", nominas[i]);
+                                    form.appendChild(hiddenField);
+                                }
+
+                                document.body.appendChild(form);
+                                form._submit_function_();
+                                t = setTimeout(function() { btnDowRecibosComp.removeClass('disabled'); }, 5000);
+
+                            } else {
+                                utils.showMessage("WAR", "Debe seleccionar los registros.", 3000);
+                            }
+
+
+                        },
+
+                    },
+                    {
+                        className: 'btnprocesado',
+                        text: '<i class="fa fa-cogs fa-lg" aria-hidden="true"></i> Procesar A',
+                        titleAttr: 'Ejecuta el procesado del aguinaldo.',
+                        action: function() {
+                            var btnProcesarN = $(this);
+
+                            var btnProcesar = $('.btnprocesado');
+                            var btnSummary = $('.btnsummary');
+
+                            var btnDowRecibos = $('.btnRecibos');
+                            var btnVerDetalle = $('.btnDetalles');
+                            var btnDowRecibosComp = $('.btnRecibosComple');
+
+                            var selected = $("#table-proceso-nomina").find(".selected");
+                            if (selected.length > 0) {
+                                utils.confirmDialog("¿DESEA CONTINUAR?",
+                                    "Se procesarán " + selected.length + " nóminas",
+                                    "CONFIRMAR",
+                                    "CANCELAR",
+                                    function(response) {
+                                        if (response) {
+                                            var empleados = [];
+                                            var faltas = [];
+                                            var gpensiona = [];
+
+                                            selected.each(function() {
+                                                var id = parseInt($(this).data("id-empleado"));
+
+                                                var valor = $(this).find(':input[type=text]').val();
+
+                                                var sino = $(this).find(':input[type=checkbox]:checked').is(":checked");
+
+                                                //console.log('1-' + $(this).find('input[type=checkbox]:checked').length);
+                                                //console.log('2-' + $(this).find(':input[type=checkbox]:checked').is(":checked"));
+                                                //console.log('3-' + $(this).find('input[type=checkbox]:checked').val());
+
+
+                                                empleados.push(id);
+                                                faltas.push(valor);
+                                                gpensiona.push(sino);
+
+                                            });
+
+                                            var request = $.ajax({
+                                                url: "/ProcesoNomina/ProcesarAguinaldo/",
+                                                method: "POST",
+                                                data: {
+                                                    empleados: empleados,
+                                                    faltas: faltas,
+                                                    generarPensionAlimenticia: gpensiona
+                                                },
+                                                beforeSend: function() {
+                                                    waitingDialog.show('Procesando...');
+                                                    btnProcesar.addClass('disabled');
+                                                    btnDowRecibos.addClass('disabled');
+                                                    btnDowRecibosComp.addClass('disabled');
+                                                    btnVerDetalle.addClass('disabled');
+                                                    $("#table-proceso-nomina")
+                                                        .switchClass("table-multiselect", "table-disabled");
+                                                    btnProcesar
+                                                        .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> PROCESANDO...");
+                                                    btnSummary
+                                                        .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> Summary...");
+                                                    btnProcesar
+                                                        .attr("title", "PROCESANDO SU AGUINALDO, POR FAVOR ESPERE...");
+                                                }
+                                            });
+                                            request.done(function(result) {
+                                                waitingDialog.hide();
+
+                                                if (result.nominas !== 0) {
+                                                    utils.showMessage("PROCESO COMPLETADO", result.status, 10000);
+                                                } else {
+                                                    utils.showMessage("Procesado", result.status, 10200, "danger");
+                                                }
+
+                                                btnProcesar.removeClass('disabled');
+                                                btnDowRecibos.removeClass('disabled');
+                                                btnDowRecibosComp.addClass('disabled');
+                                                btnVerDetalle.removeClass('disabled');
+                                                utils.LoadActivePage();
+                                            });
+                                        }
+                                    });
+                            } else {
+                                utils.showMessage("WAR", "Debe seleccionar los registros a procesar.", 8000);
+                            }
+                        },
+                        key: {
+
+                        }
+                    },
+                     {
+                         className: 'btnprocesadoA',
+                         text: '<i class="fa fa-cogs fa-lg" aria-hidden="true"></i> Procesar A con Anual',
+                         titleAttr: 'Ejecuta el procesado del aguinaldo.',
+                         action: function() {
+                             var btnProcesarN = $(this);
+
+                             var btnProcesar = $('.btnprocesadoA');
+                             var btnSummary = $('.btnsummary');
+
+                             var btnDowRecibos = $('.btnRecibos');
+                             var btnVerDetalle = $('.btnDetalles');
+                             var btnDowRecibosComp = $('.btnRecibosComple');
+
+                             var selected = $("#table-proceso-nomina").find(".selected");
+                             if (selected.length > 0) {
+                                 utils.confirmDialog("¿DESEA CONTINUAR?",
+                                     "Se procesarán " + selected.length + " nóminas",
+                                     "CONFIRMAR",
+                                     "CANCELAR",
+                                     function(response) {
+                                         if (response) {
+                                             var empleados = [];
+                                             var faltas = [];
+                                             var gpensiona = [];
+
+                                             selected.each(function() {
+                                                 var id = parseInt($(this).data("id-empleado"));
+
+                                                 var valor = $(this).find(':input[type=text]').val();
+
+                                                 var sino = $(this).find(':input[type=checkbox]:checked').is(":checked");
+
+                                                 //console.log('1-' + $(this).find('input[type=checkbox]:checked').length);
+                                                 //console.log('2-' + $(this).find(':input[type=checkbox]:checked').is(":checked"));
+                                                 //console.log('3-' + $(this).find('input[type=checkbox]:checked').val());
+
+
+                                                 empleados.push(id);
+                                                 faltas.push(valor);
+                                                 gpensiona.push(sino);
+
+                                             });
+
+                                             var request = $.ajax({
+                                                 url: "/ProcesoNomina/ProcesarAguinaldo/",
+                                                 method: "POST",
+                                                 data: {
+                                                     empleados: empleados,
+                                                     faltas: faltas,
+                                                     generarPensionAlimenticia: gpensiona,
+                                                     anual:true
+                                                 },
+                                                 beforeSend: function() {
+                                                     waitingDialog.show('Procesando...');
+                                                     btnProcesar.addClass('disabled');
+                                                     btnDowRecibos.addClass('disabled');
+                                                     btnDowRecibosComp.addClass('disabled');
+                                                     btnVerDetalle.addClass('disabled');
+                                                     $("#table-proceso-nomina")
+                                                         .switchClass("table-multiselect", "table-disabled");
+                                                     btnProcesar
+                                                         .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> PROCESANDO...");
+                                                     btnSummary
+                                                         .html("<span class='glyphicon glyphicon-hourglass fa-spin'></span> Summary...");
+                                                     btnProcesar
+                                                         .attr("title", "PROCESANDO SU AGUINALDO, POR FAVOR ESPERE...");
+                                                 }
+                                             });
+                                             request.done(function(result) {
+                                                 waitingDialog.hide();
+
+                                                 if (result.nominas !== 0) {
+                                                     utils.showMessage("PROCESO COMPLETADO", result.status, 10000);
+                                                 } else {
+                                                     utils.showMessage("Procesado", result.status, 10200, "danger");
+                                                 }
+
+                                                 btnProcesar.removeClass('disabled');
+                                                 btnDowRecibos.removeClass('disabled');
+                                                 btnDowRecibosComp.addClass('disabled');
+                                                 btnVerDetalle.removeClass('disabled');
+                                                 utils.LoadActivePage();
+                                             });
+                                         }
+                                     });
+                             } else {
+                                 utils.showMessage("WAR", "Debe seleccionar los registros a procesar.", 8000);
+                             }
+                         },
+                         key: {
+
+                         }
+                     },
+                    {
+                        className: 'btnReporteExcel',
+                        text: '<i class="fa fa-file-excel-o fa-lg" aria-hidden="true"></i> Reporte',
+                        titleAttr: 'Descarga el reporte en Excel',
+                        action: function() {
+
+                            var request = $.ajax({
+                                url: "/ProcesoNomina/ReporteAguinaldos/",
+                                contentType: 'application/json; charset=utf-8',
+                                datatype: 'json',
+                                method: "POST",
+
+                                beforeSend: function() {
+                                    waitingDialog.show('Generando Reporte Aguinaldo......');
+
+                                }
+                            });
+                            request.done(function(data) {
+                                waitingDialog.hide();
+                                //utils.loadMainPage("Incidencias", "Index", "#main-content", "false", null);
+                                window.location = "/ProcesoNomina/descargarPlantilla?ruta=" + data;
+                            });
+                        }
+                    },
+                    {
+                        className: 'btnsummary',
+                        text: textSum,
+                        action: function() {
+                            var modalSummary = $("#summaryModal");
+                            modalSummary.modal();
+                        },
+                        key: { key: 's' }
+                    }
+                ]
+
+
+            });
+            //--> fin datatable
+
+            $(".faltasC").keyup(function(e) {
+
+                if (e.which == 13 || e.which == 40) {
+
+                    var indexAct = $(this).data("index-faltas");
+                    var iid = parseInt(indexAct);
+                    var idnuevo = iid + 1;
+                    var inputNex = "#f" + idnuevo;
+                    $(inputNex).focus();
+                    $(inputNex).select();
+
+                } else if (e.which == 38) {
+
+                    var indexAct = $(this).data("index-faltas");
+                    var iid = parseInt(indexAct);
+                    var idnuevo = iid - 1;
+                    var inputNex = "#f" + idnuevo;
+
+                    $(inputNex).focus();
+                    $(inputNex).select();
+
+                }
+
+
+            });
+            //--> fin funcion faltas personalizadas
+
+            $("#selectAllpa").change(function() { //"select all" change
+                var status = this.checked; // "select all" checked status
+
+                console.log(status);
+
+                $('#table-proceso-nomina tbody tr').each(function() {
+
+                    $(this).find("input[type=checkbox]").attr("checked", status);
+                    //$(this).find("input[type=checkbox]").val(1);
+                    //$(this).find(".cbxPaClass").attr("checked", status);
+
+                });
+            });
+
+
+            $('.cbxPaClass').click(function() {
+
+                if ($(this).val() == 1) {
+                    $(this).attr('checked', false);
+                    $(this).val(0);
+                } else {
+                    $(this).attr('checked', true);
+                    $(this).val(1);
+                }
+
+            });
+
+
+            //--> fin ready
+        });
+    </script>
+}
+else
+{
+    <div>
+        <div class="alert alert-warning">
+            <h4> <strong>Info!</strong> No se encontrarón registros para procesar. <span class="label label-default"></span></h4>
+        </div>
+    </div>
+}

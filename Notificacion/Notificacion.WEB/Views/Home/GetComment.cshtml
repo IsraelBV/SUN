@@ -1,0 +1,14 @@
+﻿@using Notificacion.BLL;
+@using SYA.BLL;
+@model ComentariosDatos
+
+<div class="comment">
+    <div class="comment-header">
+        <img src="@ControlUsuario.GetProfilePictureOfUser(Model.IdUsuario)" class="circle" />
+        <span class="username"><b>@Model.Usuario</b></span>
+        <span class="comment-date">Justo ahora</span>
+    </div>
+    <div class="comment-body">
+        <p>@Model.Comentario</p>
+    </div>
+</div>

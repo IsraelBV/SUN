@@ -1,0 +1,33 @@
+﻿
+@using RH.Entidades
+
+@model List<C_TiposInasistencia>
+
+
+<table id="incidencias" class="table table-striped" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Clave</th>
+            <th>Descripción</th>
+            <th>Tipo de Pago</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in Model)
+        {
+            <tr>
+                <td>@i.Clave  </td>
+                <td>@i.Descripcion</td>
+                @if (i.TipoPago == 1)
+                {
+                    <td>Día</td>
+                }else
+                {
+                    <td>Horas</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+

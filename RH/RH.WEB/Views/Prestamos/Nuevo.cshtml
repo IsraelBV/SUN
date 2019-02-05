@@ -1,0 +1,123 @@
+﻿@using RH.BLL;
+@using Common.Helpers;
+@model RH.Entidades.Prestamos
+@{
+    ViewBag.Title = "Préstamos";
+    ViewBag.EXTRA = "Nuevo";
+    Layout = "~/Views/Shared/_MenuSecundario.cshtml";
+    DatosEmpleado empleado = ViewBag.Empleado;
+}
+
+<!-- CSS para el tooltip validator -->
+<link rel="stylesheet" href="~/Content/validator/TooltipValidator.css" />
+
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">Datos del Empleado</div>
+        <ul class="list-group">
+            <li class="list-group-item">Clave <span class="pull-right"><b>@empleado.IdEmpleado</b></span> </li>
+            <li class="list-group-item">Nombre <span class="pull-right"><b>@empleado.Nombres @empleado.Paterno @empleado.Materno</b></span></li>
+            <li class="hide" id="tipo-nomina">@empleado.TipoNomina</li>
+            <li class="list-group-item">Tipo de Nómina <span class="pull-right"><b>@NominasHelpers.TipoNomina((int)empleado.TipoNomina)</b></span></li>
+            <li class="list-group-item">Fecha de Alta <span class="pull-right"><b>@empleado.FechaAlta.ToString("dd/MM/yyyy")</b></span></li>
+        </ul>
+    </div>
+</div>
+<div class="col-md-8">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Nuevo Préstamo</div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Create", "Prestamos", FormMethod.Post, new { @class = "form-horizontal tooltipForm" }))
+            {
+                <input type="hidden" value="@empleado.IdContrato" name="IdEmpleadoContrato" />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="tipo" class="control-label col-md-3">Tipo de Préstamo</label>
+                        <div class="col-md-8">
+                            <select name="TipoPrestamo" id="TipoPrestamo" class="form-control">
+                                <option value="1">Axedes</option>
+                                <option value="2">Alianza</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="monto" class="control-label col-md-3"><span style="color:red">*</span> Monto</label>
+                        <div class="col-md-8">
+                            <input type="number" step="any" class="form-control" id="Monto" name="Monto" data-rule-required="true" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="parcialidades" class="control-label col-md-3"><span style="color:red">*</span> Parcialidades (mensuales)</label>
+                        <div class="col-md-8">
+                            <input type="number" name="Parcialidades" id="Parcialidades" class="form-control" data-rule-required="true" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row hide" id="frm-group-interes">
+                    <div class="form-group">
+                        <label for="interes" class="control-label col-md-3">Interés</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="number" step="any" name="interes" id="interes" class="form-control" />
+                                <span class="input-group-addon">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="descuento" class="control-label col-md-3"><span style="color:red">*</span> Descuento (Mensual)</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="number" step="any" name="CantidadDescuento" id="CantidadDescuento" class="form-control" data-rule-required="true" />
+                                <span class="input-group-addon">$</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="a-pagar" class="control-label col-md-3"><span style="color:red">*</span> Total a pagar</label>
+                        <div class="col-md-8">
+                            <input type="number" step="any" class="form-control" id="MontoInteres" name="MontoInteres" data-rule-required="true" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="fecha_inicio" class="control-label col-md-3"><span style="color:red">*</span> Fecha de Inicio</label>
+                        <div class="col-md-8">
+                            <input type="date" name="FechaInicio" id="FechaInicio" class="form-control"
+                                   data-rule-required="true"
+                                   data-rule-date="true" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-primary pull-right" id="btnSave">Guardar</button> <a class="btn btn-danger cancel" href="/Prestamos/Index?id=@empleado.IdEmpleado">Volver</a>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/Prestamos/Nuevo.js"></script>
+
+<!-- Scripts para el validador -->
+<script src="~/Scripts/validator/jquery.validate.1.15.js"></script>
+<script src="~/Scripts/validator/messages_es.js"></script>
+<script src="~/Scripts/validator/TooltipValidator.js"></script>
+
+

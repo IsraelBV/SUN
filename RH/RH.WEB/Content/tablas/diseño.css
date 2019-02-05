@@ -1,0 +1,30 @@
+﻿/*Diseño tablas Hover - Separadores - Stripe*/
+.table-striped>tbody>tr:nth-of-type(odd){
+    background: rgba(195, 211, 229, .2);
+}
+
+.table>tbody>tr:hover{
+     background: rgba(195, 211, 229, .5);
+}
+
+.table>thead>tr>th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #8EA0A9;
+}
+
+.table>tbody>tr>td{
+    border-top: 1px solid #B1B7BA;
+}
+
+/*Footer panel Permisos*/
+.panel-footer{
+    background-color:#DADADA;
+}
+
+#divDep{
+    margin-left:5%;
+}
+
+#divPuesto{
+    margin-left:5%;
+}

@@ -1,0 +1,177 @@
+﻿@model RH.Entidades.Empleado
+
+@using (Ajax.BeginForm("UpdateEmpleado", "Empleados", new AjaxOptions { OnBegin = "OnBegin", OnSuccess = "OnSuccess", OnFailure = "OnFailure", OnComplete = "UpdateSection1" }, new { @class = "tooltipForm form-horizontal", id = "form-empleado" }))
+{
+    <div class="row">
+        <input type="hidden" value="@(Model.Status == true ?"true":"false" )" name="Status" id="Status" />
+        <div class="col-md-11 col-md-offset-1">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="Nombres" class="control-label"><span style="color:#ff0000">*</span> Nombre/s</label>
+                    <input type="text" class="form-control form-disabled input-sm" name="Nombres" id="Nombres" value="@Model.Nombres"
+                           data-rule-required="true"
+                           data-rule-maxlength="50" />
+                </div>
+            </div>
+            <div class="col-md-3 col-md-offset-1">
+                <div class="form-group">
+                    <label for="paterno" class="control-label"><span style="color:#ff0000">*</span> Apellido Paterno</label>
+                    <input type="text" class="form-control form-disabled input-sm" name="APaterno" id="APaterno" value="@Model.APaterno"
+                           data-rule-required="true"
+                           data-rule-maxlength="50" />
+                </div>
+            </div>
+            <div class="col-md-3 col-md-offset-1">
+                <div class="form-group">
+                    <label for="materno" class="control-label"><span style="color:#ff0000">*</span> Apellido Materno</label>
+                    <input type="text" class="form-control form-disabled input-sm" style="text-transform:uppercase" name="AMaterno" id="AMaterno" value="@Model.AMaterno"
+                           data-rule-required="true"
+                           data-rule-maxlength="50" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-11 col-md-offset-1">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="FechaNacimiento" class="control-label"><span style="color:#ff0000">*</span> Fecha Nacimiento</label>
+                    <input type="date" class="form-control form-disabled input-sm" name="FechaNacimiento" value="@Model.FechaNacimiento.ToString("yyyy-MM-dd")"
+                           data-rule-required="true"
+                           data-rule-date="true" />
+                </div>
+            </div>
+            <div class="col-md-3 col-md-offset-1">
+                <div class="form-group">
+                    <label for="rfc" class="control-label"><span style="color:#ff0000">*</span> RFC</label>
+                    <input type="text" class="form-control form-disabled input-sm" style="text-transform:uppercase" name="RFC" value="@Model.RFC"
+                           data-rule-required="true"
+                           data-rule-RFC="true"
+                           data-msg-RFC="¡Por favor ingresa un RFC válido!" />
+                </div>
+            </div>
+            <div class="col-md-3 col-md-offset-1">
+                <div class="form-group">
+                    <label for="curp" class="control-label"><span style="color:#ff0000">*</span> CURP</label>
+                    <input type="text" class="form-control form-disabled input-sm" style="text-transform:uppercase" name="CURP" value="@Model.CURP"
+                           data-rule-required="true"
+                           data-rule-CURP="true"
+                           data-msg-CURP="¡Por favor ingresa una CURP válida!" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-11 col-md-offset-1">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="Sexo" class="control-label"><span style="color:#ff0000">*</span> Género</label>
+                    <select name="Sexo" class="form-control input-sm form-disabled">
+                        @{ var select = Model.Sexo == "H" ? "selected" : ""; }
+                        <option @select value="H">Hombre</option>
+                        @{ select = Model.Sexo == "M" ? "selected" : "";}
+                        <option @select value="M">Mujer</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 col-md-offset-1">
+                <div class="form-group">
+                    <label for="nss" class="control-label">NSS</label>
+                    <input type="text" class="form-control form-disabled input-sm" name="NSS" value="@Model.NSS"
+                           data-rule-digits="true"
+                           data-rule-maxlength="11"
+                           data-rule-minlength="11" />
+                </div>
+            </div>
+            <div class="col-md-3 col-md-offset-1">
+                <div class="form-group">
+                    <label for="FONACOT" class="control-label">FONACOT</label>
+                    <input type="text" class="form-control form-disabled input-sm" name="FONACOT" value="@Model.FONACOT"
+                           data-rule-digits="true"
+                           data-rule-maxlength="20"
+                           data-rule-minlength="1" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-11 col-md-offset-1">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="telefono" class="control-label">Teléfono</label>
+                    <input type="text" class="form-control form-disabled input-sm" name="Telefono" value="@Model.Telefono"
+                           data-rule-digits="true"
+                           data-rule-maxlength="10"
+                           data-rule-minlength="10" />
+                </div>
+            </div>
+            <div class="col-md-2 col-md-offset-1">
+                <div class="form-group">
+                    <label for="celular" class="control-label">Celular</label>
+                    <input type="text" class="form-control form-disabled input-sm" name="Celular" value="@Model.Celular"
+                           data-rule-digits="true"
+                           data-rule-maxlength="10"
+                           data-rule-minlength="10" />
+                </div>
+            </div>
+            <div class="col-md-5 col-md-offset-1">
+                <div class="form-group">
+                    <label for="email" class="control-label">Correo</label>
+                    <input type="email" class="form-control form-disabled input-sm" style="text-transform:uppercase" name="Email" value="@Model.Email"
+                           data-rule-email="true"
+                           data-rule-maxlength="50" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-11 col-md-offset-1">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="nacionalidad" class="control-label"><span style="color:#ff0000">*</span> Nacionalidad</label>
+                    <input type="text" name="Nacionalidad" class="form-control form-disabled input-sm" value="@Model.Nacionalidad"
+                           data-rule-required="true"
+                           data-rule-maxlength="50" />
+                </div>
+            </div>
+            <div class="col-md-3 col-md-offset-1">
+                <div class="form-group">
+                    <label for="estado" class="control-label"><span style="color:#ff0000">*</span> Estado</label>
+                    <input type="text" name="Estado" class="form-control form-disabled input-sm" style="text-transform:uppercase" value="@Model.Estado"
+                           data-rule-required="true"
+                           data-rule-maxlength="50" />
+                </div>
+            </div>
+            <div class="col-md-2 col-md-offset-1">
+                <div class="form-group">
+                    <label for="EstadoCivil" class="control-label"><span style="color:#ff0000">*</span> Estado Civil</label>
+                    <select name="EstadoCivil" class="form-control form-disabled input-sm">
+                        @{
+                            string[] edocivil = { "Soltero/a", "Casado/a", "Divorciado/a", "Viudo/a" };
+                        }
+                        @foreach (var item in edocivil)
+                        {
+                    var selected = Model.EstadoCivil == item ? "selected" : "";
+                            <option @selected>@item</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-11 col-md-offset-1">
+            <div class="col-md-11">
+                <div class="form-group">
+                    <label for="direccion" class="control-label"><span style="color:#ff0000">*</span> Dirección</label>
+                    <input type="text" class="form-control form-disabled input-sm" style="text-transform:uppercase" name="Direccion" value="@Model.Direccion"
+                           data-rule-required="true"
+                           data-rule-maxlength="150" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="hidden"></button>
+    <input type="hidden" value="@Model.IdEmpleado" name="IdEmpleado" />
+    
+}
