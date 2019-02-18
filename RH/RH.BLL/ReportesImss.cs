@@ -402,7 +402,7 @@ namespace RH.BLL
                 listaPeriodos = (from p in context.NOM_PeriodosPago
                                  where DbFunctions.TruncateTime(p.Fecha_Fin) >= DbFunctions.TruncateTime(fecI) && DbFunctions.TruncateTime(p.Fecha_Fin) <= DbFunctions.TruncateTime(fecF)
                                        && p.Autorizado == true
-                                       && (p.IdTipoNomina < 16 && p.IdTipoNomina != 11) //Nominas - Asimilados
+                                       && (p.IdTipoNomina <= 16 && p.IdTipoNomina != 11) //Nominas - Asimilados
                                                                                         //&& (p.IdTipoNomina <= 16) //Nominas - Asimilados - finiquitos
                                        && p.SoloComplemento == false //Que no sean solo complemento
                                  select p).ToList();
