@@ -80,6 +80,7 @@ namespace Nomina.Procesador
         {
             List<NotificationSummary> summaryList = new List<NotificationSummary>();
             bool esFiniquito = false;
+            bool esIndemnizacion = false;
 
             //Lista de Datos de la nomina
             List<NominaData> listaDatosNomina = new List<NominaData>();
@@ -87,6 +88,14 @@ namespace Nomina.Procesador
             //obtiene los datos de las nominas y empleados
             if (ppago.IdTipoNomina == 11)//finiquito
             {
+                // se usa para saber si es indemnizacion 
+                using (var context = new RHEntities())
+                {
+                    // variable usada para la exprecion la linq ya que no acepta arrays se asigna a una variable independiente
+                    var idFiniquitoRespaldo = nominasSeleccionadas[0];
+                    esIndemnizacion = context.NOM_Finiquito.Where(x => x.IdFiniquito == idFiniquitoRespaldo).Select(x => x.EsLiquidacion).FirstOrDefault();
+                }
+
                 esFiniquito = true;
                 var itemData = _dao.GetDatosFiniquito(ppago.IdEjercicio, ppago.IdPeriodoPago, nominasSeleccionadas[0], ref summaryList);
 
@@ -215,10 +224,43 @@ namespace Nomina.Procesador
                     }
 
 
+
+                    if (esIndemnizacion)
+                    {
+                        // variable que mantiene el valor de totalOtrosPagos para 
+                        var keepTotalOtrosPagos = itemData.TotalOtrosPagos;
+                        // se asigna cero a total otros pagos ya que por ser indemnizacion no tiene subsidio
+                        itemData.TotalOtrosPagos = 0;
+
+                        var registroIndemnizacion = CrearXmlConSelloYSinTimbre3312_v2(ref resultMesg, itemData, ppago, idUsuario,
+                            esFiniquito, esIndemnizacion, itemCliente,
+                            listaEmpresas,
+                            listaEmpleados,
+                            listaPercepciones.Where(x => x.IdConcepto == 17 || x.IdConcepto == 20).ToList(),
+                            listaDeducciones.Where(x => x.IsLiquidacion == true).ToList(),
+                            new List<ConceptosNomina>(),
+                            listaIncapacidadesGeneral,
+                            transformador,
+                            archivoCer,
+                            archivoKey,
+                            strPasswordEmisor, fromModuloProcesar
+                        );
+
+                        // se asigna de nuevo el valor original de Totaolotrospagos
+                        itemData.TotalOtrosPagos = keepTotalOtrosPagos;
+
+                        listaXmlGenerados.Add(registroIndemnizacion);
+
+                        itemData.TotalOtrosPagos = keepTotalOtrosPagos;
+
+                        listaPercepciones = listaPercepciones.Where(x => x.IdConcepto != 17 && x.IdConcepto != 20).ToList();
+                        listaDeducciones = listaDeducciones.Where(x => x.IsLiquidacion == false).ToList();
+                    }
+
                     //Crea el xml 3.3
                     //Debug.WriteLine($"{cont} {strIni} data: {itemData.IdNomina}  {DateTime.Now}");
                     var registro = CrearXmlConSelloYSinTimbre3312_v2(ref resultMesg, itemData, ppago, idUsuario,
-                        esFiniquito, itemCliente,
+                        esFiniquito, false, itemCliente,
                         listaEmpresas,
                         listaEmpleados,
                         listaPercepciones,
@@ -241,6 +283,7 @@ namespace Nomina.Procesador
                         listaXmlGenerados.Add(registro);
 
                     }
+                    
                 }
                 catch (Exception e)
                 {
@@ -481,7 +524,7 @@ namespace Nomina.Procesador
         /// <param name="isFiniquito"></param>
         /// <param name="fromModuloProcesar"></param>
         /// <returns></returns>
-        private NOM_CFDI_Timbrado CrearXmlConSelloYSinTimbre3312_v2(ref List<NotificationSummary> summaryList, NominaData datosNomina, NOM_PeriodosPago periodoPago, int idUsuario, bool isFiniquito,
+        private NOM_CFDI_Timbrado CrearXmlConSelloYSinTimbre3312_v2(ref List<NotificationSummary> summaryList, NominaData datosNomina, NOM_PeriodosPago periodoPago, int idUsuario, bool isFiniquito, bool isIndemnizacion,
             Cliente itemCliente,
             List<Empresa> listaEmpresas,
             List<Empleado> listaEmpleados,
@@ -565,8 +608,8 @@ namespace Nomina.Procesador
                     ? listaIncapacidadesGeneral.Where(x => x.IdFiniquito == datosNomina.IdFiniquito).ToList()
                     : listaIncapacidadesGeneral.Where(x => x.IdNomina == datosNomina.IdNomina).ToList();
 
-
-                var itemIndemnizacion = isFiniquito ? _dao.GetDatosIndemnizacionByIdFiniquito(datosNomina.IdFiniquito) : null;//pendiente
+                //se agrega la validacion de si es indemnizacion para poder dividir el cfdi y aparesca el nodo Separacion indemnizacion en Ceros cuando se arme el cfdi de finiquito
+                var itemIndemnizacion = isFiniquito && isIndemnizacion? _dao.GetDatosIndemnizacionByIdFiniquito(datosNomina.IdFiniquito) : null;//pendiente
 
                 if (listaPercepcionesDeLaNomina.Count <= 0 && listaDeduccionesDeLaNomina.Count <= 0 && listaOtrosPagosDeLaNomina.Count <= 0)
                 {
@@ -771,6 +814,7 @@ namespace Nomina.Procesador
 
 
                 #region COMPLEMENTO DE NOMINA 1.2 en 3.3
+                
 
                 var nomina12 = ComplementoDeNomina12_v2(datosNomina, periodoPago, emisorDatos, datosReceptor, listaPercepcionesDeLaNomina, listaDeduccionesDeLaNomina, listaOtrosPagosDeLaNomina, itemIndemnizacion, itemCliente, listaIncapacidades);
 

@@ -188,27 +188,40 @@ namespace Nomina.BLL
             {
                 using (var context = new RHEntities())
                 {
-                    
-              
-                listaTimbrados = (from t in context.NOM_CFDI_Timbrado
-                                  where
-                                  arrayIds.Contains(t.IdNomina) && t.IdSucursal == idSucusal && t.IdEjercicio == idEjercicio &&
-                                  t.IdPeriodo == pp.IdPeriodoPago && t.Cancelado == false && t.IsPrueba == false && t.ErrorTimbrado == false &&
-                                  t.IdPeriodo == pp.IdPeriodoPago && t.FolioFiscalUUID != null
-                                  select t.IdNomina).ToArray();
+                    listaTimbrados = (from 
+                                        t in context.NOM_CFDI_Timbrado
+                                      where
+                                          arrayIds.Contains(t.IdNomina) && 
+                                          t.IdSucursal == idSucusal && 
+                                          t.IdEjercicio == idEjercicio &&
+                                          t.IdPeriodo == pp.IdPeriodoPago && 
+                                          t.Cancelado == false && 
+                                          t.IsPrueba == false && 
+                                          t.ErrorTimbrado == false &&
+                                          t.IdPeriodo == pp.IdPeriodoPago && 
+                                          t.FolioFiscalUUID != null
+                                      select 
+                                        t.IdNomina).ToArray();
                 }
             }
             else if (pp.IdTipoNomina == 11) //finiquito
             {
                 using (var context = new RHEntities())
                 {
-                    listaTimbrados = (from t in context.NOM_CFDI_Timbrado
-                        where
-                        arrayIds.Contains(t.IdFiniquito) && t.IdSucursal == idSucusal && t.IdEjercicio == idEjercicio &&
-                        t.IdPeriodo == pp.IdPeriodoPago && t.Cancelado == false && t.IsPrueba == false &&
-                        t.ErrorTimbrado == false &&
-                        t.IdPeriodo == pp.IdPeriodoPago && t.FolioFiscalUUID != null
-                        select t.IdFiniquito).ToArray();
+                    listaTimbrados = (from 
+                                      t in context.NOM_CFDI_Timbrado
+                                    where
+                                        arrayIds.Contains(t.IdFiniquito) && 
+                                        t.IdSucursal == idSucusal && 
+                                        t.IdEjercicio == idEjercicio &&
+                                        t.IdPeriodo == pp.IdPeriodoPago && 
+                                        t.Cancelado == false && 
+                                        t.IsPrueba == false &&
+                                        t.ErrorTimbrado == false &&
+                                        t.IdPeriodo == pp.IdPeriodoPago && 
+                                        t.FolioFiscalUUID != null
+                                    select 
+                                        t.IdFiniquito).ToArray();
                 }
 
             }

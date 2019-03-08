@@ -82,6 +82,7 @@ namespace Nomina.Procesador.Metodos
 
             //usado para el calculo del isr de la nomina - 2 metodo nomina - son 2 porque ultimo se fuerza a que sea la tabla mensual
             //usando para el calculo isr del asimilado - 1
+
         public static TotalIsrSubsidio CalculoDeIsr(NOM_Nomina nomina, decimal salarioBase, int tipoNomina, int diasPeriodo, bool anualOK, int eje, decimal exento)
         {
 
@@ -350,6 +351,7 @@ namespace Nomina.Procesador.Metodos
 
             return item;
         }
+
         public static IsrSubsidio CalculoIsrSubsidioAnual( decimal baseGravable)
         {
             int tipoTarifa = 365;
@@ -534,6 +536,7 @@ namespace Nomina.Procesador.Metodos
 
             return item;
         }
+
         public static IsrSubsidio CalculoIsrSubsidio304especial(int Dias_Laborados, decimal baseGravable, decimal SD, int diasPeriodo, int tipoTarifa, bool incluirTablas = false)
         {
 
@@ -792,6 +795,7 @@ namespace Nomina.Procesador.Metodos
 
             return item;
         }
+
         public static int GetInasistenciasByIdEmpleado(int idEmpleado)
         {
             return 0; //idEmpleado <= 0 ? 0 : _rhDao.GetInasistenciasByIdEmpleado(idEmpleado);
@@ -971,6 +975,7 @@ namespace Nomina.Procesador.Metodos
             }
             return item;
         }
+
         public static CalculoAnual GetCalculoAnual(int idEmpleado, int idEjercicio, int? idempresa, decimal baseg, decimal isr, decimal sub, decimal exento)
         {
             decimal resultadoA = 0;

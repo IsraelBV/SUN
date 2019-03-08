@@ -93,6 +93,7 @@ namespace RH.Entidades
         public decimal SubsidioCausado { get; set; }
         public decimal SubsidioEntregado { get; set; }
         public string XMLSinTimbre { get; set; }
+        public string XMLIndemnizacionSinTimbre { get; set; }
         public decimal UMA { get; set; }
         public bool EsLiquidacion { get; set; }
         public decimal DescuentosAplicados { get; set; }

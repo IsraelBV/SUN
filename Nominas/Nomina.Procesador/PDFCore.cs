@@ -373,8 +373,9 @@ namespace Nomina.Procesador
                 //Crea directorio, o si ya existe elimina el contenido
                 var pathUsuario = Utils.ValidarFolderUsuario(idUsuario, pathFolder);
                 _pathUsuario = pathUsuario;
-                //
                 var itemFiniquito = _nominasDao.GetFiniquitoById(idFiniquito);
+
+                
 
                 // GET - Datos del periodo y Metodos de pago
                 using (var context = new RHEntities())
@@ -400,26 +401,33 @@ namespace Nomina.Procesador
                 doc.Open();
 
                 //Se crea un solo archivo pdf con varias hojas
-
-                if (itemFiniquito.XMLSinTimbre != null)
-                {
-                    if (isCfdi33)
+                ////se agrego un foreach por la divicion de finiquito e indemnizacion
+                //foreach (var itemcfdi in ListaFiniquito)
+                //{                
+                    if (itemFiniquito.XMLSinTimbre != null)
                     {
-                        AddReciboPdf33(ref doc, itemFiniquito.XMLSinTimbre, periodoDatos, listaTipoJornada, listaRegimenFiscal, listaIncapacidadSats, itemFiniquito.IdFiniquito);
+                        if (isCfdi33)
+                        {
+                            AddReciboPdf33(ref doc, itemFiniquito.XMLSinTimbre, periodoDatos, listaTipoJornada, listaRegimenFiscal, listaIncapacidadSats, itemFiniquito.IdFiniquito);
+                            if (itemFiniquito.EsLiquidacion)
+                            {
+                                AddReciboPdf33(ref doc, itemFiniquito.XMLIndemnizacionSinTimbre, periodoDatos, listaTipoJornada, listaRegimenFiscal, listaIncapacidadSats, itemFiniquito.IdFiniquito);
+                            }
+                        }
+                        else
+                        {
+                            AddReciboPdf(ref doc, itemFiniquito.XMLSinTimbre, periodoDatos, listaMetodosPagos, itemFiniquito.IdFiniquito);
+                        }
+
+                        cont++;
                     }
                     else
                     {
-                        AddReciboPdf(ref doc, itemFiniquito.XMLSinTimbre, periodoDatos, listaMetodosPagos, itemFiniquito.IdFiniquito);
+                        var itemX = $"No se encontró xml para generar el recibo Finiquito ID: {itemFiniquito.IdFiniquito} Total Nomina: {itemFiniquito.TOTAL_total} Periodo: {itemFiniquito.IdPeriodo}";
+
+                        listaItemSinXML.Add(itemX);
                     }
-
-                    cont++;
-                }
-                else
-                {
-                    var itemX = $"No se encontró xml para generar el recibo Finiquito ID: {itemFiniquito.IdFiniquito} Total Nomina: {itemFiniquito.TOTAL_total} Periodo: {itemFiniquito.IdPeriodo}";
-
-                    listaItemSinXML.Add(itemX);
-                }
+                //}
 
 
                 if (cont == 0)

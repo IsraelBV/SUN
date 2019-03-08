@@ -112,11 +112,11 @@ namespace RH.Entidades
         public virtual DbSet<NOM_CalculoAnual> NOM_CalculoAnual { get; set; }
         public virtual DbSet<NOM_AplicacionSaldo> NOM_AplicacionSaldo { get; set; }
         public virtual DbSet<NOM_PeriodosPago> NOM_PeriodosPago { get; set; }
-        public virtual DbSet<NOM_Finiquito> NOM_Finiquito { get; set; }
         public virtual DbSet<NOM_Finiquito_Complemento> NOM_Finiquito_Complemento { get; set; }
         public virtual DbSet<DatosBancarios> DatosBancarios { get; set; }
         public virtual DbSet<Empleado> Empleado { get; set; }
         public virtual DbSet<Empleado_Contrato> Empleado_Contrato { get; set; }
+        public virtual DbSet<NOM_Finiquito> NOM_Finiquito { get; set; }
     
         public virtual ObjectResult<Nullable<decimal>> sp_c_GetTotalGravablebyEmpleado(Nullable<int> idEmpleado, Nullable<int> idEjercicio)
         {

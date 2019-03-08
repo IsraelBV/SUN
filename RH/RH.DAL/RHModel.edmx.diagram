@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6100d50d0110499bb5104c03b411e05d" Name="Diagram1" ZoomLevel="68">
+      <Diagram DiagramId="6100d50d0110499bb5104c03b411e05d" Name="Diagram1" ZoomLevel="78">
         <EntityTypeShape EntityType="SUNRHModel.Notificacion_Departamento" Width="1.5" PointX="8.75" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="SUNRHModel.SYA_Aplicaciones" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
         <EntityTypeShape EntityType="SUNRHModel.SYA_Departamentos" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
@@ -90,11 +90,11 @@
         <EntityTypeShape EntityType="SUNRHModel.NOM_CalculoAnual" Width="1.5" PointX="18.375" PointY="23.75" />
         <EntityTypeShape EntityType="SUNRHModel.NOM_AplicacionSaldo" Width="1.5" PointX="24.375" PointY="31.75" />
         <EntityTypeShape EntityType="SUNRHModel.NOM_PeriodosPago" Width="1.5" PointX="13.375" PointY="0.75" />
-        <EntityTypeShape EntityType="SUNRHModel.NOM_Finiquito" Width="1.5" PointX="15.375" PointY="23.75" />
-        <EntityTypeShape EntityType="SUNRHModel.NOM_Finiquito_Complemento" Width="1.5" PointX="17.375" PointY="28.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Finiquito_Complemento" Width="1.75" PointX="17.375" PointY="28.75" />
         <EntityTypeShape EntityType="SUNRHModel.DatosBancarios" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="SUNRHModel.Empleado" Width="1.5" PointX="0.75" PointY="28.75" />
         <EntityTypeShape EntityType="SUNRHModel.Empleado_Contrato" Width="1.5" PointX="31.75" PointY="26.75" />
+        <EntityTypeShape EntityType="SUNRHModel.NOM_Finiquito" Width="1.5" PointX="22.375" PointY="28.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

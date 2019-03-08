@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -1360,8 +1360,11 @@ namespace Nomina.Procesador.Datos
                             Gravado = fd.GravadoISR,
                             Excento = fd.ExentoISR,
                             ClaveSat = c.Clave,
-                            IdFiniquito = fd.IdFiniquito,
-                            IdNomina = 0
+                            IdTipoOtroPago = c.IdTipoOtroPago,
+                            ClaveContable = c.Cuenta_Acredora,
+                            ClaveOtroPago = c.Clave,
+                            IdNomina = 0,
+                            IdFiniquito = fd.IdFiniquito
                         }).ToList();
                     // se asigna el id del finiquito a una variable ya que no se ouede utilizar el array en linq
                     var idFiniquito = arraynominas[0];
@@ -1513,11 +1516,24 @@ namespace Nomina.Procesador.Datos
             {
                 if (esFiniquito)
                 {
-                    foreach (var item in listaXmlGenerados)
+                    var idXmlgenerado = listaXmlGenerados[0].IdFiniquito;
+                    //foreach (var item in listaXmlGenerados)
+                    //{
+                    var reg = context.NOM_Finiquito.FirstOrDefault(x => x.IdFiniquito == idXmlgenerado);
+                    if (reg != null)
                     {
-                        var reg = context.NOM_Finiquito.FirstOrDefault(x => x.IdFiniquito == item.IdFiniquito);
-                        if (reg != null) reg.XMLSinTimbre = item.XMLSinTimbre;
+                        if (reg.EsLiquidacion == true)
+                        {
+                            reg.XMLIndemnizacionSinTimbre = listaXmlGenerados[0].XMLSinTimbre;
+                            reg.XMLSinTimbre = listaXmlGenerados[1].XMLSinTimbre;
+                        }
+                        else
+                        {
+                            reg.XMLSinTimbre = listaXmlGenerados[0].XMLSinTimbre;                            
+                        }
                     }
+                    //}
+
                     r = context.SaveChanges();
                 }
                 else

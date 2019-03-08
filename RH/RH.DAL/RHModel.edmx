@@ -873,6 +873,7 @@
           <Property Name="SubsidioCausado" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SubsidioEntregado" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="XMLSinTimbre" Type="varchar(max)" />
+          <Property Name="XMLIndemnizacionSinTimbre" Type="varchar(max)" />
           <Property Name="UMA" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="EsLiquidacion" Type="bit" Nullable="false" />
           <Property Name="DescuentosAplicados" Type="decimal" Precision="18" Scale="2" Nullable="false" />
@@ -1582,11 +1583,11 @@
           <EntitySet Name="NOM_CalculoAnual" EntityType="SUNRHModel.NOM_CalculoAnual" />
           <EntitySet Name="NOM_AplicacionSaldo" EntityType="SUNRHModel.NOM_AplicacionSaldo" />
           <EntitySet Name="NOM_PeriodosPago" EntityType="SUNRHModel.NOM_PeriodosPago" />
-          <EntitySet Name="NOM_Finiquito" EntityType="SUNRHModel.NOM_Finiquito" />
           <EntitySet Name="NOM_Finiquito_Complemento" EntityType="SUNRHModel.NOM_Finiquito_Complemento" />
           <EntitySet Name="DatosBancarios" EntityType="SUNRHModel.DatosBancarios" />
           <EntitySet Name="Empleado" EntityType="SUNRHModel.Empleado" />
           <EntitySet Name="Empleado_Contrato" EntityType="SUNRHModel.Empleado_Contrato" />
+          <EntitySet Name="NOM_Finiquito" EntityType="SUNRHModel.NOM_Finiquito" />
         </EntityContainer>
         <EntityType Name="SYA_Recientes">
           <Key>
@@ -2674,98 +2675,6 @@
           <Property Name="Pagado" Type="Boolean" Nullable="false" />
           <Property Name="FechaPagoBanco" Type="DateTime" Precision="3" />
         </EntityType>
-        <EntityType Name="NOM_Finiquito">
-          <Key>
-            <PropertyRef Name="IdFiniquito" />
-          </Key>
-          <Property Name="IdFiniquito" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdPeriodo" Type="Int32" Nullable="false" />
-          <Property Name="IdContrato" Type="Int32" Nullable="false" />
-          <Property Name="IdEmpleado" Type="Int32" Nullable="false" />
-          <Property Name="IdCliente" Type="Int32" Nullable="false" />
-          <Property Name="IdSucursal" Type="Int32" Nullable="false" />
-          <Property Name="SalarioMinimo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SueldoPrimaAntiguedad" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="FechaAlta" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="FechaBaja" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="FechaInicioAguinaldo" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="FechaInicioVacacion" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="DiasLaborados" Type="Int32" Nullable="false" />
-          <Property Name="DiasVacacionesParaCalculo" Type="Int32" Nullable="false" />
-          <Property Name="DiasAguinaldoParaCalculo" Type="Int32" Nullable="false" />
-          <Property Name="AguinaldoCorrespondiente" Type="Int32" Nullable="false" />
-          <Property Name="VacacionesCorrespondiente" Type="Int32" Nullable="false" />
-          <Property Name="PrimaVacacional" Type="Int32" Nullable="false" />
-          <Property Name="SD" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SDI" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SBC" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="DiasEjercicioFiscal" Type="Int32" Nullable="false" />
-          <Property Name="L_3Meses_SueldoParaCalculo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="DiasSueldoPendiente" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="VacacionesPendientes" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="PrimaVacacionPendiente" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ProporcionalAguinaldo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ProporcionalVacaciones" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ProporcionalPrimaAntiguedad" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Proporcional20DiasPorAño" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SUELDO" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="VACACIONES" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="PRIMA_VACACIONAL" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="AGUINDALDO" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="VACACIONES_PENDIENTE" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="PRIMA_VACACIONES_PENDIENTE" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="GRATIFICACION" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="L_3MESES_SUELDO" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="L_20DIAS_POR_AÑO" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="PRIMA_ANTIGUEDAD" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="COMPENSACION_X_INDEMNIZACION" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="BaseGravableUltimoSueldo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ISR_UltimoSueldo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TasaParaLiquidacion" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
-          <Property Name="Prima_Riesgo" Type="Decimal" Nullable="false" Precision="18" Scale="6" />
-          <Property Name="SubTotal_Finiquito" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SubTotal_FiniquitoF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ISR_Finiquito" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ISR_FiniquitoF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Total_Finiquito" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Total_FiniquitoF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TOTAL_total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TOTAL_totalF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ISR_Liquidacion" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ISR_LiquidacionF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SubTotal_Liquidacion" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SubTotal_LiquidacionF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Total_Liquidacion" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Total_LiquidacionF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Subsidio_Finiquito" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Subsidio_FiniquitoF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Subsidio_Liquidacion" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Subsidio_LiquidacionF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="L_AniosServicio" Type="Int32" Nullable="false" />
-          <Property Name="L_UltimoSueldoMensualOrd" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="L_IngresoAcumulable" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="L_IngresoNoAcumulable" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="IdEmpresaFiscal" Type="Int32" />
-          <Property Name="IdEmpresaComplemento" Type="Int32" />
-          <Property Name="IdEmpresaAsimilado" Type="Int32" />
-          <Property Name="IdEmpresaSindicato" Type="Int32" />
-          <Property Name="IdMetodo_Pago" Type="Int32" Nullable="false" />
-          <Property Name="TotalPercepciones" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalDeducciones" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalComplemento" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalOtrosPagos" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SubsidioCausado" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SubsidioEntregado" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="XMLSinTimbre" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="UMA" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="EsLiquidacion" Type="Boolean" Nullable="false" />
-          <Property Name="DescuentosAplicados" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CFDICreado" Type="Boolean" Nullable="false" />
-          <Property Name="TipoTarifa" Type="Int32" Nullable="false" />
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
-          <Property Name="PensionAlimenticiaDelTotal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Art174" Type="Boolean" Nullable="false" />
-        </EntityType>
         <EntityType Name="NOM_Finiquito_Complemento">
           <Key>
             <PropertyRef Name="Id" />
@@ -2900,6 +2809,99 @@
           <Property Name="IdUsuarioMod" Type="Int32" />
           <Property Name="FechaRegBaja" Type="DateTime" Precision="3" />
           <Property Name="IdUsuarioRegBaja" Type="Int32" />
+        </EntityType>
+        <EntityType Name="NOM_Finiquito">
+          <Key>
+            <PropertyRef Name="IdFiniquito" />
+          </Key>
+          <Property Name="IdFiniquito" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPeriodo" Type="Int32" Nullable="false" />
+          <Property Name="IdContrato" Type="Int32" Nullable="false" />
+          <Property Name="IdEmpleado" Type="Int32" Nullable="false" />
+          <Property Name="IdCliente" Type="Int32" Nullable="false" />
+          <Property Name="IdSucursal" Type="Int32" Nullable="false" />
+          <Property Name="SalarioMinimo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SueldoPrimaAntiguedad" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="FechaAlta" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaBaja" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaInicioAguinaldo" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaInicioVacacion" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DiasLaborados" Type="Int32" Nullable="false" />
+          <Property Name="DiasVacacionesParaCalculo" Type="Int32" Nullable="false" />
+          <Property Name="DiasAguinaldoParaCalculo" Type="Int32" Nullable="false" />
+          <Property Name="AguinaldoCorrespondiente" Type="Int32" Nullable="false" />
+          <Property Name="VacacionesCorrespondiente" Type="Int32" Nullable="false" />
+          <Property Name="PrimaVacacional" Type="Int32" Nullable="false" />
+          <Property Name="SD" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SDI" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SBC" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="DiasEjercicioFiscal" Type="Int32" Nullable="false" />
+          <Property Name="L_3Meses_SueldoParaCalculo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="DiasSueldoPendiente" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="VacacionesPendientes" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PrimaVacacionPendiente" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ProporcionalAguinaldo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ProporcionalVacaciones" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ProporcionalPrimaAntiguedad" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Proporcional20DiasPorAño" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SUELDO" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="VACACIONES" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PRIMA_VACACIONAL" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AGUINDALDO" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="VACACIONES_PENDIENTE" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PRIMA_VACACIONES_PENDIENTE" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="GRATIFICACION" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="L_3MESES_SUELDO" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="L_20DIAS_POR_AÑO" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PRIMA_ANTIGUEDAD" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="COMPENSACION_X_INDEMNIZACION" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BaseGravableUltimoSueldo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ISR_UltimoSueldo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TasaParaLiquidacion" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="Prima_Riesgo" Type="Decimal" Nullable="false" Precision="18" Scale="6" />
+          <Property Name="SubTotal_Finiquito" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SubTotal_FiniquitoF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ISR_Finiquito" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ISR_FiniquitoF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Total_Finiquito" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Total_FiniquitoF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TOTAL_total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TOTAL_totalF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ISR_Liquidacion" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ISR_LiquidacionF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SubTotal_Liquidacion" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SubTotal_LiquidacionF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Total_Liquidacion" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Total_LiquidacionF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Subsidio_Finiquito" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Subsidio_FiniquitoF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Subsidio_Liquidacion" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Subsidio_LiquidacionF" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="L_AniosServicio" Type="Int32" Nullable="false" />
+          <Property Name="L_UltimoSueldoMensualOrd" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="L_IngresoAcumulable" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="L_IngresoNoAcumulable" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="IdEmpresaFiscal" Type="Int32" />
+          <Property Name="IdEmpresaComplemento" Type="Int32" />
+          <Property Name="IdEmpresaAsimilado" Type="Int32" />
+          <Property Name="IdEmpresaSindicato" Type="Int32" />
+          <Property Name="IdMetodo_Pago" Type="Int32" Nullable="false" />
+          <Property Name="TotalPercepciones" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalDeducciones" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalComplemento" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalOtrosPagos" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SubsidioCausado" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SubsidioEntregado" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="XMLSinTimbre" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="XMLIndemnizacionSinTimbre" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UMA" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="EsLiquidacion" Type="Boolean" Nullable="false" />
+          <Property Name="DescuentosAplicados" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CFDICreado" Type="Boolean" Nullable="false" />
+          <Property Name="TipoTarifa" Type="Int32" Nullable="false" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="PensionAlimenticiaDelTotal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Art174" Type="Boolean" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -4117,99 +4119,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="NOM_Finiquito">
-            <EntityTypeMapping TypeName="SUNRHModel.NOM_Finiquito">
-              <MappingFragment StoreEntitySet="NOM_Finiquito">
-                <ScalarProperty Name="Art174" ColumnName="Art174" />
-                <ScalarProperty Name="PensionAlimenticiaDelTotal" ColumnName="PensionAlimenticiaDelTotal" />
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-                <ScalarProperty Name="TipoTarifa" ColumnName="TipoTarifa" />
-                <ScalarProperty Name="CFDICreado" ColumnName="CFDICreado" />
-                <ScalarProperty Name="DescuentosAplicados" ColumnName="DescuentosAplicados" />
-                <ScalarProperty Name="EsLiquidacion" ColumnName="EsLiquidacion" />
-                <ScalarProperty Name="UMA" ColumnName="UMA" />
-                <ScalarProperty Name="XMLSinTimbre" ColumnName="XMLSinTimbre" />
-                <ScalarProperty Name="SubsidioEntregado" ColumnName="SubsidioEntregado" />
-                <ScalarProperty Name="SubsidioCausado" ColumnName="SubsidioCausado" />
-                <ScalarProperty Name="TotalOtrosPagos" ColumnName="TotalOtrosPagos" />
-                <ScalarProperty Name="TotalComplemento" ColumnName="TotalComplemento" />
-                <ScalarProperty Name="TotalDeducciones" ColumnName="TotalDeducciones" />
-                <ScalarProperty Name="TotalPercepciones" ColumnName="TotalPercepciones" />
-                <ScalarProperty Name="IdMetodo_Pago" ColumnName="IdMetodo_Pago" />
-                <ScalarProperty Name="IdEmpresaSindicato" ColumnName="IdEmpresaSindicato" />
-                <ScalarProperty Name="IdEmpresaAsimilado" ColumnName="IdEmpresaAsimilado" />
-                <ScalarProperty Name="IdEmpresaComplemento" ColumnName="IdEmpresaComplemento" />
-                <ScalarProperty Name="IdEmpresaFiscal" ColumnName="IdEmpresaFiscal" />
-                <ScalarProperty Name="L_IngresoNoAcumulable" ColumnName="L_IngresoNoAcumulable" />
-                <ScalarProperty Name="L_IngresoAcumulable" ColumnName="L_IngresoAcumulable" />
-                <ScalarProperty Name="L_UltimoSueldoMensualOrd" ColumnName="L_UltimoSueldoMensualOrd" />
-                <ScalarProperty Name="L_AniosServicio" ColumnName="L_AniosServicio" />
-                <ScalarProperty Name="Subsidio_LiquidacionF" ColumnName="Subsidio_LiquidacionF" />
-                <ScalarProperty Name="Subsidio_Liquidacion" ColumnName="Subsidio_Liquidacion" />
-                <ScalarProperty Name="Subsidio_FiniquitoF" ColumnName="Subsidio_FiniquitoF" />
-                <ScalarProperty Name="Subsidio_Finiquito" ColumnName="Subsidio_Finiquito" />
-                <ScalarProperty Name="Total_LiquidacionF" ColumnName="Total_LiquidacionF" />
-                <ScalarProperty Name="Total_Liquidacion" ColumnName="Total_Liquidacion" />
-                <ScalarProperty Name="SubTotal_LiquidacionF" ColumnName="SubTotal_LiquidacionF" />
-                <ScalarProperty Name="SubTotal_Liquidacion" ColumnName="SubTotal_Liquidacion" />
-                <ScalarProperty Name="ISR_LiquidacionF" ColumnName="ISR_LiquidacionF" />
-                <ScalarProperty Name="ISR_Liquidacion" ColumnName="ISR_Liquidacion" />
-                <ScalarProperty Name="TOTAL_totalF" ColumnName="TOTAL_totalF" />
-                <ScalarProperty Name="TOTAL_total" ColumnName="TOTAL_total" />
-                <ScalarProperty Name="Total_FiniquitoF" ColumnName="Total_FiniquitoF" />
-                <ScalarProperty Name="Total_Finiquito" ColumnName="Total_Finiquito" />
-                <ScalarProperty Name="ISR_FiniquitoF" ColumnName="ISR_FiniquitoF" />
-                <ScalarProperty Name="ISR_Finiquito" ColumnName="ISR_Finiquito" />
-                <ScalarProperty Name="SubTotal_FiniquitoF" ColumnName="SubTotal_FiniquitoF" />
-                <ScalarProperty Name="SubTotal_Finiquito" ColumnName="SubTotal_Finiquito" />
-                <ScalarProperty Name="Prima_Riesgo" ColumnName="Prima_Riesgo" />
-                <ScalarProperty Name="TasaParaLiquidacion" ColumnName="TasaParaLiquidacion" />
-                <ScalarProperty Name="ISR_UltimoSueldo" ColumnName="ISR_UltimoSueldo" />
-                <ScalarProperty Name="BaseGravableUltimoSueldo" ColumnName="BaseGravableUltimoSueldo" />
-                <ScalarProperty Name="COMPENSACION_X_INDEMNIZACION" ColumnName="COMPENSACION_X_INDEMNIZACION" />
-                <ScalarProperty Name="PRIMA_ANTIGUEDAD" ColumnName="PRIMA_ANTIGUEDAD" />
-                <ScalarProperty Name="L_20DIAS_POR_AÑO" ColumnName="L_20DIAS_POR_AÑO" />
-                <ScalarProperty Name="L_3MESES_SUELDO" ColumnName="L_3MESES_SUELDO" />
-                <ScalarProperty Name="GRATIFICACION" ColumnName="GRATIFICACION" />
-                <ScalarProperty Name="PRIMA_VACACIONES_PENDIENTE" ColumnName="PRIMA_VACACIONES_PENDIENTE" />
-                <ScalarProperty Name="VACACIONES_PENDIENTE" ColumnName="VACACIONES_PENDIENTE" />
-                <ScalarProperty Name="AGUINDALDO" ColumnName="AGUINDALDO" />
-                <ScalarProperty Name="PRIMA_VACACIONAL" ColumnName="PRIMA_VACACIONAL" />
-                <ScalarProperty Name="VACACIONES" ColumnName="VACACIONES" />
-                <ScalarProperty Name="SUELDO" ColumnName="SUELDO" />
-                <ScalarProperty Name="Proporcional20DiasPorAño" ColumnName="Proporcional20DiasPorAño" />
-                <ScalarProperty Name="ProporcionalPrimaAntiguedad" ColumnName="ProporcionalPrimaAntiguedad" />
-                <ScalarProperty Name="ProporcionalVacaciones" ColumnName="ProporcionalVacaciones" />
-                <ScalarProperty Name="ProporcionalAguinaldo" ColumnName="ProporcionalAguinaldo" />
-                <ScalarProperty Name="PrimaVacacionPendiente" ColumnName="PrimaVacacionPendiente" />
-                <ScalarProperty Name="VacacionesPendientes" ColumnName="VacacionesPendientes" />
-                <ScalarProperty Name="DiasSueldoPendiente" ColumnName="DiasSueldoPendiente" />
-                <ScalarProperty Name="L_3Meses_SueldoParaCalculo" ColumnName="L_3Meses_SueldoParaCalculo" />
-                <ScalarProperty Name="DiasEjercicioFiscal" ColumnName="DiasEjercicioFiscal" />
-                <ScalarProperty Name="SBC" ColumnName="SBC" />
-                <ScalarProperty Name="SDI" ColumnName="SDI" />
-                <ScalarProperty Name="SD" ColumnName="SD" />
-                <ScalarProperty Name="PrimaVacacional" ColumnName="PrimaVacacional" />
-                <ScalarProperty Name="VacacionesCorrespondiente" ColumnName="VacacionesCorrespondiente" />
-                <ScalarProperty Name="AguinaldoCorrespondiente" ColumnName="AguinaldoCorrespondiente" />
-                <ScalarProperty Name="DiasAguinaldoParaCalculo" ColumnName="DiasAguinaldoParaCalculo" />
-                <ScalarProperty Name="DiasVacacionesParaCalculo" ColumnName="DiasVacacionesParaCalculo" />
-                <ScalarProperty Name="DiasLaborados" ColumnName="DiasLaborados" />
-                <ScalarProperty Name="FechaInicioVacacion" ColumnName="FechaInicioVacacion" />
-                <ScalarProperty Name="FechaInicioAguinaldo" ColumnName="FechaInicioAguinaldo" />
-                <ScalarProperty Name="FechaBaja" ColumnName="FechaBaja" />
-                <ScalarProperty Name="FechaAlta" ColumnName="FechaAlta" />
-                <ScalarProperty Name="SueldoPrimaAntiguedad" ColumnName="SueldoPrimaAntiguedad" />
-                <ScalarProperty Name="SalarioMinimo" ColumnName="SalarioMinimo" />
-                <ScalarProperty Name="IdSucursal" ColumnName="IdSucursal" />
-                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
-                <ScalarProperty Name="IdEmpleado" ColumnName="IdEmpleado" />
-                <ScalarProperty Name="IdContrato" ColumnName="IdContrato" />
-                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
-                <ScalarProperty Name="IdFiniquito" ColumnName="IdFiniquito" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="NOM_Finiquito_Complemento">
             <EntityTypeMapping TypeName="SUNRHModel.NOM_Finiquito_Complemento">
               <MappingFragment StoreEntitySet="NOM_Finiquito_Complemento">
@@ -4346,6 +4255,100 @@
                 <ScalarProperty Name="FechaAlta" ColumnName="FechaAlta" />
                 <ScalarProperty Name="IdEmpleado" ColumnName="IdEmpleado" />
                 <ScalarProperty Name="IdContrato" ColumnName="IdContrato" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NOM_Finiquito">
+            <EntityTypeMapping TypeName="SUNRHModel.NOM_Finiquito">
+              <MappingFragment StoreEntitySet="NOM_Finiquito">
+                <ScalarProperty Name="Art174" ColumnName="Art174" />
+                <ScalarProperty Name="PensionAlimenticiaDelTotal" ColumnName="PensionAlimenticiaDelTotal" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="TipoTarifa" ColumnName="TipoTarifa" />
+                <ScalarProperty Name="CFDICreado" ColumnName="CFDICreado" />
+                <ScalarProperty Name="DescuentosAplicados" ColumnName="DescuentosAplicados" />
+                <ScalarProperty Name="EsLiquidacion" ColumnName="EsLiquidacion" />
+                <ScalarProperty Name="UMA" ColumnName="UMA" />
+                <ScalarProperty Name="XMLIndemnizacionSinTimbre" ColumnName="XMLIndemnizacionSinTimbre" />
+                <ScalarProperty Name="XMLSinTimbre" ColumnName="XMLSinTimbre" />
+                <ScalarProperty Name="SubsidioEntregado" ColumnName="SubsidioEntregado" />
+                <ScalarProperty Name="SubsidioCausado" ColumnName="SubsidioCausado" />
+                <ScalarProperty Name="TotalOtrosPagos" ColumnName="TotalOtrosPagos" />
+                <ScalarProperty Name="TotalComplemento" ColumnName="TotalComplemento" />
+                <ScalarProperty Name="TotalDeducciones" ColumnName="TotalDeducciones" />
+                <ScalarProperty Name="TotalPercepciones" ColumnName="TotalPercepciones" />
+                <ScalarProperty Name="IdMetodo_Pago" ColumnName="IdMetodo_Pago" />
+                <ScalarProperty Name="IdEmpresaSindicato" ColumnName="IdEmpresaSindicato" />
+                <ScalarProperty Name="IdEmpresaAsimilado" ColumnName="IdEmpresaAsimilado" />
+                <ScalarProperty Name="IdEmpresaComplemento" ColumnName="IdEmpresaComplemento" />
+                <ScalarProperty Name="IdEmpresaFiscal" ColumnName="IdEmpresaFiscal" />
+                <ScalarProperty Name="L_IngresoNoAcumulable" ColumnName="L_IngresoNoAcumulable" />
+                <ScalarProperty Name="L_IngresoAcumulable" ColumnName="L_IngresoAcumulable" />
+                <ScalarProperty Name="L_UltimoSueldoMensualOrd" ColumnName="L_UltimoSueldoMensualOrd" />
+                <ScalarProperty Name="L_AniosServicio" ColumnName="L_AniosServicio" />
+                <ScalarProperty Name="Subsidio_LiquidacionF" ColumnName="Subsidio_LiquidacionF" />
+                <ScalarProperty Name="Subsidio_Liquidacion" ColumnName="Subsidio_Liquidacion" />
+                <ScalarProperty Name="Subsidio_FiniquitoF" ColumnName="Subsidio_FiniquitoF" />
+                <ScalarProperty Name="Subsidio_Finiquito" ColumnName="Subsidio_Finiquito" />
+                <ScalarProperty Name="Total_LiquidacionF" ColumnName="Total_LiquidacionF" />
+                <ScalarProperty Name="Total_Liquidacion" ColumnName="Total_Liquidacion" />
+                <ScalarProperty Name="SubTotal_LiquidacionF" ColumnName="SubTotal_LiquidacionF" />
+                <ScalarProperty Name="SubTotal_Liquidacion" ColumnName="SubTotal_Liquidacion" />
+                <ScalarProperty Name="ISR_LiquidacionF" ColumnName="ISR_LiquidacionF" />
+                <ScalarProperty Name="ISR_Liquidacion" ColumnName="ISR_Liquidacion" />
+                <ScalarProperty Name="TOTAL_totalF" ColumnName="TOTAL_totalF" />
+                <ScalarProperty Name="TOTAL_total" ColumnName="TOTAL_total" />
+                <ScalarProperty Name="Total_FiniquitoF" ColumnName="Total_FiniquitoF" />
+                <ScalarProperty Name="Total_Finiquito" ColumnName="Total_Finiquito" />
+                <ScalarProperty Name="ISR_FiniquitoF" ColumnName="ISR_FiniquitoF" />
+                <ScalarProperty Name="ISR_Finiquito" ColumnName="ISR_Finiquito" />
+                <ScalarProperty Name="SubTotal_FiniquitoF" ColumnName="SubTotal_FiniquitoF" />
+                <ScalarProperty Name="SubTotal_Finiquito" ColumnName="SubTotal_Finiquito" />
+                <ScalarProperty Name="Prima_Riesgo" ColumnName="Prima_Riesgo" />
+                <ScalarProperty Name="TasaParaLiquidacion" ColumnName="TasaParaLiquidacion" />
+                <ScalarProperty Name="ISR_UltimoSueldo" ColumnName="ISR_UltimoSueldo" />
+                <ScalarProperty Name="BaseGravableUltimoSueldo" ColumnName="BaseGravableUltimoSueldo" />
+                <ScalarProperty Name="COMPENSACION_X_INDEMNIZACION" ColumnName="COMPENSACION_X_INDEMNIZACION" />
+                <ScalarProperty Name="PRIMA_ANTIGUEDAD" ColumnName="PRIMA_ANTIGUEDAD" />
+                <ScalarProperty Name="L_20DIAS_POR_AÑO" ColumnName="L_20DIAS_POR_AÑO" />
+                <ScalarProperty Name="L_3MESES_SUELDO" ColumnName="L_3MESES_SUELDO" />
+                <ScalarProperty Name="GRATIFICACION" ColumnName="GRATIFICACION" />
+                <ScalarProperty Name="PRIMA_VACACIONES_PENDIENTE" ColumnName="PRIMA_VACACIONES_PENDIENTE" />
+                <ScalarProperty Name="VACACIONES_PENDIENTE" ColumnName="VACACIONES_PENDIENTE" />
+                <ScalarProperty Name="AGUINDALDO" ColumnName="AGUINDALDO" />
+                <ScalarProperty Name="PRIMA_VACACIONAL" ColumnName="PRIMA_VACACIONAL" />
+                <ScalarProperty Name="VACACIONES" ColumnName="VACACIONES" />
+                <ScalarProperty Name="SUELDO" ColumnName="SUELDO" />
+                <ScalarProperty Name="Proporcional20DiasPorAño" ColumnName="Proporcional20DiasPorAño" />
+                <ScalarProperty Name="ProporcionalPrimaAntiguedad" ColumnName="ProporcionalPrimaAntiguedad" />
+                <ScalarProperty Name="ProporcionalVacaciones" ColumnName="ProporcionalVacaciones" />
+                <ScalarProperty Name="ProporcionalAguinaldo" ColumnName="ProporcionalAguinaldo" />
+                <ScalarProperty Name="PrimaVacacionPendiente" ColumnName="PrimaVacacionPendiente" />
+                <ScalarProperty Name="VacacionesPendientes" ColumnName="VacacionesPendientes" />
+                <ScalarProperty Name="DiasSueldoPendiente" ColumnName="DiasSueldoPendiente" />
+                <ScalarProperty Name="L_3Meses_SueldoParaCalculo" ColumnName="L_3Meses_SueldoParaCalculo" />
+                <ScalarProperty Name="DiasEjercicioFiscal" ColumnName="DiasEjercicioFiscal" />
+                <ScalarProperty Name="SBC" ColumnName="SBC" />
+                <ScalarProperty Name="SDI" ColumnName="SDI" />
+                <ScalarProperty Name="SD" ColumnName="SD" />
+                <ScalarProperty Name="PrimaVacacional" ColumnName="PrimaVacacional" />
+                <ScalarProperty Name="VacacionesCorrespondiente" ColumnName="VacacionesCorrespondiente" />
+                <ScalarProperty Name="AguinaldoCorrespondiente" ColumnName="AguinaldoCorrespondiente" />
+                <ScalarProperty Name="DiasAguinaldoParaCalculo" ColumnName="DiasAguinaldoParaCalculo" />
+                <ScalarProperty Name="DiasVacacionesParaCalculo" ColumnName="DiasVacacionesParaCalculo" />
+                <ScalarProperty Name="DiasLaborados" ColumnName="DiasLaborados" />
+                <ScalarProperty Name="FechaInicioVacacion" ColumnName="FechaInicioVacacion" />
+                <ScalarProperty Name="FechaInicioAguinaldo" ColumnName="FechaInicioAguinaldo" />
+                <ScalarProperty Name="FechaBaja" ColumnName="FechaBaja" />
+                <ScalarProperty Name="FechaAlta" ColumnName="FechaAlta" />
+                <ScalarProperty Name="SueldoPrimaAntiguedad" ColumnName="SueldoPrimaAntiguedad" />
+                <ScalarProperty Name="SalarioMinimo" ColumnName="SalarioMinimo" />
+                <ScalarProperty Name="IdSucursal" ColumnName="IdSucursal" />
+                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+                <ScalarProperty Name="IdEmpleado" ColumnName="IdEmpleado" />
+                <ScalarProperty Name="IdContrato" ColumnName="IdContrato" />
+                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
+                <ScalarProperty Name="IdFiniquito" ColumnName="IdFiniquito" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
