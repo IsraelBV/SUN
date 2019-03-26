@@ -5690,6 +5690,7 @@ namespace Nomina.Procesador
                 tblSellos.AddCell(new PdfPCell(new Phrase(selloSat, _font7)) { Border = 0, Colspan = colspanSet });
                 tblSellos.AddCell(new PdfPCell(new Phrase("      ", _font7B)) { Border = 0, Colspan = colspanSet });
 
+
                 tblSellos.AddCell(
                     new PdfPCell(new Phrase("Cadena Original del complemento del certificado del SAT", _font7BW))
                     {
@@ -5697,7 +5698,11 @@ namespace Nomina.Procesador
                         BackgroundColor = colorBackAzulOscuro,
                         Colspan = colspanSet
                     });
-                tblSellos.AddCell(new PdfPCell(new Phrase(cadenaOriginal, _font7)) { Border = 0, Colspan = colspanSet });
+                tblSellos.AddCell(new PdfPCell(new Phrase(cadenaOriginal, _font7)) { Border = 1, Colspan = colspanSet });
+                                
+                tblSellos.AddCell(new PdfPCell(new Phrase("      ", _font7B)) { Border = 0, Colspan = 10 });
+                tblSellos.AddCell(new PdfPCell(new Phrase("      ", _font7B)) { Border = 0, Colspan = 10 });
+                tblSellos.AddCell(new PdfPCell(new Phrase("Se puso a mi disposición el archivo XML correspondiente y recibí de la empresa arriba mencionada la cantidad neta a que este documento se refiere, estando conforme con las percepciones y deducciones que en él aparecen especificados", _font7B)) { Border = 0, Colspan = 10 });
 
                 documento.Add(tblSellos);
 
@@ -6838,6 +6843,10 @@ namespace Nomina.Procesador
                         Colspan = colspanSet
                     });
                 tblSellos.AddCell(new PdfPCell(new Phrase(cadenaOriginal, _font7)) { Border = 0, Colspan = colspanSet });
+
+                tblSellos.AddCell(new PdfPCell(new Phrase("      ", _font7B)) { Border = 0, Colspan = 10 });
+                tblSellos.AddCell(new PdfPCell(new Phrase("      ", _font7B)) { Border = 0, Colspan = 10 });
+                tblSellos.AddCell(new PdfPCell(new Phrase("Se puso a mi disposición el archivo XML correspondiente y recibí de la empresa arriba mencionada la cantidad neta a que este documento se refiere, estando conforme con las percepciones y deducciones que en él aparecen especificados", _font7B)) { Border = 0, Colspan = 10 });
 
                 documento.Add(tblSellos);
 

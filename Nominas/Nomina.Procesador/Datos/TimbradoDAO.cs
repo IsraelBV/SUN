@@ -1363,6 +1363,31 @@ namespace Nomina.Procesador.Datos
                             IdFiniquito = fd.IdFiniquito,
                             IdNomina = 0
                         }).ToList();
+                    // se asigna el id del finiquito a una variable ya que no se ouede utilizar el array en linq
+                    var idFiniquito = arraynominas[0];
+
+                    if (r.Where(x => x.IdConcepto == 144).Count() == 0)
+                    {
+                        var ListaSubsidiosACero = (from c in context.C_NOM_Conceptos
+                                                   where c.IdConcepto == 144
+                                                   select new ConceptosNomina()
+                                                   {
+                                                       IdConcepto = c.IdConcepto,
+                                                       NombreConcepto = c.DescripcionCorta,
+                                                       Importe = 0.01M,
+                                                       Gravado = 0.00M,
+                                                       Excento = 0.00M,
+                                                       ClaveSat = c.Clave,
+                                                       IdTipoOtroPago = c.IdTipoOtroPago,
+                                                       ClaveContable = c.Cuenta_Acredora,
+                                                       //<- confirmar si se debe usar la cuenta acredora o deudora de contabilidad
+                                                       ClaveOtroPago = c.Clave,
+                                                       IdNomina = 0,
+                                                       IdFiniquito = idFiniquito
+                                                   }).FirstOrDefault();
+
+                        r.Add(ListaSubsidiosACero);
+                    }
 
                     return r;
                 }
@@ -1371,6 +1396,8 @@ namespace Nomina.Procesador.Datos
             {
                 using (var context = new RHEntities())
                 {
+
+
                     var r = (from nd in context.NOM_Nomina_Detalle
                         join c in context.C_NOM_Conceptos on nd.IdConcepto equals c.IdConcepto
                         join otroPago in context.C_TipoOtroPago_SAT on c.IdTipoOtroPago equals otroPago.IdTipoOtroPago
@@ -1392,6 +1419,36 @@ namespace Nomina.Procesador.Datos
                             IdFiniquito = 0
                         }).ToList();
 
+                    //se obtienen todos los subsidios para poder compararlos en el proximo foreach
+                    var listaNominasSubsidio = r.Where(x => x.IdConcepto == 144).Select(x => x.IdNomina).Distinct().ToList();
+
+                    //En caso de no tener subsidio se agrega uno de 0.01 para que figure el subsidio causado en el xml
+                    foreach (var nomina in arraynominas)
+                    {
+                        if (!listaNominasSubsidio.Contains(nomina))
+                        {
+                            var ListaSubsidiosACero = (from c in context.C_NOM_Conceptos
+                                                       where c.IdConcepto == 144
+                                                       select new ConceptosNomina()
+                                                       {
+                                                           IdConcepto = c.IdConcepto,
+                                                           NombreConcepto = c.DescripcionCorta,
+                                                           Importe = 0.01M,
+                                                           Gravado = 0.00M,
+                                                           Excento = 0.00M,
+                                                           ClaveSat = c.Clave,
+                                                           IdTipoOtroPago = c.IdTipoOtroPago,
+                                                           ClaveContable = c.Cuenta_Acredora,
+                                                           //<- confirmar si se debe usar la cuenta acredora o deudora de contabilidad
+                                                           ClaveOtroPago = c.Clave,
+                                                           IdNomina = nomina,
+                                                           IdFiniquito = 0
+                                                       }).FirstOrDefault();
+
+                            r.Add(ListaSubsidiosACero);
+                        }
+                    }
+                    
                     return r;
                 }
             }

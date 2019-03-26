@@ -1153,7 +1153,8 @@ namespace Nomina.Procesador
                         Modelos.Nomina12.NominaOtroPago otroPagoDevolucionIsr = new Modelos.Nomina12.NominaOtroPago()
                         {
                             TipoOtroPago = itemOtroPago.ClaveOtroPago.Trim(),
-                            Clave = itemOtroPago.ClaveContable,
+                            //Clave = itemOtroPago.ClaveContable,
+                            Clave = itemOtroPago.IdConcepto.ToString().PadLeft(3, '0'),
                             Concepto = itemOtroPago.NombreConcepto,
                             Importe = itemOtroPago.Importe,
                         };
@@ -1168,7 +1169,8 @@ namespace Nomina.Procesador
                         Modelos.Nomina12.NominaOtroPago otroPago = new Modelos.Nomina12.NominaOtroPago()
                         {
                             TipoOtroPago = itemOtroPago.ClaveOtroPago.Trim(),
-                            Clave = itemOtroPago.ClaveContable,
+                            //Clave = itemOtroPago.ClaveContable,
+                            Clave = itemOtroPago.IdConcepto.ToString().PadLeft(3, '0'),
                             Concepto = itemOtroPago.NombreConcepto,
                             Importe = itemOtroPago.Importe,
                             SubsidioAlEmpleo = subsidioAlEmpleo
@@ -1180,7 +1182,8 @@ namespace Nomina.Procesador
                         Modelos.Nomina12.NominaOtroPago otrosViaticos = new Modelos.Nomina12.NominaOtroPago()
                         {
                             TipoOtroPago = itemOtroPago.ClaveOtroPago.Trim(),
-                            Clave = itemOtroPago.ClaveContable,
+                            //Clave = itemOtroPago.ClaveContable,
+                            Clave = itemOtroPago.IdConcepto.ToString().PadLeft(3, '0'),
                             Concepto = itemOtroPago.NombreConcepto,
                             Importe = itemOtroPago.Importe
                         };
@@ -1201,7 +1204,8 @@ namespace Nomina.Procesador
                         Modelos.Nomina12.NominaOtroPago otroPagoSv = new Modelos.Nomina12.NominaOtroPago()
                         {
                             TipoOtroPago = itemOtroPago.ClaveOtroPago.Trim(),
-                            Clave = itemOtroPago.ClaveContable,
+                            //Clave = itemOtroPago.ClaveContable,
+                            Clave = itemOtroPago.IdConcepto.ToString().PadLeft(3, '0'),
                             Concepto = itemOtroPago.NombreConcepto,
                             Importe = itemOtroPago.Importe,
                             CompensacionSaldosAFavor = otroPagoSaldoFavor
@@ -1213,7 +1217,8 @@ namespace Nomina.Procesador
                         Modelos.Nomina12.NominaOtroPago otrosPago = new Modelos.Nomina12.NominaOtroPago()
                         {
                             TipoOtroPago = itemOtroPago.ClaveOtroPago.Trim(),
-                            Clave = itemOtroPago.ClaveContable,
+                            //Clave = itemOtroPago.ClaveContable,
+                            Clave = itemOtroPago.IdConcepto.ToString().PadLeft(3, '0'),
                             Concepto = itemOtroPago.NombreConcepto,
                             Importe = itemOtroPago.Importe
                         };
@@ -1225,7 +1230,8 @@ namespace Nomina.Procesador
                         Modelos.Nomina12.NominaOtroPago otroPagoReintegroIsr = new Modelos.Nomina12.NominaOtroPago()
                         {
                             TipoOtroPago = itemOtroPago.ClaveOtroPago.Trim(),
-                            Clave = itemOtroPago.ClaveContable,
+                            //Clave = itemOtroPago.ClaveContable,
+                            Clave = itemOtroPago.IdConcepto.ToString().PadLeft(3, '0'),
                             Concepto = itemOtroPago.NombreConcepto,
                             Importe = itemOtroPago.Importe,
                         };
