@@ -346,19 +346,16 @@ namespace Common.Utils
             switch (tipo_nomina)
             {
                 case 1:
-                    tipoNomina = "Diario";
+                    tipoNomina = "Quincenal";
                     break;
                 case 2:
                     tipoNomina = "Semanal";
                     break;
                 case 3:
-                    tipoNomina = "Catorcenal";
+                    tipoNomina = "Mensual";
                     break;
                 case 4:
-                    tipoNomina = "Quincenal";
-                    break;
-                case 5:
-                    tipoNomina = "Mensual";
+                    tipoNomina = "Catorcenal";
                     break;
                 default:
                     tipoNomina = "Quincenal";
