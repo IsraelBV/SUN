@@ -135,10 +135,16 @@ namespace Nomina.Reportes
                         if (!lista.Contains(listbank.IdBanco))
                         {
                             lista.Add(listbank.IdBanco);
-                        }
-
+                        }                        
 
                     }
+
+                    if (lista.Contains(2))
+                    {
+                        lista.Remove(2);
+                        lista.Insert(0, 2);
+                    }
+
                     List<ListadoBancoEmpleados> listadoRegistros = new List<ListadoBancoEmpleados>();
                     foreach (var b in lista)
                     {
